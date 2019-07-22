@@ -1,3 +1,6 @@
+# ignore path
+/bak
+
 # Compiled Object files
 *.slo
 *.lo
