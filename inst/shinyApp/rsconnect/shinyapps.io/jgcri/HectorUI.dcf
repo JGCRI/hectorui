@@ -1,0 +1,12 @@
+name: HectorUI
+title: HectorUI
+username:
+account: jgcri
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 976821
+bundleId: 2261409
+url: https://jgcri.shinyapps.io/HectorUI/
+when: 1563990608.65341
+asMultiple: FALSE
+asStatic: FALSE
