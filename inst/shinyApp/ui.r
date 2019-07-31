@@ -1,33 +1,20 @@
 #
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+# This is a Shiny web application.
 
 
-
-# Define UI for application that draws a histogram
+# Define UI for application
 fluidPage(
+  shinyalert::useShinyalert(),
   # Application title
   titlePanel("Hector"),
 
-  # Sidebar with a slider input for number of bins
-  #  sidebarLayout(
-  #     sidebarPanel(
-  #       sliderInput("bins",
-  #                 "Number of bins:",
-  #                   min = 1,
-  #                   max = 50,
-  #                   value = 30)
-  #      ),
+  # Function that gets called on first load of application to load in any themes/css etc
   tags$head
   (
     tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.css")
   ),
 
+  # Main component from which all other components fall under, navbarPage.
   navbarPage
   (
     "Hector",
@@ -40,7 +27,7 @@ fluidPage(
         width=3,
         div(h4("Baseline Scenarios"),
             selectInput("input_RCP", "RCP Scenario", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6"="RCP 6.0", "8.5" = "RCP 8.5"), width=200, selected = "RCP 4.5"),
-            radioButtons("input_Driven", "", list("Emissions Driven", "Concentration Driven"), inline=TRUE),
+            radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
             textInput("input_ScenarioName", "Scenario Name", width=200, value = ""),
 
         div(h4("Custom Scenario"),
@@ -50,13 +37,13 @@ fluidPage(
         div
         (
           h4("Model Parameters"),
-          numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width=250, value = 1, step = 0.01),
-          numericInput("input_beta", "CO2 fertilization factor (unitless)", width=250, value = 1, step = 0.01),
-          numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width=250, value = 1, step = 0.01),
-          numericInput("input_ecs", "Equilibrium Climate Sensitivity (degC)", width=250, value = 1, step = 0.01),
-          numericInput("input_pco2", "Preindustrial CO2 concentration (ppmv CO2)", width=250, value = 1, step = 0.01),
-          numericInput("input_q10", "Heterotrophic respiration temp sensitivity factor (unitless)", width=250, value = 1, step = 0.01),
-          numericInput("input_volc", "Volcanic forcing scaling factor (unitless)", width=250, value = 1, step = 0.01),
+          numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width=250, value = NA, step = 0.01),
+          numericInput("input_beta", "CO2 fertilization factor (unitless)", width=250, value = NA, step = 0.01),
+          numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width=250, value = NA, step = 0.01),
+          numericInput("input_ecs", "Equilibrium Climate Sensitivity (degC)", width=250, value = NA, step = 0.01),
+          numericInput("input_pco2", "Preindustrial CO2 concentration (ppmv CO2)", width=250, value = NA, step = 0.01),
+          numericInput("input_q10", "Heterotrophic respiration temp sensitivity factor (unitless)", width=250, value = NA, step = 0.01),
+          numericInput("input_volc", "Volcanic forcing scaling factor (unitless)", width=250, value = NA, step = 0.01),
           actionButton(inputId="set_Params", label="Set Parameters"),
           actionButton(inputId="reset_Params", label="Reset Parameters")
         )
@@ -72,12 +59,12 @@ fluidPage(
             p("test information")
           ),
           tabPanel
-          (
+          ( fluid = TRUE,
             p(icon("table"), "Scenario Output", value="outputTab"),
             # Output Tab Panel
             mainPanel
             (
-              p(selectInput   #ATMOSPHERIC_CO2(), GLOBAL_TEMP(), RF_TOTAL()
+              p(selectInput
                 ("capabilities", "Choose capability identifiers:",
                   list('Carbon Cycle' = list("Land Carbon Flux"='cc_lcf', "Atmospheric CO2"="cc_co2", "Atmospheric Carbon Pool"="cc_acp"),
                        'Concentrations' = list("Amospheric N2O"='c_an20', "Preindustrial Atmospheric CO2"='c_paco2', "Preindustrial Ozone Concentration"='c_po'),
@@ -99,11 +86,11 @@ fluidPage(
                        'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Land Temp Anomaly"="t_lta", "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')                  ), multiple = T
                 ),  actionButton(inputId="loadGraphs", label="Load Graphs", width = 200)
                ),
-               # plotlyOutput("plot")
-               div(width = '100%', plotOutput("plot"))
-            ) #end mainpanel
-          ) #end tabpanel
-        ) #end tabsetpanel
+                plotly::plotlyOutput("plot")
+               #div(width = '100%', plotOutput("plot"))
+            ) # end mainpanel
+          ) # end tabpanel
+        ) # end tabsetpanel
       ), # end mainpanel
       tabPanel
       (

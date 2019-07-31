@@ -1,19 +1,20 @@
 # Build Global variables for Hector capabilities
 library(hector)
 
-# Create file input vector
+# Create global file input vector
 globalScenarios <- vector()
-
-globalScenarios['RCP 2.6'] <- "input/hector_rcp26.ini"
-globalScenarios['RCP 4.5'] <- "input/hector_rcp45.ini"
-globalScenarios['RCP 6.0'] <- "input/hector_rcp60.ini"
-globalScenarios['RCP 8.5'] <- "input/hector_rcp85.ini"
 
 # Create master list of variable lookups
 globalCapabilities <- vector()
 
 # Create master list of parameter lookups
 globalParameters <- vector()
+
+# Load file input paths into global variable
+globalScenarios['RCP 2.6'] <- "input/hector_rcp26.ini"
+globalScenarios['RCP 4.5'] <- "input/hector_rcp45.ini"
+globalScenarios['RCP 6.0'] <- "input/hector_rcp60.ini"
+globalScenarios['RCP 8.5'] <- "input/hector_rcp85.ini"
 
 # Load parameter strings into global variable (should match UI component ids)
 globalParameters['pco2'] <- hector::PREINDUSTRIAL_CO2()
