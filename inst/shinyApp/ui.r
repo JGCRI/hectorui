@@ -66,8 +66,8 @@ fluidPage(
             (
               p(selectInput
                 ("capabilities", "Choose capability identifiers:",
-                  list('Carbon Cycle' = list("Land Carbon Flux"='cc_lcf', "Atmospheric CO2"="cc_co2", "Atmospheric Carbon Pool"="cc_acp"),
-                       'Concentrations' = list("Amospheric N2O"='c_an20', "Preindustrial Atmospheric CO2"='c_paco2', "Preindustrial Ozone Concentration"='c_po'),
+                  list('Carbon Cycle' = list("Atmospheric CO2"="cc_co2", "Atmospheric Carbon Pool"="cc_acp"),
+                       'Concentrations' = list("Amospheric N2O"='c_an20'),
                        'Emissions' = list("Black Carbon Emissions" = 'e_bc', "N20 Emissions" = 'e_n2o', "NOx Emissions"='e_nox', "CO Emissions"='e_co', "NMVOC Emissions"='e_nmvoc', "Organic Carbon Emissions"='e_oc'),
                        'Forcings' = list("RF - Total"='f_rft', "RF - Albedo"='f_alb', "RF - CO2"='f_co2', "RF - N2O"='f_n2o', "RF - H2O"='f_h2o', "RF - Ozone"='f_oz', "RF - Black Carbon"='f_bc',
                                          "RF - Organic Carbon"='f_oc', "RF - SO2 Direct"='f_so2d', "RF - SO2 Indirect"='f_so2i', "RF - SO2 Total"='f_so2t', "RF - Volcanic Activity"='f_va', "RF - CH4"='f_ch4'),
@@ -86,7 +86,8 @@ fluidPage(
                        'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Land Temp Anomaly"="t_lta", "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')                  ), multiple = T
                 ),  actionButton(inputId="loadGraphs", label="Load Graphs", width = 200)
                ),
-                plotly::plotlyOutput("plot")
+               # plotly::plotlyOutput("plot")
+              plotOutput("plot")
                #div(width = '100%', plotOutput("plot"))
             ) # end mainpanel
           ) # end tabpanel

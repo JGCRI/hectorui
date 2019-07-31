@@ -13,9 +13,9 @@ server <- function(input, output, session)
     firstLoad <- TRUE
     outputVariables <- list()
     fetchList <- write.table(matrix(as.character(outputVariables),nrow=1), sep=",", row.names=FALSE, col.names=FALSE)
-    #print(fetchList)
-
     inifile <- system.file('input/hector_rcp45.ini', package='hector', mustWork=TRUE)
+
+    # Hector core
     hcore <- hector::newcore(inifile, suppresslogging=TRUE, name="RCP 4.5")
 
     # Set up observer functions for user interactive fields
@@ -25,6 +25,7 @@ server <- function(input, output, session)
     observeEvent(input$input_ScenarioFile, loadScenario())
     observeEvent(input$reset_Params, resetParams())
     observeEvent(input$input_RCP, setRCP())
+    params <- loadParameters()
 
     # Load parameters
     loadParameters <- function()
@@ -33,6 +34,7 @@ server <- function(input, output, session)
       hdata <- hector::fetchvars(core = hcore, dates = NA, vars = fetchList, "\n")
       print("and here")
       print(head(hdata))
+      #print(head(hector::fetchvars(hcore, dates = NA, vars = c(globalCapabilities['pco2']))))
     }
 
     # Observer function that responds to changes in inputs from the capabilities drop down field
@@ -53,7 +55,7 @@ server <- function(input, output, session)
       }
       else
       {print("i am here")
-        fetchList <<- hdata <- hector::fetchvars(core = hcore, dates = 1800:2300, vars = outputVariables, "\n")
+        fetchList <<- hdata <- hector::fetchvars(core = hcore, dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
       }
     }
 
@@ -68,10 +70,10 @@ server <- function(input, output, session)
           inifile <<- system.file(globalScenarios[input$input_RCP], package='hector', mustWork=TRUE)
           hcore <<- hector::newcore(inifile, suppresslogging=TRUE, name=input$input_ScenarioName)
           updateTextInput(session=session, "input_ScenarioName", value=paste(input$input_RCP))
-          hector::run(hcore, 2300)
+          hector::run(hcore, globalVars['endDate'])
          # print(hcore)
          # print(outputVariables)
-         # print(head(hector::fetchvars(hcore, 1800:2100, vars = c(globalCapabilities['cc_acp']))))
+
           #output$plot <<- NULL
           #hdata <- hector::fetchvars(core = hcore, dates = 1800:2300, vars = fetchList, "\n")
          # output$plot <<-  renderPlot(ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value)) + ggplot2::geom_line(col="darkgrey", size=1.1) + ggplot2::facet_wrap(~variable, scales='free_y') +
@@ -120,7 +122,7 @@ server <- function(input, output, session)
         hector::run(hcore, 2300)
         loadGraph()
        # print(hcore)
-       # print(head(hector::fetchvars(hcore, 1800:2100, vars = c(globalCapabilities['cc_acp']))))
+       # print(head(hector::fetchvars(hcore, 1800:globalVars['endDate'], vars = c(globalCapabilities['cc_acp']))))
       },
       warning = function(war)
       {
@@ -134,8 +136,7 @@ server <- function(input, output, session)
       {
         # error handler picks up where error was generated
         cat(file=stderr(), "\n ERROR: Set Params - ", as.character(err[1]), sep=" ")
-        #shinyalert::shinyalert("Oops!",print(paste('Error:',err)), type = "error")
-        #bsModal("modalExample", "Your plot", "go", size = "large","asfd",downloadButton('downloadPlot', 'Download'))
+        shinyalert::shinyalert("Oops!",print(paste('Error:',err)), type = "error")
 
       },
       finally =
@@ -156,47 +157,49 @@ server <- function(input, output, session)
        #if(length(outputVariables) >= 1)
         #{
 
-          hdata <- hector::fetchvars(core = hcore, dates = 1800:2300, vars = outputVariables, "\n")
-         # gg = ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value)) + ggplot2::geom_line(col="darkgrey", size=1.1) + ggplot2::facet_wrap(~variable, scales='free_y') +
-         #   ggthemes::theme_solarized(light = TRUE)
-
-          hdata <- tidyr::spread(data = dplyr::select(hdata, -units), key = variable, value = value, drop=F )
+          hdata <- hector::fetchvars(core = hcore, dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
+          # gg = ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value)) + ggplot2::geom_line(col="darkgrey", size=1.1) + ggplot2::facet_wrap(~variable, scales='free_y') +
+          #   ggthemes::theme_solarized(light = TRUE)
+          output$plot <<-  renderPlot(ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value)) + ggplot2::geom_line(col="darkgrey", size=1.1) + ggplot2::facet_wrap(~variable, scales='free_y') +
+                                          ggthemes::theme_solarized(light = TRUE))
+          #browser()
+        #  hdata <- tidyr::spread(data = dplyr::select(hdata, -units), key = variable, value = value, drop=F )
          # print(head(hdata))
       #    print(outputVariables)
          # print(fetchList)
 
-          output$plot <<- NULL
-          localPlot <- plotly::plot_ly(data = hdata, x = ~year) %>%   plotly::layout(title = "Scenario Results",
-                                                                              paper_bgcolor='rgb(255,255,255)', plot_bgcolor='rgb(229,229,229)',
-                                                                              xaxis = list(title = "Year",
-                                                                                           gridcolor = 'rgb(255,255,255)',
-                                                                                           showgrid = TRUE,
-                                                                                           showline = FALSE,
-                                                                                           showticklabels = TRUE,
-                                                                                           tickcolor = 'rgb(127,127,127)',
-                                                                                           ticks = 'outside',
-                                                                                           zeroline = FALSE),
-                                                                              yaxis = list(title = "Value",
-                                                                                           gridcolor = 'rgb(255,255,255)',
-                                                                                           showgrid = TRUE,
-                                                                                           showline = FALSE,
-                                                                                           showticklabels = TRUE,
-                                                                                           tickcolor = 'rgb(127,127,127)',
-                                                                                           ticks = 'outside',
-                                                                                           zeroline = FALSE)
-                                                                              )
-
-          i <- 1
-          while(i <= length(outputVariables))
-          {
-            yVal <- as.character(outputVariables[i[1]])
-            print("yval: ")
-            print(yVal)
-            localPlot %>% plotly::add_trace(y = ~Ca, name =  yVal[1], type="scatter", mode = 'lines')
-            i <- i+1
-          }
-          output$plot <<-  plotly::renderPlotly(localPlot)
-          hdata <- hector::fetchvars(core = hcore, dates = NA, vars = globalParameters['pco2'] , "\n")
+          #output$plot <<- NULL
+          # localPlot <- plotly::plot_ly(data = hdata, x = ~year) %>%   plotly::layout(title = "Scenario Results",
+          #                                                                     paper_bgcolor='rgb(255,255,255)', plot_bgcolor='rgb(229,229,229)',
+          #                                                                     xaxis = list(title = "Year",
+          #                                                                                  gridcolor = 'rgb(255,255,255)',
+          #                                                                                  showgrid = TRUE,
+          #                                                                                  showline = FALSE,
+          #                                                                                  showticklabels = TRUE,
+          #                                                                                  tickcolor = 'rgb(127,127,127)',
+          #                                                                                  ticks = 'outside',
+          #                                                                                  zeroline = FALSE),
+          #                                                                     yaxis = list(title = "Value",
+          #                                                                                  gridcolor = 'rgb(255,255,255)',
+          #                                                                                  showgrid = TRUE,
+          #                                                                                  showline = FALSE,
+          #                                                                                  showticklabels = TRUE,
+          #                                                                                  tickcolor = 'rgb(127,127,127)',
+          #                                                                                  ticks = 'outside',
+          #                                                                                  zeroline = FALSE)
+          #                                                                     )
+          #
+          # i <- 1
+          # while(i <= length(outputVariables))
+          # {
+          #   yVal <- as.character(outputVariables[i[1]])
+          #   print("yval: ")
+          #   print(yVal)
+          #   localPlot %>% plotly::add_trace(y = ~Ca, name =  yVal[1], type="scatter", mode = 'lines')
+          #   i <- i+1
+          # }
+          # output$plot <<-  plotly::renderPlotly(localPlot)
+         # hdata <- hector::fetchvars(core = hcore, dates = NA, vars = globalParameters['pco2'] , "\n")
         # print(hdata)
            #output$plot <<- plotly::ggplotly(gg)
         #  data, x = ~x, y = ~random_y, type = 'scatter', mode = 'lines')
