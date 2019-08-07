@@ -1,35 +1,37 @@
 # Build Global variables for Hector capabilities
 library(hector)
 
-# Create global file input vector
-globalScenarios <- vector()
+# Global vars for misc items such as run date end (2100)
+globalVars <- vector()
+globalVars['endDate'] <- 2100
 
 # Create master list of variable lookups
 globalCapabilities <- vector()
 
-# Create master list of parameter lookups
-globalParameters <- vector()
-
+# Create global file input vector
+globalScenarios <- vector()
 # Load file input paths into global variable
 globalScenarios['RCP 2.6'] <- "input/hector_rcp26.ini"
 globalScenarios['RCP 4.5'] <- "input/hector_rcp45.ini"
 globalScenarios['RCP 6.0'] <- "input/hector_rcp60.ini"
 globalScenarios['RCP 8.5'] <- "input/hector_rcp85.ini"
 
+# Create master list of parameter lookups
+globalParameters <- vector()
 # Load parameter strings into global variable (should match UI component ids)
 globalParameters['pco2'] <- hector::PREINDUSTRIAL_CO2()
-globalParameters['q10'] <- hector::Q10_RH()
-globalParameters['beta'] <- hector::BETA()
-globalParameters['ecs'] <- hector::ECS()
-globalParameters['aero'] <- hector::AERO_SCALE()
-globalParameters['volc'] <- hector::VOLCANIC_SCALE()
-globalParameters['diff'] <- hector::DIFFUSIVITY()
+globalParameters['q10'] <- hector::Q10_RH() #2.0
+globalParameters['beta'] <- hector::BETA() #0.36
+globalParameters['ecs'] <- hector::ECS() #3.0
+globalParameters['aero'] <- hector::AERO_SCALE() #1.0
+globalParameters['volc'] <- hector::VOLCANIC_SCALE() #1.0
+globalParameters['diff'] <- hector::DIFFUSIVITY() #2.3
 # UNUSED Parameters as of now
-globalParameters['fnppv'] <- hector::F_NPPV()
-globalParameters['fnppd'] <- hector::F_NPPD()
-globalParameters['flitter'] <- hector::F_LITTERD()
-globalParameters['flucv'] <- hector::F_LUCV()
-globalParameters['flucd'] <- hector::F_LUCD()
+# globalParameters['fnppv'] <- hector::F_NPPV()
+# globalParameters['fnppd'] <- hector::F_NPPD()
+# globalParameters['flitter'] <- hector::F_LITTERD()
+# globalParameters['flucv'] <- hector::F_LUCV()
+# globalParameters['flucd'] <- hector::F_LUCD()
 
 
 # Output Variables: This section maps output variables (should match drop down item ids)

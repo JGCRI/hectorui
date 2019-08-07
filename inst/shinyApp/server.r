@@ -9,11 +9,13 @@ server <- function(input, output, session)
 {
     shinyjs::useShinyjs()
 
-     # Set up local variables in top level scope
+    # Set up local variables in top level application scope
     firstLoad <- TRUE
-    outputVariables <- list()
-    fetchList <- write.table(matrix(as.character(outputVariables),nrow=1), sep=",", row.names=FALSE, col.names=FALSE)
+    outputVariables <- vector()
     inifile <- system.file('input/hector_rcp45.ini', package='hector', mustWork=TRUE)
+    # This variable is for storing paremeter values so that if a change is made (like loading new scenario) the custom params set by user will persist
+    paramsList <- list()
+    paramsChanged <- FALSE
 
     # Hector core
     hcore <- hector::newcore(inifile, suppresslogging=TRUE, name="RCP 4.5")
@@ -25,21 +27,36 @@ server <- function(input, output, session)
     observeEvent(input$input_ScenarioFile, loadScenario())
     observeEvent(input$reset_Params, resetParams())
     observeEvent(input$input_RCP, setRCP())
-    params <- loadParameters()
 
-    # Load parameters
+
+    # Function that gets the parameters that are settable from the hector core and maps them to the input fields
+    # This would normally be called on first load or when parameters are reset.
     loadParameters <- function()
-    {print("here")
-      fetchList <<- write.table(matrix(as.character(globalParameters),nrow=1), sep=",", row.names=FALSE, col.names=FALSE)
-      hdata <- hector::fetchvars(core = hcore, dates = NA, vars = fetchList, "\n")
-      print("and here")
-      print(head(hdata))
-      #print(head(hector::fetchvars(hcore, dates = NA, vars = c(globalCapabilities['pco2']))))
+    {
+      hdata <- hector::fetchvars(core = hcore, dates = NA, vars = globalParameters, "\n")
+
+      # Update on screen input components for parameter with parameter values stored in hector core
+      updateNumericInput(session, "input_aero", value=round(hdata[which(hdata$variable == "alpha"), 4], 2))   #df[which(df$Amount == min(df$Amount)), ]
+      updateNumericInput(session, "input_beta", value=round(hdata[which(hdata$variable == "beta"), 4], 2))
+      updateNumericInput(session, "input_diff", value=round(hdata[which(hdata$variable == "diff"), 4], 2))
+      updateNumericInput(session, "input_ecs",  value=round(hdata[which(hdata$variable == "S"), 4], 2))
+      updateNumericInput(session, "input_pco2", value=round(hdata[which(hdata$variable == "C0"), 4], 2))
+      updateNumericInput(session, "input_q10",  value=round(hdata[which(hdata$variable == "q10_rh"), 4], 2))
+      updateNumericInput(session, "input_volc", value=round(hdata[which(hdata$variable == "volscl"), 4], 2))
+
+      # Store params in the top level variable paramsList for persistence
+      paramsList['alpha'] <- hdata[which(hdata$variable == "alpha"), 4]
+      paramsList['beta'] <- hdata[which(hdata$variable == "beta"), 4]
+      paramsList['diff'] <- hdata[which(hdata$variable == "diff"), 4]
+      paramsList['S'] <- hdata[which(hdata$variable == "S"), 4]
+      paramsList['C'] <- hdata[which(hdata$variable == "C0"), 4]
+      paramsList['q10_rh'] <- hdata[which(hdata$variable == "q10_rh"), 4]
+      paramsList['volscl'] <- hdata[which(hdata$variable == "volscl"), 4]
     }
 
-    # Observer function that responds to changes in inputs from the capabilities drop down field
+    # Observer function that responds to changes in inputs from the output capabilities drop down field
     setCapabilities <- function()
-    {
+    { print('set cap')
       outputVariables <<- list()
       capabilityValues <- vector()
       if(length(input$capabilities) > 0)
@@ -51,11 +68,9 @@ server <- function(input, output, session)
           outputVariables[i] <<- globalCapabilities[capabilityValues[i]]
           i <- i+1
         }
-        #fetchList <<- write.table(matrix(as.character(outputVariables),nrow=1), sep=",", row.names=FALSE, col.names=FALSE)
       }
       else
-      {print("i am here")
-        fetchList <<- hdata <- hector::fetchvars(core = hcore, dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
+      {
       }
     }
 
@@ -63,24 +78,31 @@ server <- function(input, output, session)
     setRCP <- function()
     {
       tryCatch(
+      {
+        # If this is called after initial load of Hector then need to restart core
+        if(!firstLoad)
         {
-          if(!firstLoad)
-            hcore <<- hector::shutdown(hcore)
-          #fetchList <<- write.table(matrix(as.character(outputVariables),nrow=1), sep=",", row.names=FALSE, col.names=FALSE)
-          inifile <<- system.file(globalScenarios[input$input_RCP], package='hector', mustWork=TRUE)
-          hcore <<- hector::newcore(inifile, suppresslogging=TRUE, name=input$input_ScenarioName)
-          updateTextInput(session=session, "input_ScenarioName", value=paste(input$input_RCP))
-          hector::run(hcore, globalVars['endDate'])
-         # print(hcore)
-         # print(outputVariables)
-
-          #output$plot <<- NULL
-          #hdata <- hector::fetchvars(core = hcore, dates = 1800:2300, vars = fetchList, "\n")
-         # output$plot <<-  renderPlot(ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value)) + ggplot2::geom_line(col="darkgrey", size=1.1) + ggplot2::facet_wrap(~variable, scales='free_y') +
-         #                               ggthemes::theme_solarized(light = TRUE))
-          loadParameters()
-          loadGraph()
+          hcore <<- hector::shutdown(hcore)
         }
+        inifile <<- system.file(globalScenarios[input$input_RCP], package='hector', mustWork=TRUE)
+        hcore <<- hector::newcore(inifile, suppresslogging=TRUE, name=input$input_ScenarioName)
+        updateTextInput(session=session, "input_ScenarioName", value=paste(input$input_RCP))
+        hector::run(hcore, globalVars['endDate'])
+
+        if(firstLoad)
+        {
+          loadParameters()
+        }
+       # print(hcore)
+       # print(outputVariables)
+
+        #output$plot <<- NULL
+        #hdata <- hector::fetchvars(core = hcore, dates = 1800:2300, vars = fetchList, "\n")
+       # output$plot <<-  renderPlot(ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value)) + ggplot2::geom_line(col="darkgrey", size=1.1) + ggplot2::facet_wrap(~variable, scales='free_y') +
+       #                               ggthemes::theme_solarized(light = TRUE))
+       # loadParameters()
+        loadGraph()
+      }
       )
       firstLoad <<- FALSE
     }
@@ -88,7 +110,7 @@ server <- function(input, output, session)
     # Observer function to handle the user input on the reset parameters button
     resetParams <- function()
     {
-
+      paramsChanged <- FALSE
     }
 
     # Observer function to handle the user input on the load custom scenario button
@@ -97,29 +119,57 @@ server <- function(input, output, session)
 
     }
 
-    # Observer function to handle the user input on the set parameters button.
+    # Observer function to handle user click on the set parameters button.
     setParameters <- function()
     {
       newVals <- vector()
       tryCatch(
       {
         if(!is.na(input$input_aero))
+        {
           hector::setvar(hcore, dates = NA, var = globalParameters['aero'], values = c(as.double(input$input_aero)), unit = "unitless")
+          paramsList['alpha'] <<- as.double(input$input_aero)
+          paramsChanged <- TRUE
+        }
         if(!is.na(input$input_beta))
-        hector::setvar(hcore, dates = NA, var = globalParameters['beta'], values = c(as.double(input$input_beta)), unit = "unitless")
+        {
+          hector::setvar(hcore, dates = NA, var = globalParameters['beta'], values = c(as.double(input$input_beta)), unit = "unitless")
+          paramsList['beta'] <<- as.double(input$input_aero)
+          paramsChanged <- TRUE
+        }
         if(!is.na(input$input_diff))
-        hector::setvar(hcore, dates = NA, var = globalParameters['diff'], values = c(as.double(input$input_diff)), unit = "cm2/s")
+        {
+          hector::setvar(hcore, dates = NA, var = globalParameters['diff'], values = c(as.double(input$input_diff)), unit = "cm2/s")
+          paramsList['diff'] <<- as.double(input$input_aero)
+          paramsChanged <- TRUE
+        }
         if(!is.na(input$input_ecs))
-        hector::setvar(hcore, dates = NA, var = globalParameters['ecs'],  values = c(as.double(input$input_ecs)), unit = "degC")
+        {
+          hector::setvar(hcore, dates = NA, var = globalParameters['ecs'],  values = c(as.double(input$input_ecs)), unit = "degC")
+          paramsList['S'] <<- as.double(input$input_aero)
+          paramsChanged <- TRUE
+        }
         if(!is.na(input$input_pco2))
-        hector::setvar(hcore, dates = NA, var = globalParameters['pco2'], values = c(as.double(input$input_pco2)), unit = "ppmv CO2")#c(150), unit="ppmv CO2")
+        {
+          hector::setvar(hcore, dates = NA, var = globalParameters['pco2'], values = c(as.double(input$input_pco2)), unit = "ppmv CO2")#c(150), unit="ppmv CO2")
+          paramsList['C'] <<- as.double(input$input_aero)
+          paramsChanged <- TRUE
+        }
         if(!is.na(input$input_q10))
+        {
           hector::setvar(hcore, dates = NA, var = globalParameters['q10'],  values = c(as.double(input$input_q10)), unit = "unitless")
+          paramsList['q10_rh'] <<- as.double(input$input_aero)
+          paramsChanged <- TRUE
+        }
         if(!is.na(input$input_volc))
-             hector::setvar(hcore, dates = NA, var = globalParameters['volc'], values = c(as.double(input$input_volc)), unit = "unitless")
+        {
+          hector::setvar(hcore, dates = NA, var = globalParameters['volc'], values = c(as.double(input$input_volc)), unit = "unitless")
+          paramsList['volscl'] <<- as.double(input$input_aero)
+          paramsChanged <- TRUE
+        }
 
         hector::reset(hcore)
-        hector::run(hcore, 2300)
+        hector::run(hcore, globalVars['endDate'])
         loadGraph()
        # print(hcore)
        # print(head(hector::fetchvars(hcore, 1800:globalVars['endDate'], vars = c(globalCapabilities['cc_acp']))))
@@ -154,8 +204,9 @@ server <- function(input, output, session)
      # print(head(hector::fetchvars(hcore, 1800:2300, vars = c(globalCapabilities['cc_acp']))))
       tryCatch(
       {
-       #if(length(outputVariables) >= 1)
-        #{
+       if(length(outputVariables) >= 1)
+       {
+
 
           hdata <- hector::fetchvars(core = hcore, dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
           # gg = ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value)) + ggplot2::geom_line(col="darkgrey", size=1.1) + ggplot2::facet_wrap(~variable, scales='free_y') +
@@ -206,11 +257,11 @@ server <- function(input, output, session)
        # cat(file=stderr(), "\nhdata ", as.character(head(hdata)), " list", "\n")
          # shinyalert::shinyalert("plot", output$plot <<-  renderPlot(ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value)) + ggplot2::geom_line(col="darkgrey", size=1.1) + ggplot2::facet_wrap(~variable, scales='free_y') +
           #                           ggthemes::theme_solarized(light = TRUE)), type = "" )
-        #}
-       # else
-       # {
-        #  outputVariables <<- NULL
-       # }
+       }
+       else
+       {
+        outputVariables <<- NULL
+       }
 
       },
       warning = function(war)
