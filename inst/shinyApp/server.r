@@ -4,23 +4,23 @@
 #themes <- sort(unique(data$theme))
 
 
-# Define server logic to drive UI interactions. The server function is the main function and required for Shiny apps.
+# Define server logic to set up data fields and drive UI interactions.
+# The server function is the main function that processes inputs and handles data i/o. This is required for Shiny apps.
 server <- function(input, output, session)
 {
     shinyjs::useShinyjs()
 
-    # Set up local variables in top level application scope
+    #----- Set up non global variables in top level application scope
     firstLoad <- TRUE
     outputVariables <- vector()
     inifile <- system.file('input/hector_rcp45.ini', package='hector', mustWork=TRUE)
-    # This variable is for storing paremeter values so that if a change is made (like loading new scenario) the custom params set by user will persist
+
+    # These variables are for storing paremeter values so that if a change is made (like loading new scenario) the custom params set by user will persist
     paramsList <- list()
     paramsChanged <- FALSE
+    #----- End set up local vars
 
-    # Hector core
-    hcore <- hector::newcore(inifile, suppresslogging=TRUE, name="RCP 4.5")
-
-    # Set up observer functions for user interactive fields
+    # Set up observer functions to catch user interaction on the input fields
     observeEvent(input$capabilities, setCapabilities())
     observeEvent(input$loadGraphs, loadGraph())
     observeEvent(input$set_Params, setParameters())
@@ -28,15 +28,89 @@ server <- function(input, output, session)
     observeEvent(input$reset_Params, resetParams())
     observeEvent(input$input_RCP, setRCP())
 
+    # Main function that loads Hector Core
+    startHector <- function()
+    {
+      print("in start hector")
+      tryCatch(
+      {
+        inifile <<- system.file(globalScenarios[input$input_RCP], package='hector', mustWork=TRUE)
+        hcore <<- hector::newcore(inifile, suppresslogging=TRUE, name=input$input_ScenarioName)
+        updateTextInput(session=session, "input_ScenarioName", value=paste(input$input_RCP))
+        hector::run(hcore, globalVars['endDate'])
 
-    # Function that gets the parameters that are settable from the hector core and maps them to the input fields
+        # If this is the initial application load then need to assign the input field values to hector's default params
+        if(firstLoad)
+        {
+          loadParameters()
+        }
+        # If its not first load but the parameters have changed via user input, then need to restore those values after restarting core
+        else if(paramsChanged)
+        {
+          restoreParameters()
+        }
+      },
+      warning = function(war)
+      {
+        showModal(modalDialog(
+          title = "Warning",
+          paste("MY_WARNING:  ",war)
+        ))
+      },
+      error = function(err)
+      {
+        shinyalert::shinyalert("Initalization Error",print(paste('Error starting Hector: ',err)), type = "error")
+      },
+      finally =
+        {
+        })
+    }
+
+    # Function to reset (not restart via shutdown) a Hector core. A core reset should only be called when input parameters have changed.
+    resetCore <- function()
+    {
+      print("in reset core")
+      hector::reset(hcore)
+      hector::run(hcore, globalVars['endDate'])
+      loadGraph()
+    }
+
+    # Function to shutdown and create a new Hector core. A core restart should only be called when the scenario (RCP or custom) has changed/been loaded
+    restartCore <- function()
+    {
+      print("in restart core")
+      hcore <<- hector::shutdown(hcore)
+      startHector()
+      loadGraph()
+    }
+
+    # Function that assigns the changed parameter values to the Hector core (for persistence)
+    restoreParameters <- function()
+    {
+      print('in restore params')
+      setParameters()
+    }
+
+    # Observer function to handle the user input on the reset parameters button - reset hector parameters to defaults
+    resetParams <- function()
+    {
+      print("in reset params")
+      paramsChanged <<- FALSE
+      restartCore()
+      loadParameters()
+    }
+
+    # Function that gets the input parameters from the hector core and maps them to the input fields
     # This would normally be called on first load or when parameters are reset.
     loadParameters <- function()
     {
+      print("in load params")
+
+      # Fetch hector parameters from core
       hdata <- hector::fetchvars(core = hcore, dates = NA, vars = globalParameters, "\n")
 
       # Update on screen input components for parameter with parameter values stored in hector core
-      updateNumericInput(session, "input_aero", value=round(hdata[which(hdata$variable == "alpha"), 4], 2))   #df[which(df$Amount == min(df$Amount)), ]
+      updateNumericInput(session, "input_aero", value=round(hdata[which(hdata$variable == "alpha"), 4], 2))
       updateNumericInput(session, "input_beta", value=round(hdata[which(hdata$variable == "beta"), 4], 2))
       updateNumericInput(session, "input_diff", value=round(hdata[which(hdata$variable == "diff"), 4], 2))
       updateNumericInput(session, "input_ecs",  value=round(hdata[which(hdata$variable == "S"), 4], 2))
@@ -56,7 +130,8 @@ server <- function(input, output, session)
 
     # Observer function that responds to changes in inputs from the output capabilities drop down field
     setCapabilities <- function()
-    { print('set cap')
+    {
+      print('in set capabilities')
       outputVariables <<- list()
       capabilityValues <- vector()
       if(length(input$capabilities) > 0)
@@ -74,9 +149,11 @@ server <- function(input, output, session)
       }
     }
 
-    # Observer function that is activated on a change to the RCP Scenario drop down field. This function will load the chosen scenario and rerun Hector
+    # Observer function that is activated on a change to the RCP Scenario drop down field.
+    # This function will load the chosen scenario and rerun Hector
     setRCP <- function()
     {
+      print("in set RCP")
       tryCatch(
       {
         # If this is called after initial load of Hector then need to restart core
@@ -84,44 +161,24 @@ server <- function(input, output, session)
         {
           hcore <<- hector::shutdown(hcore)
         }
-        inifile <<- system.file(globalScenarios[input$input_RCP], package='hector', mustWork=TRUE)
-        hcore <<- hector::newcore(inifile, suppresslogging=TRUE, name=input$input_ScenarioName)
-        updateTextInput(session=session, "input_ScenarioName", value=paste(input$input_RCP))
-        hector::run(hcore, globalVars['endDate'])
 
-        if(firstLoad)
-        {
-          loadParameters()
-        }
-       # print(hcore)
-       # print(outputVariables)
-
-        #output$plot <<- NULL
-        #hdata <- hector::fetchvars(core = hcore, dates = 1800:2300, vars = fetchList, "\n")
-       # output$plot <<-  renderPlot(ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value)) + ggplot2::geom_line(col="darkgrey", size=1.1) + ggplot2::facet_wrap(~variable, scales='free_y') +
-       #                               ggthemes::theme_solarized(light = TRUE))
-       # loadParameters()
+        startHector()
         loadGraph()
       }
       )
       firstLoad <<- FALSE
     }
 
-    # Observer function to handle the user input on the reset parameters button
-    resetParams <- function()
-    {
-      paramsChanged <- FALSE
-    }
-
     # Observer function to handle the user input on the load custom scenario button
     loadScenario <- function()
     {
-
+      print("in load scenario")
     }
 
     # Observer function to handle user click on the set parameters button.
     setParameters <- function()
     {
+      print("in set parameters")
       newVals <- vector()
       tryCatch(
       {
@@ -129,48 +186,46 @@ server <- function(input, output, session)
         {
           hector::setvar(hcore, dates = NA, var = globalParameters['aero'], values = c(as.double(input$input_aero)), unit = "unitless")
           paramsList['alpha'] <<- as.double(input$input_aero)
-          paramsChanged <- TRUE
+          paramsChanged <<- TRUE
         }
         if(!is.na(input$input_beta))
         {
           hector::setvar(hcore, dates = NA, var = globalParameters['beta'], values = c(as.double(input$input_beta)), unit = "unitless")
           paramsList['beta'] <<- as.double(input$input_aero)
-          paramsChanged <- TRUE
+          paramsChanged <<- TRUE
         }
         if(!is.na(input$input_diff))
         {
           hector::setvar(hcore, dates = NA, var = globalParameters['diff'], values = c(as.double(input$input_diff)), unit = "cm2/s")
           paramsList['diff'] <<- as.double(input$input_aero)
-          paramsChanged <- TRUE
+          paramsChanged <<- TRUE
         }
         if(!is.na(input$input_ecs))
         {
           hector::setvar(hcore, dates = NA, var = globalParameters['ecs'],  values = c(as.double(input$input_ecs)), unit = "degC")
           paramsList['S'] <<- as.double(input$input_aero)
-          paramsChanged <- TRUE
+          paramsChanged <<- TRUE
         }
         if(!is.na(input$input_pco2))
         {
           hector::setvar(hcore, dates = NA, var = globalParameters['pco2'], values = c(as.double(input$input_pco2)), unit = "ppmv CO2")#c(150), unit="ppmv CO2")
           paramsList['C'] <<- as.double(input$input_aero)
-          paramsChanged <- TRUE
+          paramsChanged <<- TRUE
         }
         if(!is.na(input$input_q10))
         {
           hector::setvar(hcore, dates = NA, var = globalParameters['q10'],  values = c(as.double(input$input_q10)), unit = "unitless")
           paramsList['q10_rh'] <<- as.double(input$input_aero)
-          paramsChanged <- TRUE
+          paramsChanged <<- TRUE
         }
         if(!is.na(input$input_volc))
         {
           hector::setvar(hcore, dates = NA, var = globalParameters['volc'], values = c(as.double(input$input_volc)), unit = "unitless")
           paramsList['volscl'] <<- as.double(input$input_aero)
-          paramsChanged <- TRUE
+          paramsChanged <<- TRUE
         }
 
-        hector::reset(hcore)
-        hector::run(hcore, globalVars['endDate'])
-        loadGraph()
+        resetCore()
        # print(hcore)
        # print(head(hector::fetchvars(hcore, 1800:globalVars['endDate'], vars = c(globalCapabilities['cc_acp']))))
       },
@@ -200,63 +255,55 @@ server <- function(input, output, session)
     # Observer function designed to handle the loading/creation of the output graphs from the Hector model.
     loadGraph <- function()
     {
-     # print(hcore)
-     # print(head(hector::fetchvars(hcore, 1800:2300, vars = c(globalCapabilities['cc_acp']))))
+      print("in load graph")
       tryCatch(
       {
        if(length(outputVariables) >= 1)
        {
-
-
           hdata <- hector::fetchvars(core = hcore, dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
-          # gg = ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value)) + ggplot2::geom_line(col="darkgrey", size=1.1) + ggplot2::facet_wrap(~variable, scales='free_y') +
-          #   ggthemes::theme_solarized(light = TRUE)
-          output$plot <<-  renderPlot(ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value)) + ggplot2::geom_line(col="darkgrey", size=1.1) + ggplot2::facet_wrap(~variable, scales='free_y') +
-                                          ggthemes::theme_solarized(light = TRUE))
+          x <- dplyr::distinct(hdata, units)
+          print(x)
+          testy <- ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value, group=variable, color=variable)) + ggplot2::geom_line() #+ ggplot2::facet_wrap(~variable, scales='free_y') +
+           #                     ggthemes::theme_solarized(light = TRUE)+ ggplot2::ylab(x)
           #browser()
-        #  hdata <- tidyr::spread(data = dplyr::select(hdata, -units), key = variable, value = value, drop=F )
-         # print(head(hdata))
-      #    print(outputVariables)
-         # print(fetchList)
+          hdata2 <- tidyr::spread(data = dplyr::select(hdata, -units), key = variable, value = value, drop=F )
+          print(head(hdata))
 
           #output$plot <<- NULL
-          # localPlot <- plotly::plot_ly(data = hdata, x = ~year) %>%   plotly::layout(title = "Scenario Results",
-          #                                                                     paper_bgcolor='rgb(255,255,255)', plot_bgcolor='rgb(229,229,229)',
-          #                                                                     xaxis = list(title = "Year",
-          #                                                                                  gridcolor = 'rgb(255,255,255)',
-          #                                                                                  showgrid = TRUE,
-          #                                                                                  showline = FALSE,
-          #                                                                                  showticklabels = TRUE,
-          #                                                                                  tickcolor = 'rgb(127,127,127)',
-          #                                                                                  ticks = 'outside',
-          #                                                                                  zeroline = FALSE),
-          #                                                                     yaxis = list(title = "Value",
-          #                                                                                  gridcolor = 'rgb(255,255,255)',
-          #                                                                                  showgrid = TRUE,
-          #                                                                                  showline = FALSE,
-          #                                                                                  showticklabels = TRUE,
-          #                                                                                  tickcolor = 'rgb(127,127,127)',
-          #                                                                                  ticks = 'outside',
-          #                                                                                  zeroline = FALSE)
-          #                                                                     )
-          #
-          # i <- 1
-          # while(i <= length(outputVariables))
-          # {
-          #   yVal <- as.character(outputVariables[i[1]])
-          #   print("yval: ")
-          #   print(yVal)
-          #   localPlot %>% plotly::add_trace(y = ~Ca, name =  yVal[1], type="scatter", mode = 'lines')
-          #   i <- i+1
-          # }
-          # output$plot <<-  plotly::renderPlotly(localPlot)
-         # hdata <- hector::fetchvars(core = hcore, dates = NA, vars = globalParameters['pco2'] , "\n")
-        # print(hdata)
-           #output$plot <<- plotly::ggplotly(gg)
-        #  data, x = ~x, y = ~random_y, type = 'scatter', mode = 'lines')
-       # cat(file=stderr(), "\nhdata ", as.character(head(hdata)), " list", "\n")
-         # shinyalert::shinyalert("plot", output$plot <<-  renderPlot(ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value)) + ggplot2::geom_line(col="darkgrey", size=1.1) + ggplot2::facet_wrap(~variable, scales='free_y') +
-          #                           ggthemes::theme_solarized(light = TRUE)), type = "" )
+          localPlot <- plotly::ggplotly(p = testy)
+          #plotly::layout(p=localPlot, )
+       #    plotObject <- plotly::plotlyProxy(plot2, session = shiny::getDefaultReactiveDomain(),
+       #                        deferUntilFlush = TRUE)
+       #    plotly::plotlyProxyInvoke(p = plotObject, plotly::layout())
+       #      plotly::layout(title = "Scenario Results",
+       #                   paper_bgcolor='rgb(255,255,255)', plot_bgcolor='rgb(229,229,229)',
+       #                   xaxis = list(title = "Year",
+       #                                gridcolor = 'rgb(255,255,255)',
+       #                                showgrid = TRUE,
+       #                                showline = FALSE,
+       #                                showticklabels = TRUE,
+       #                                tickcolor = 'rgb(127,127,127)',
+       #                                ticks = 'outside',
+       #                                zeroline = FALSE),
+       #                   yaxis = list(title = "Value",
+       #                                gridcolor = 'rgb(255,255,255)',
+       #                                showgrid = TRUE,
+       #                                showline = FALSE,
+       #                                showticklabels = TRUE,
+       #                                tickcolor = 'rgb(127,127,127)',
+       #                                ticks = 'outside',
+       #                                zeroline = FALSE))
+       # #  plotly::add_lines(p = localPlot, y = ~year, type="scatter", mode = 'lines')
+       #    i <- 1
+       #    while(i <= length(outputVariables))
+       #    {
+       #      yVal <- as.character(outputVariables[i[1]])
+       #      print("yval: ")
+       #      print(yVal)
+       #  #    plotly::add_lines(p = localPlot, y = ~Ca, name =  yVal[i], type="scatter", mode = 'lines')
+       #      i <- i+1
+       #    }
+          output$plot2 <<-  plotly::renderPlotly(localPlot)
        }
        else
        {
@@ -276,7 +323,7 @@ server <- function(input, output, session)
       error = function(err)
       {
         # error handler picks up where error was generated
-        cat(file=stderr(), "\nError ","error in graph ", " " , "\n")
+        cat(file=stderr(), "\nError ","Graph error: ", " " , "\n")
         shinyalert::shinyalert("Oops!",print(paste('Error:',err)), type = "error")
         #bsModal("modalExample", "Your plot", "go", size = "large","asfd",downloadButton('downloadPlot', 'Download'))
 
@@ -288,18 +335,10 @@ server <- function(input, output, session)
 
     }
 
-    # getPage <- function(url) {
-    #      return(tags$iframe(src = url,
-    #                         style="width:100%;",
-    #                         height = "500px"))
-    #  }
-
     openPage <- function(url) {
       return(tags$a(href=url, "Click here!", target="_blank"))
 
     }
-
-
 
     # Initialize reactive values
     values <- reactiveValues()
@@ -308,6 +347,25 @@ server <- function(input, output, session)
     observe({
 
     })
+
+    output$dlData <- downloadHandler(
+      filename = function()
+      {print("in dl data")
+        paste('data-', Sys.Date(), '.csv', sep='')
+      },
+      content = function(file)
+      {
+        hdata <- hector::fetchvars(core = hcore, dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
+        write.csv(hdata, file, row.names = FALSE)
+      }
+    )
+
+    # downloadData <- downloadH()
+    # {
+    #   print("in dl data")
+    #   hdata <- hector::fetchvars(core = hcore, dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
+    #   write.csv(hdata, file="test.csv")
+    # }
 
 
 }

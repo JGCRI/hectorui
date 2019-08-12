@@ -29,4 +29,5 @@ Imports:
     base,
     shinyalert,
     shinyBS, 
-    tidyr
+    tidyr,
+    magrittr

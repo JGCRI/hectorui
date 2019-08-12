@@ -1,7 +1,6 @@
 #
 # This is a Shiny web application.
 
-
 # Define UI for application
 fluidPage(
   shinyalert::useShinyalert(),
@@ -84,10 +83,10 @@ fluidPage(
                        #                "Carbonate Concentration - High Lat"='o_hl_cc', "Carbonate Concentration - Low Lat"='o_ll_cc'),
                        'SO2' = list( "Anthropogenic SO2"='so2_a', "Natural CH4 Emissions"='so2_n_ch4', "Volcanic SO2"='so2_v'),
                        'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Land Temp Anomaly"="t_lta", "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')                  ), multiple = T
-                ),  actionButton(inputId="loadGraphs", label="Load Graphs", width = 200)
+                ),  actionButton(inputId="loadGraphs", label="Load Graphs", width = 200), downloadButton("dlData", label="Download Raw Data")
                ),
-               # plotly::plotlyOutput("plot")
-              plotOutput("plot")
+              # plotOutput("plot"),
+              plotly::plotlyOutput("plot2")
                #div(width = '100%', plotOutput("plot"))
             ) # end mainpanel
           ) # end tabpanel

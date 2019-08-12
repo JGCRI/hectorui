@@ -277,8 +277,10 @@ globalCapabilities['so2_v'] = hector::VOLCANIC_SO2()
 # TEMPERATURE
 # "Global Mean Temp"
 globalCapabilities['t_gmt'] = hector::GLOBAL_TEMP()
+globalCapabilities['t_gmt']['name'] = "Global Mean Temp"
 # "Equilibrium Global Temp"
 globalCapabilities['t_egt'] = hector::GLOBAL_TEMPEQ()
+globalCapabilities['t_egt']['name'] = "Equilibrium Global Temp"
 # # "Ocean Surface Temp"
 globalCapabilities['t_ost'] = hector::OCEAN_SURFACE_TEMP()
 # "Ocean Air Temp"

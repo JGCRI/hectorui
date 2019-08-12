@@ -5,8 +5,8 @@ account: jgcri
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 976821
-bundleId: 2298246
+bundleId: 2299203
 url: https://jgcri.shinyapps.io/HectorUI/
-when: 1565184583.11291
+when: 1565208743.66147
 asMultiple: FALSE
 asStatic: FALSE
