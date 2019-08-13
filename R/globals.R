@@ -1,22 +1,36 @@
 # Build Global variables for Hector capabilities
-library(hector)
+
+#' Global constants for the Hector-Shiny UI
+#' @import hector
+#' @name constants
+NULL
 
 # Global vars for misc items such as run date end (2100)
+#' @details \code{globalVars}: Miscellaneous global variables
+#' @rdname constants
+#' @export
 globalVars <- vector()
 globalVars['endDate'] <- 2100
 
 # Create master list of variable lookups
-globalCapabilities <- vector()
+#' @details \code{globalCapabilities} Capability strings for Hector variables
+#' @rdname constants
+#' @export
+globalCapabilities <- list()
 
 # Create global file input vector
-globalScenarios <- vector()
-# Load file input paths into global variable
-globalScenarios['RCP 2.6'] <- "input/hector_rcp26.ini"
-globalScenarios['RCP 4.5'] <- "input/hector_rcp45.ini"
-globalScenarios['RCP 6.0'] <- "input/hector_rcp60.ini"
-globalScenarios['RCP 8.5'] <- "input/hector_rcp85.ini"
+#' @details \code{globalScenarios} Scenario input files
+#' @rdname constants
+#' @export
+globalScenarios <- NULL
+rcps <- c(26,45,60,85)
+globalScenarios <- file.path('input',paste0('hector_rcp',rcps,'.ini'))
+names(globalScenarios) <- paste('RCP', c('2.6', '4.5', '6.0', '8.5'))
 
 # Create master list of parameter lookups
+#' @details \code{globalParameters}: Capability strings for Hector parameters
+#' @rdname constants
+#' @export
 globalParameters <- vector()
 # Load parameter strings into global variable (should match UI component ids)
 globalParameters['pco2'] <- hector::PREINDUSTRIAL_CO2()
@@ -277,10 +291,10 @@ globalCapabilities['so2_v'] = hector::VOLCANIC_SO2()
 # TEMPERATURE
 # "Global Mean Temp"
 globalCapabilities['t_gmt'] = hector::GLOBAL_TEMP()
-globalCapabilities['t_gmt']['name'] = "Global Mean Temp"
+#globalCapabilities['t_gmt']['name'] = "Global Mean Temp"
 # "Equilibrium Global Temp"
 globalCapabilities['t_egt'] = hector::GLOBAL_TEMPEQ()
-globalCapabilities['t_egt']['name'] = "Equilibrium Global Temp"
+#globalCapabilities['t_egt']['name'] = "Equilibrium Global Temp"
 # # "Ocean Surface Temp"
 globalCapabilities['t_ost'] = hector::OCEAN_SURFACE_TEMP()
 # "Ocean Air Temp"

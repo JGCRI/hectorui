@@ -3,6 +3,7 @@
 #source("data_processing.R")
 #themes <- sort(unique(data$theme))
 
+library(HectorShiny)
 
 # Define server logic to set up data fields and drive UI interactions.
 # The server function is the main function that processes inputs and handles data i/o. This is required for Shiny apps.
@@ -34,6 +35,7 @@ server <- function(input, output, session)
       print("in start hector")
       tryCatch(
       {
+        cat(paste('Looking for inputfile, scenario= ', input$input_RCP, '  file=', globalScenarios[input$input_RCP]),'\n')
         inifile <<- system.file(globalScenarios[input$input_RCP], package='hector', mustWork=TRUE)
         hcore <<- hector::newcore(inifile, suppresslogging=TRUE, name=input$input_ScenarioName)
         updateTextInput(session=session, "input_ScenarioName", value=paste(input$input_RCP))

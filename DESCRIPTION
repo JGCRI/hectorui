@@ -2,7 +2,7 @@ Package: HectorShiny
 Type: Package
 Title: A visual web interface for the Hector Simple Climate Model https://jgcri.github.io/hector
 Version: 1.0.0
-Authors@R:c(person("Jason", "Evanoff", email = "jason.evanoff@pnnl.gov", role = c("aut", "cre")),
+Authors@R: c(person("Jason", "Evanoff", email = "jason.evanoff@pnnl.gov", role = c("aut", "cre")),
          person("Robert", "Link", email = "robert.link@pnnl.gov", role = c("aut")),
 	     person("Corinne", "Hartin", email = "corinne.hartin@pnnl.gov", role = "aut"),
 	     person("Ben", "Bond-Lamberty", email = "BondLamberty@pnnl.gov", role = "aut"),
@@ -31,3 +31,4 @@ Imports:
     shinyBS, 
     tidyr,
     magrittr
+RoxygenNote: 6.1.1
