@@ -2,21 +2,21 @@
 # This is a Shiny web application.
 
 # Define UI for application
-fluidPage(
+fluidPage(theme = shinythemes::shinytheme("darkly"),
+  shinythemes::themeSelector(),
   shinyalert::useShinyalert(),
   # Application title
-  titlePanel("Hector"),
+  titlePanel("Hector User Interface"),
 
   # Function that gets called on first load of application to load in any themes/css etc
   tags$head
   (
-    tags$link(rel = "stylesheet", type = "text/css", href = "bootstrap.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
   ),
-
   # Main component from which all other components fall under, navbarPage.
   navbarPage
   (
-    "Hector",
+    "Navigation",
     # multi-page user-interface that includes a navigation bar.
     tabPanel
     (
@@ -24,25 +24,27 @@ fluidPage(
       sidebarPanel
       (
         width=3,
-        div(h4("Baseline Scenarios"),
+        div(h4("Baseline Scenarios"),#, icon("info-circle", "fa-1x")),
+            tags$hr(style="border-color: #375a7f;"),
             selectInput("input_RCP", "RCP Scenario", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6"="RCP 6.0", "8.5" = "RCP 8.5"), width=200, selected = "RCP 4.5"),
-            radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
+
+            # radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
             textInput("input_ScenarioName", "Scenario Name", width=200, value = ""),
 
         div(h4("Custom Scenario"),
-            fileInput("input_ScenarioFile", "Upload Emissions File", width=200, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
+            fileInput("input_ScenarioFile", "Upload Emissions File", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
             actionButton(inputId="input_Driven", label="Load Scenario"))
         ),
         div
         (
           h4("Model Parameters"),
-          numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width=250, value = NA, step = 0.01),
-          numericInput("input_beta", "CO2 fertilization factor (unitless)", width=250, value = NA, step = 0.01),
-          numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width=250, value = NA, step = 0.01),
-          numericInput("input_ecs", "Equilibrium Climate Sensitivity (degC)", width=250, value = NA, step = 0.01),
-          numericInput("input_pco2", "Preindustrial CO2 concentration (ppmv CO2)", width=250, value = NA, step = 0.01),
-          numericInput("input_q10", "Heterotrophic respiration temp sensitivity factor (unitless)", width=250, value = NA, step = 0.01),
-          numericInput("input_volc", "Volcanic forcing scaling factor (unitless)", width=250, value = NA, step = 0.01),
+          numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width=275, value = NA, step = 0.01),
+          numericInput("input_beta", "CO2 fertilization factor (unitless)", width=275, value = NA, step = 0.01),
+          numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width=275, value = NA, step = 0.01),
+          numericInput("input_ecs", "Equilibrium Climate Sensitivity (degC)", width=275, value = NA, step = 0.01),
+          numericInput("input_pco2", "Preindustrial CO2 concentration (ppmv CO2)", width=275, value = NA, step = 0.01),
+          numericInput("input_q10", "Heterotrophic respiration temp sensitivity factor (unitless)", width=275, value = NA, step = 0.01),
+          numericInput("input_volc", "Volcanic forcing scaling factor (unitless)", width=275, value = NA, step = 0.01),
           actionButton(inputId="set_Params", label="Set Parameters"),
           actionButton(inputId="reset_Params", label="Reset Parameters")
         )
@@ -54,12 +56,42 @@ fluidPage(
           # Information Tab Panel
           tabPanel
           (
-            p(icon("table"), "Scenario Information", value="infoTab"),
-            p("test information")
+            p(icon("info-circle", "fa-2x"), " System Information", value="infoTab"),
+            p(br(),"Hector Shiny is a web-based user interface designed interact with Hector, an open source, object-oriented, simple global climate carbon-cycle model.
+It  runs essentially instantaneously while still representing the most critical global scale earth system processes,
+and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses."),
+            p("
+For example, Hector's global temperature rise for the RCP 8.5 scenario, compared to observations and other model results,
+looks like this:"),
+            p(img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="350")),
+              p("
+The primary source for Hector model documentation is the ", a("Github Hector Wiki",href="https://github.com/JGCRI/hector/wiki", target="blank"),".
+Please note that the wiki documents are included in the repository as a ", a("Git
+Submodule",href="https://git-scm.com/book/en/v2/Git-Tools-Submodules", target="blank"),"."),
+            p("To clone the repository as well as the documentation,
+you can use `git clone --recursive`. If you have already cloned non-recursively, you can fetch (download) the documentation
+by running `git submodule init; git submodule update`. The code is also well documented with ", a("Doxygen", href="http://doxygen.org", target="blank"), "-style
+comments."),tags$hr(style="border-color: #375a7f;"),
+            p("A formal model description paper ", a("Hartin et al. 2015", href="http://www.geosci-model-dev.net/8/939/2015/gmd-8-939-2015.html", target="blank"),
+"documents its science internals and performance relative to observed data, the ", a("CMIP5", href="http://cmip-pcmdi.llnl.gov/cmip5/", target="blank"), "archive,
+and the reduced-complexity ", a("MAGICC", href="http://www.magicc.org", target="blank"), " model.
+This research was supported by the U.S. Department of Energy, Office of Science, as part of research in Multi-Sector Dynamics,
+Earth and Environmental System Modeling Program. The Pacific Northwest National Laboratory is operated for DOE by
+Battelle Memorial Institute under contract DE-AC05-76RL01830."),
+
+            p("Tools and software that work with Hector:"),
+
+            tags$ul(
+              tags$li(a("GCAM", href="https://github.com/JGCRI/gcam-core", target="blank"),": Hector can be used as
+              the climate component in the GCAM integrated assessment model."),
+            tags$li(a("Hector", href="https://github.com/openclimatedata/pyhector", target="blank"),": A python
+              interface to Hector.")
+            )
           ),
+          tabPanel( fluid=TRUE, p(icon("chalkboard-teacher", "fa-2x"), " Instructions", value="infoTab")),
           tabPanel
           ( fluid = TRUE,
-            p(icon("table"), "Scenario Output", value="outputTab"),
+            p(icon("chart-line","fa-2x"), " Scenario Output", value="outputTab"),
             # Output Tab Panel
             mainPanel
             (
@@ -86,7 +118,7 @@ fluidPage(
                 ),  actionButton(inputId="loadGraphs", label="Load Graphs", width = 200), downloadButton("dlData", label="Download Raw Data")
                ),
               # plotOutput("plot"),
-              plotly::plotlyOutput("plot2")
+              plotly::plotlyOutput("plot2", width = "800")
                #div(width = '100%', plotOutput("plot"))
             ) # end mainpanel
           ) # end tabpanel

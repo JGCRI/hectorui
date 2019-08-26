@@ -1,9 +1,20 @@
-
-# Load data processing file
-#source("data_processing.R")
-#themes <- sort(unique(data$theme))
+#' Convert \code{data.frame} to \code{list}.
+#'
+#' @importFrom magrittr %>%
+#' @name %>%
+#' @rdname pipe
+#' @export
+#' @param x A \code{data.frame} object.
+#' @examples
+#' my_result <- foo(iris)
+#'
+foo <- function(x) {
+  x %>%
+    as.list()
+}
 
 library(HectorShiny)
+
 
 # Define server logic to set up data fields and drive UI interactions.
 # The server function is the main function that processes inputs and handles data i/o. This is required for Shiny apps.
@@ -41,7 +52,7 @@ server <- function(input, output, session)
         updateTextInput(session=session, "input_ScenarioName", value=paste(input$input_RCP))
         hector::run(hcore, globalVars['endDate'])
 
-        # If this is the initial application load then need to assign the input field values to hector's default params
+        # If this is the initial application load, then we need to assign the on screen input field values to hector's default params
         if(firstLoad)
         {
           loadParameters()
@@ -86,7 +97,7 @@ server <- function(input, output, session)
       loadGraph()
     }
 
-    # Function that assigns the changed parameter values to the Hector core (for persistence)
+    # Function that assigns the user changed parameter values to the Hector core (for persistence)
     restoreParameters <- function()
     {
       print('in restore params')
@@ -141,10 +152,13 @@ server <- function(input, output, session)
         i <- 1
         capabilityValues <- input$capabilities
         while(i <= length(capabilityValues))
-        {
+        {# browser()
           outputVariables[i] <<- globalCapabilities[capabilityValues[i]]
+          attr(outputVariables[i], "name") <<- attr(globalCapabilities[capabilityValues[i]], "name")
+
           i <- i+1
         }
+        print(outputVariables)
       }
       else
       {
@@ -226,10 +240,7 @@ server <- function(input, output, session)
           paramsList['volscl'] <<- as.double(input$input_aero)
           paramsChanged <<- TRUE
         }
-
         resetCore()
-       # print(hcore)
-       # print(head(hector::fetchvars(hcore, 1800:globalVars['endDate'], vars = c(globalCapabilities['cc_acp']))))
       },
       warning = function(war)
       {
@@ -249,8 +260,6 @@ server <- function(input, output, session)
       finally =
         {
           cat(file=stderr(), "\nSetVars ","****Made it thru****", " trypas", "\n")
-
-
         })
     }
 
@@ -264,47 +273,16 @@ server <- function(input, output, session)
        {
           hdata <- hector::fetchvars(core = hcore, dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
           x <- dplyr::distinct(hdata, units)
-          print(x)
-          testy <- ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value, group=variable, color=variable)) + ggplot2::geom_line() #+ ggplot2::facet_wrap(~variable, scales='free_y') +
-           #                     ggthemes::theme_solarized(light = TRUE)+ ggplot2::ylab(x)
-          #browser()
+          print(outputVariables)
+          ggplotGraph <- ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value, group=variable, color=variable)) + ggplot2::geom_line() + ggplot2::facet_wrap(~variable, scales='free_y') +
+                                ggthemes::theme_solarized(light = TRUE)+ ggplot2::ylab(x)
+         # browser()
           hdata2 <- tidyr::spread(data = dplyr::select(hdata, -units), key = variable, value = value, drop=F )
           print(head(hdata))
 
           #output$plot <<- NULL
-          localPlot <- plotly::ggplotly(p = testy)
-          #plotly::layout(p=localPlot, )
-       #    plotObject <- plotly::plotlyProxy(plot2, session = shiny::getDefaultReactiveDomain(),
-       #                        deferUntilFlush = TRUE)
-       #    plotly::plotlyProxyInvoke(p = plotObject, plotly::layout())
-       #      plotly::layout(title = "Scenario Results",
-       #                   paper_bgcolor='rgb(255,255,255)', plot_bgcolor='rgb(229,229,229)',
-       #                   xaxis = list(title = "Year",
-       #                                gridcolor = 'rgb(255,255,255)',
-       #                                showgrid = TRUE,
-       #                                showline = FALSE,
-       #                                showticklabels = TRUE,
-       #                                tickcolor = 'rgb(127,127,127)',
-       #                                ticks = 'outside',
-       #                                zeroline = FALSE),
-       #                   yaxis = list(title = "Value",
-       #                                gridcolor = 'rgb(255,255,255)',
-       #                                showgrid = TRUE,
-       #                                showline = FALSE,
-       #                                showticklabels = TRUE,
-       #                                tickcolor = 'rgb(127,127,127)',
-       #                                ticks = 'outside',
-       #                                zeroline = FALSE))
-       # #  plotly::add_lines(p = localPlot, y = ~year, type="scatter", mode = 'lines')
-       #    i <- 1
-       #    while(i <= length(outputVariables))
-       #    {
-       #      yVal <- as.character(outputVariables[i[1]])
-       #      print("yval: ")
-       #      print(yVal)
-       #  #    plotly::add_lines(p = localPlot, y = ~Ca, name =  yVal[i], type="scatter", mode = 'lines')
-       #      i <- i+1
-       #    }
+          localPlot <- plotly::ggplotly(p = ggplotGraph)
+          plotly::layout(p=localPlot, xaxis = "attr(outputVariables[[1]]", yaxis = "y")
           output$plot2 <<-  plotly::renderPlotly(localPlot)
        }
        else
@@ -358,16 +336,10 @@ server <- function(input, output, session)
       content = function(file)
       {
         hdata <- hector::fetchvars(core = hcore, dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
+        hdata <- dplyr::mutate(hdata)
         write.csv(hdata, file, row.names = FALSE)
       }
     )
-
-    # downloadData <- downloadH()
-    # {
-    #   print("in dl data")
-    #   hdata <- hector::fetchvars(core = hcore, dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
-    #   write.csv(hdata, file="test.csv")
-    # }
 
 
 }

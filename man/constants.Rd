@@ -4,19 +4,19 @@
 \name{constants}
 \alias{constants}
 \alias{globalVars}
-\alias{globalCapabilities}
 \alias{globalScenarios}
 \alias{globalParameters}
+\alias{globalCapabilities}
 \title{Global constants for the Hector-Shiny UI}
 \format{An object of class \code{numeric} of length 1.}
 \usage{
 globalVars
 
-globalCapabilities
-
 globalScenarios
 
 globalParameters
+
+globalCapabilities
 }
 \description{
 Global constants for the Hector-Shiny UI
@@ -24,10 +24,10 @@ Global constants for the Hector-Shiny UI
 \details{
 \code{globalVars}: Miscellaneous global variables
 
-\code{globalCapabilities} Capability strings for Hector variables
-
 \code{globalScenarios} Scenario input files
 
 \code{globalParameters}: Capability strings for Hector parameters
+
+\code{globalCapabilities} Capability strings for Hector variables
 }
 \keyword{datasets}
