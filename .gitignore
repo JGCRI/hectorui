@@ -1,3 +1,6 @@
+# ignore path
+/bak
+
 # Compiled Object files
 *.slo
 *.lo
@@ -70,3 +73,6 @@ vignettes/rsconnect
 
 # vignette caches
 /vignettes/*_cache
+
+# Rstudio connect files
+rsconnect
