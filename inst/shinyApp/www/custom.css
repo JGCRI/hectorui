@@ -1,8 +1,107 @@
 @charset "utf-8";
 /* CSS Document */
 
-fas,
-  fab {
-    vertical-align: middle;
-	  border: #A23739 thick;
-  }
+fas,fab
+{
+  vertical-align: middle;
+  border: #A23739 thick;
+}
+
+hr
+{
+  color: #375a7f;
+  border-top: 2px solid #375a7f;
+}
+
+h2
+{
+  font-size: 28px;
+  text-align: center;
+  margin-top: 15px;
+}
+
+h4
+{
+  font-size: 16px;
+}
+
+label
+{
+  font-weight: normal;
+  margin-bottom: 3px;
+}
+body
+{
+  font-size: 12px;
+}
+
+img
+{
+  padding: 10px;
+}
+
+input
+{
+  padding:5px 10px;
+}
+
+.btn
+{
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+.form-control
+{
+  height: 27px;
+  width: 200px;
+  font-size: 12px;
+}
+
+.form-group
+{
+  margin-bottom: 12px;
+}
+
+.hrNav
+{
+  margin-top: -5px;
+  margin-bottom: 10px;
+
+}
+
+.navbar
+{
+  min-height: 50px;
+  margin-bottom: 15px;
+}
+
+.container-fluid
+{
+  height:20px;
+}
+
+.progress
+{
+  margin-bottom: 15px;
+}
+
+.progress-bar
+{
+  /*visibility: visible;*/
+}
+.progress.shiny-file-input-progress
+{
+ /* visibility: visible;*/
+}
+.shinytheme-selector.form-control.shiny-bound-input
+{
+  padding-top:5px;
+  padding-bottom:5px;
+}
+.well
+{
+  padding: 17px;
+  padding-top: 8px;
+
+}

@@ -31,8 +31,7 @@ Imports:
     shinyBS, 
     tidyr,
     magrittr,
-    shinythemes,
-    HectorShiny
+    shinythemes
 Depends:
     magrittr
 RoxygenNote: 6.1.1
