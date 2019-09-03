@@ -57,7 +57,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
           tabPanel
           (
             p(icon("info-circle", "fa-2x"), " System Information", value="infoTab"),
-            h5("System Information"), tags$hr(class="hrNav"),
+            h5("Background Information"), tags$hr(class="hrNav"),
             p("The Hector Interactive Climate Model is a web-based user interface designed to interact with Hector, an open source, object-oriented, simple global climate carbon-cycle model
             built in C++ with an R package based interface. This model was originally designed to run through R scripts, but is now web enabled to reach a broader audience.
 It  runs essentially instantaneously while still representing the most critical global scale earth system processes,

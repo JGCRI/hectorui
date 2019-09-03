@@ -33,6 +33,5 @@ Imports:
     magrittr,
     shinythemes
 Depends:
-    magrittr
 RoxygenNote: 6.1.1
 

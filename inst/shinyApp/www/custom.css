@@ -1,16 +1,15 @@
 @charset "utf-8";
 /* CSS Document */
 
+body
+{
+  font-size: 12px;
+}
+
 fas,fab
 {
   vertical-align: middle;
   border: #A23739 thick;
-}
-
-hr
-{
-  color: #375a7f;
-  border-top: 2px solid #375a7f;
 }
 
 h2
@@ -25,14 +24,10 @@ h4
   font-size: 16px;
 }
 
-label
+hr
 {
-  font-weight: normal;
-  margin-bottom: 3px;
-}
-body
-{
-  font-size: 12px;
+  color: #375a7f;
+  border-top: 2px solid #375a7f;
 }
 
 img
@@ -43,6 +38,12 @@ img
 input
 {
   padding:5px 10px;
+}
+
+label
+{
+  font-weight: normal;
+  margin-bottom: 3px;
 }
 
 .btn

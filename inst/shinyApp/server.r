@@ -1,17 +1,4 @@
-#' Convert \code{data.frame} to \code{list}.
-#'
-#' @importFrom magrittr %>%
-#' @name %>%
-#' @rdname pipe
-#' @export
-#' @param x A \code{data.frame} object.
-#' @examples
-#' my_result <- foo(iris)
-#'
-foo <- function(x) {
-  x %>%
-    as.list()
-}
+
 
 library(HectorShiny)
 
@@ -42,6 +29,7 @@ server <- function(input, output, session)
     observeEvent(input$input_ScenarioFile, loadScenario())
     observeEvent(input$reset_Params, resetParams())
     observeEvent(input$input_RCP, setRCP())
+    observeEvent(input$input_Driven, loadCustomScenario())
   #----- End observer function setup
 
   # Main function that loads/starts the Hector Core and runs the default scenario
@@ -71,7 +59,7 @@ server <- function(input, output, session)
     {
       showModal(modalDialog(
         title = "Warning",
-        paste("MY_WARNING:  ",war)
+        paste("Details:  ",war)
       ))
     },
     error = function(err)
@@ -136,16 +124,16 @@ server <- function(input, output, session)
     updateNumericInput(session, "input_volc", value=round(hdata[which(hdata$variable == "volscl"), 4], 2))
 
     # Store params in the top level variable paramsList for persistence
-    paramsList['alpha'] <- hdata[which(hdata$variable == "alpha"), 4]
-    paramsList['beta'] <- hdata[which(hdata$variable == "beta"), 4]
-    paramsList['diff'] <- hdata[which(hdata$variable == "diff"), 4]
-    paramsList['S'] <- hdata[which(hdata$variable == "S"), 4]
-    paramsList['C'] <- hdata[which(hdata$variable == "C0"), 4]
-    paramsList['q10_rh'] <- hdata[which(hdata$variable == "q10_rh"), 4]
-    paramsList['volscl'] <- hdata[which(hdata$variable == "volscl"), 4]
+    paramsList['alpha']   <<- hdata[which(hdata$variable == "alpha"), 4]
+    paramsList['beta']    <<- hdata[which(hdata$variable == "beta"), 4]
+    paramsList['diff']    <<- hdata[which(hdata$variable == "diff"), 4]
+    paramsList['S']       <<- hdata[which(hdata$variable == "S"), 4]
+    paramsList['C']       <<- hdata[which(hdata$variable == "C0"), 4]
+    paramsList['q10_rh']  <<- hdata[which(hdata$variable == "q10_rh"), 4]
+    paramsList['volscl']  <<- hdata[which(hdata$variable == "volscl"), 4]
   }
 
-  # Observer function that responds to changes in inputs from the output capabilities drop down field
+  # Observer function that responds to changes in inputs from the capabilities drop down field in the scenario output tab
   setCapabilities <- function()
   {
     print('in set capabilities')
@@ -158,8 +146,7 @@ server <- function(input, output, session)
       while(i <= length(capabilityValues))
       {# browser()
         outputVariables[i] <<- globalCapabilities[capabilityValues[i]]
-        attr(outputVariables[i], "name") <<- attr(globalCapabilities[capabilityValues[i]], "name")
-
+        attr(outputVariables[[i]], "name") <<- attr(globalCapabilities[capabilityValues[i]], "name")
         i <- i+1
       }
       print(outputVariables)
@@ -200,6 +187,7 @@ server <- function(input, output, session)
   {
     print("in set parameters")
     newVals <- vector()
+    # Run through variables and make sure none are left empty and update the top level scope paramsList variable with any changed values
     tryCatch(
     {
       if(!is.na(input$input_aero))
@@ -251,13 +239,13 @@ server <- function(input, output, session)
       # warning handler picks up where error was generated
       showModal(modalDialog(
         title = "Important message",
-        paste("MY_WARNING:  ",war)
+        paste("Details:  ",war)
       ))
     },
     error = function(err)
     {
       # error handler picks up where error was generated
-      cat(file=stderr(), "\n ERROR: Set Params - ", as.character(err[1]), sep=" ")
+      print(paste("\n ERROR: Set Params - ", as.character(err[1]), sep=" "))
       shinyalert::shinyalert("Oops!",print(paste('Error:',err)), type = "error")
 
     },
@@ -280,13 +268,28 @@ server <- function(input, output, session)
         print(outputVariables)
         ggplotGraph <- ggplot2::ggplot(data=hdata, ggplot2::aes(x=year, y=value, group=variable, color=variable)) + ggplot2::geom_line() + ggplot2::facet_wrap(~variable, scales='free_y') +
                               ggthemes::theme_solarized(light = TRUE)+ ggplot2::ylab(x)
-       # browser()
-        hdata2 <- tidyr::spread(data = dplyr::select(hdata, -units), key = variable, value = value, drop=F )
-        print(head(hdata))
+        #rowser()
 
         #output$plot <<- NULL
+        xAxis <- list(
+          showspikes = TRUE,
+          title = "testing"
+        )
+        yAxis <- list(
+          showspikes = TRUE,
+          title = "testing"
+        )
+        a <- list(
+          title = "AXIS TITLE",
+
+          showticklabels = TRUE,
+          tickangle = 45,
+
+          exponentformat = "E"
+        )
         localPlot <- plotly::ggplotly(p = ggplotGraph)
-        plotly::layout(p=localPlot, xaxis = "attr(outputVariables[[1]]", yaxis = "y")
+        plotly::layout(p=localPlot, title="testing 123", hovermode="closest", xaxis = a, yaxis = a )
+       # browser()
         output$plot2 <<-  plotly::renderPlotly(localPlot)
      }
      else
@@ -307,8 +310,8 @@ server <- function(input, output, session)
     error = function(err)
     {
       # error handler picks up where error was generated
-      cat(file=stderr(), "\nError ","Graph error: ", " " , "\n")
-      shinyalert::shinyalert("Oops!",print(paste('Error:',err)), type = "error")
+      cat(file=stderr(), "\nError ","Graphing error: ", " " , "\n")
+      shinyalert::shinyalert("Error Detected:",print(paste('There was an error when attempting to update the graph:',err)), type = "error")
       #bsModal("modalExample", "Your plot", "go", size = "large","asfd",downloadButton('downloadPlot', 'Download'))
 
     },
@@ -317,6 +320,46 @@ server <- function(input, output, session)
       #cat(file=stderr(), "\nFinally ", "\n")
     })
 
+  }
+
+  loadCustomScenario <- function()
+  {
+    print("in load custom")
+
+    tryCatch(
+    {
+      # browser()
+      inifile <<-  Sys.glob(input$input_ScenarioFile$datapath)
+
+      hcore <<- hector::newcore(inifile, suppresslogging=TRUE, name="testing123")
+      updateTextInput(session=session, "input_ScenarioName", value=paste(input$input_RCP))
+      hector::run(hcore, globalVars['endDate'])
+
+      # If this is the initial application load, then we need to assign the on screen input field values to hector's default params
+      if(firstLoad)
+      {
+        loadParameters()
+      }
+      # If its not first load but the parameters have changed via user input, then need to restore those values after restarting core
+      else if(paramsChanged)
+      {
+        restoreParameters()
+      }
+    },
+    warning = function(war)
+    {
+      showModal(modalDialog(
+        title = "Warning",
+        paste("Details:  ",war)
+      ))
+    },
+    error = function(err)
+    {
+      shinyalert::shinyalert("Custom Scenario Error",print(paste('Error attempting to load custom scenario: ',err)), type = "error")
+    },
+    finally =
+      {
+      })
   }
 
   openPage <- function(url) {
@@ -332,6 +375,7 @@ server <- function(input, output, session)
 
   })
 
+  # Download handler for downloading the raw data output from a Hector run. This is activated upon button click.
   output$dlData <- downloadHandler(
     filename = function()
     {print("in dl data")

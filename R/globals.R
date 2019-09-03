@@ -29,7 +29,7 @@ globalParameters <- vector()
 # Load parameter strings into global variable (should match UI component ids)
 globalParameters['pco2'] <- hector::PREINDUSTRIAL_CO2()
 globalParameters['q10'] <- hector::Q10_RH() #2.0
-#globalParameters['beta'] <- hector::BETA() #0.36
+globalParameters['beta'] <- hector::BETA() #0.36
 globalParameters['ecs'] <- hector::ECS() #3.0
 globalParameters['aero'] <- hector::AERO_SCALE() #1.0
 globalParameters['volc'] <- hector::VOLCANIC_SCALE() #1.0
