@@ -50,6 +50,21 @@ label
 {
   padding: 4px 10px;
   font-size: 13px;
+  border: 1px #AC7023 solid;
+  border-radius: 1px;
+  margin-right: 2px;
+  margin-left: 2px;
+}
+
+.changedParamsTrue
+{
+	border: #AC7023 thick;
+	font-size: 25px;
+}
+
+.changedParamsFalse
+{
+	border: none;
 }
 
 .form-control
@@ -95,11 +110,7 @@ label
 {
  /* visibility: visible;*/
 }
-.shinytheme-selector.form-control.shiny-bound-input
-{
-  padding-top:5px;
-  padding-bottom:5px;
-}
+
 .well
 {
   padding: 17px;

@@ -7,12 +7,14 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
   shinyalert::useShinyalert(),
   # Application title
   titlePanel("Hector Interactive Climate Model"),
+  shinyjs::inlineCSS(list(.big = "font-size: 2em")),
 
   # Function that gets called on first load of application to load in any themes/css etc
   tags$head
   (
     tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
   ),
+  shinyjs::useShinyjs(),
   # Main component from which all other components fall under, navbarPage.
   navbarPage
   (
@@ -36,7 +38,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
             fileInput("input_ScenarioFile", "Upload Emissions File", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
             actionButton(inputId="input_Driven", label="Load Scenario"))
         ),
-        div(h4("Model Parameters"),
+        div(id="myapp",h4("Model Parameters"),
           tags$hr(class="hrNav"),
           numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width=275, value = NA, step = 0.01),
           numericInput("input_beta", "CO2 fertilization factor (unitless)", width=275, value = NA, step = 0.01),
@@ -97,9 +99,6 @@ Battelle Memorial Institute under contract DE-AC05-76RL01830."),
           tabPanel
           ( fluid = TRUE,
             p(icon("chart-line","fa-2x"), " Scenario Output", value="outputTab"),
-            # Output Tab Panel
-            # mainPanel
-            # (
             h5("Scenario Results"), tags$hr(class="hrNav"),
               p(selectInput
                 ("capabilities", "Choose capability identifiers:",
@@ -125,8 +124,6 @@ Battelle Memorial Institute under contract DE-AC05-76RL01830."),
                ),
               # plotOutput("plot"),
               plotly::plotlyOutput("plot2", width = "100%", height = "500")
-               #div(width = '100%', plotOutput("plot"))
-            # ) # end mainpanel
           ) # end tabpanel
         ) # end tabsetpanel
       ), # end mainpanel

@@ -10,6 +10,7 @@ server <- function(input, output, session)
 {
   # Needed to interact Shiny with client side JS
   shinyjs::useShinyjs()
+  # shinyjs::disable("set_Params")
 
   #----- Set up non global variables in top level application scope
     # Keeps track of if this is the actual first load/run of this instance
@@ -89,7 +90,7 @@ server <- function(input, output, session)
     loadGraph()
   }
 
-  # Function that assigns the user changed parameter values to the Hector core (for persistence)
+  # Function that maintains persistence after the user has changed parameter values to the Hector core (after scenario change)
   restoreParameters <- function()
   {
     print('in restore params')
@@ -100,7 +101,7 @@ server <- function(input, output, session)
   resetParams <- function()
   {
     print("in reset params")
-    paramsChanged <<- FALSE
+    setParamsChanged(FALSE)
     restartCore()
     loadParameters()
   }
@@ -137,23 +138,33 @@ server <- function(input, output, session)
   setCapabilities <- function()
   {
     print('in set capabilities')
-    outputVariables <<- list()
-    capabilityValues <- vector()
-    if(length(input$capabilities) > 0)
+    tryCatch(
     {
-      i <- 1
-      capabilityValues <- input$capabilities
-      while(i <= length(capabilityValues))
-      {# browser()
-        outputVariables[i] <<- globalCapabilities[capabilityValues[i]]
-        attr(outputVariables[[i]], "name") <<- attr(globalCapabilities[capabilityValues[i]], "name")
-        i <- i+1
+      outputVariables <<- list()
+      capabilityValues <- vector()
+      if(length(input$capabilities) > 0)
+      {
+        i <- 1
+        capabilityValues <- input$capabilities
+        while(i <= length(capabilityValues))
+        { #browser()
+          outputVariables[i] <<- globalCapabilities[capabilityValues[i]]
+          attr(outputVariables[[i]], "name") <<- attr(globalCapabilities[capabilityValues[i]], "name")
+          i <- i+1
+        }
+        print(outputVariables)
       }
-      print(outputVariables)
-    }
-    else
+      else
+      {
+      }
+    },
+    error = function(err)
     {
-    }
+      # error handler picks up where error was generated
+      print(paste("\n ERROR: Set Params - ", as.character(err[1]), sep=" "))
+      shinyalert::shinyalert("Error!",print(paste('Output Error: ',err)), type = "error")
+
+    })
   }
 
   # Observer function that is activated on a change to the RCP Scenario drop down field.
@@ -171,8 +182,14 @@ server <- function(input, output, session)
 
       startHector()
       loadGraph()
-    }
-    )
+    },
+    error = function(err)
+    {
+      # error handler picks up where error was generated
+      print(paste("\n ERROR: Set Params - ", as.character(err[1]), sep=" "))
+      shinyalert::shinyalert("Error!",print(paste('Output Error: ',err)), type = "error")
+
+    })
     firstLoad <<- FALSE
   }
 
@@ -187,50 +204,44 @@ server <- function(input, output, session)
   {
     print("in set parameters")
     newVals <- vector()
-    # Run through variables and make sure none are left empty and update the top level scope paramsList variable with any changed values
+    # Run through variables and make sure none are left empty and update the top level scope paramsList variable
+    # and the hector core with any changed values
     tryCatch(
     {
       if(!is.na(input$input_aero))
       {
         hector::setvar(hcore, dates = NA, var = globalParameters['aero'], values = c(as.double(input$input_aero)), unit = "unitless")
         paramsList['alpha'] <<- as.double(input$input_aero)
-        paramsChanged <<- TRUE
       }
       if(!is.na(input$input_beta))
       {
         hector::setvar(hcore, dates = NA, var = globalParameters['beta'], values = c(as.double(input$input_beta)), unit = "unitless")
         paramsList['beta'] <<- as.double(input$input_aero)
-        paramsChanged <<- TRUE
       }
       if(!is.na(input$input_diff))
       {
         hector::setvar(hcore, dates = NA, var = globalParameters['diff'], values = c(as.double(input$input_diff)), unit = "cm2/s")
         paramsList['diff'] <<- as.double(input$input_aero)
-        paramsChanged <<- TRUE
       }
       if(!is.na(input$input_ecs))
       {
         hector::setvar(hcore, dates = NA, var = globalParameters['ecs'],  values = c(as.double(input$input_ecs)), unit = "degC")
         paramsList['S'] <<- as.double(input$input_aero)
-        paramsChanged <<- TRUE
       }
       if(!is.na(input$input_pco2))
       {
         hector::setvar(hcore, dates = NA, var = globalParameters['pco2'], values = c(as.double(input$input_pco2)), unit = "ppmv CO2")#c(150), unit="ppmv CO2")
         paramsList['C'] <<- as.double(input$input_aero)
-        paramsChanged <<- TRUE
       }
       if(!is.na(input$input_q10))
       {
         hector::setvar(hcore, dates = NA, var = globalParameters['q10'],  values = c(as.double(input$input_q10)), unit = "unitless")
         paramsList['q10_rh'] <<- as.double(input$input_aero)
-        paramsChanged <<- TRUE
       }
       if(!is.na(input$input_volc))
       {
         hector::setvar(hcore, dates = NA, var = globalParameters['volc'], values = c(as.double(input$input_volc)), unit = "unitless")
         paramsList['volscl'] <<- as.double(input$input_aero)
-        paramsChanged <<- TRUE
       }
       resetCore()
     },
@@ -248,11 +259,7 @@ server <- function(input, output, session)
       print(paste("\n ERROR: Set Params - ", as.character(err[1]), sep=" "))
       shinyalert::shinyalert("Oops!",print(paste('Error:',err)), type = "error")
 
-    },
-    finally =
-      {
-        cat(file=stderr(), "\nSetVars ","****Made it thru****", " trypas", "\n")
-      })
+    })
   }
 
   # Observer function designed to handle the loading/creation of the output graphs from the Hector model.
@@ -314,10 +321,6 @@ server <- function(input, output, session)
       shinyalert::shinyalert("Error Detected:",print(paste('There was an error when attempting to update the graph:',err)), type = "error")
       #bsModal("modalExample", "Your plot", "go", size = "large","asfd",downloadButton('downloadPlot', 'Download'))
 
-    },
-    finally =
-    {
-      #cat(file=stderr(), "\nFinally ", "\n")
     })
 
   }
@@ -325,7 +328,7 @@ server <- function(input, output, session)
   loadCustomScenario <- function()
   {
     print("in load custom")
-
+    if ( is.null(input$input_ScenarioFile)) return(NULL)
     tryCatch(
     {
       # browser()
@@ -345,6 +348,7 @@ server <- function(input, output, session)
       {
         restoreParameters()
       }
+      loadGraph()
     },
     warning = function(war)
     {
@@ -367,12 +371,44 @@ server <- function(input, output, session)
 
   }
 
+  setParamsChanged <- function(toggle)
+  {
+    print("in set Params Changed")
+    if(toggle == TRUE)
+    {
+      paramsChanged <<- TRUE
+      # shinyjs::enable("set_Params")
+      # shinyjs::toggleClass(id = "set_Params", class = "changedParamsTrue")
+     # shinyjs::runjs(paste0('$("#set_Params").css({"border": "1px #AC7023 solid"})'))
+    }
+    else
+    {
+
+      paramsChanged <<- FALSE
+      # shinyjs::toggleClass(id = "set_Params", class = "changedParamsFalse")
+    }
+  }
+
+  setParamsButton <- function()
+  {
+    print("set PButton")
+    shinyjs::runjs(paste0('$(".selectize-input").css({"color": "red", "font-weight": "bold"})'))
+    shinyjs::addClass(id = "setParams", class = "changedParamsTrue")
+  }
+
   # Initialize reactive values
   values <- reactiveValues()
   #values$themes <- themes
 
   observe({
-
+    input$input_pco2
+    input$input_q10
+    input$input_volc
+    input$input_aero
+    input$input_beta
+    input$input_diff
+    input$input_ecs
+    setParamsChanged(TRUE)
   })
 
   # Download handler for downloading the raw data output from a Hector run. This is activated upon button click.
