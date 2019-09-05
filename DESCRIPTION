@@ -19,7 +19,6 @@ Imports:
     devtools,
     dplyr,
     BH,
-    rCharts,
     markdown,
     data.table, 
     DT,
