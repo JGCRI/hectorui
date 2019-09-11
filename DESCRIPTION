@@ -30,7 +30,8 @@ Imports:
     shinyBS, 
     tidyr,
     magrittr,
-    shinythemes
+    shinythemes,
+    shinyWidgets
 Depends:
 RoxygenNote: 6.1.1
 

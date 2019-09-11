@@ -7,7 +7,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
   shinyalert::useShinyalert(),
   # Application title
   titlePanel("Hector Interactive Climate Model"),
-  shinyjs::inlineCSS(list(.big = "font-size: 2em")),
+  # shinyjs::inlineCSS(list(.big = "font-size: 2em")),
 
   # Function that gets called on first load of application to load in any themes/css etc
   tags$head
@@ -28,27 +28,39 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
         width=3,
         div(h4("Baseline Scenarios"),#, icon("info-circle", "fa-1x")),
             tags$hr(class="hrNav"),
-            selectInput("input_RCP", "RCP Scenario", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6"="RCP 6.0", "8.5" = "RCP 8.5"), width=200, selected = "RCP 4.5"),
-
+            #checkboxGroupInput(inline=TRUE,"input_RCP", "RCP Scenario:", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6.0"="RCP 6.0", "8.5" = "RCP 8.5"), width=200),
+            div(class="checkboxDiv", "RCP Scenarios:", p(
+                prettyCheckbox(inputId = "input_RCP2.6", label = "2.6", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
+                prettyCheckbox(inputId = "input_RCP4.5", label = "4.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
+                prettyCheckbox(inputId = "input_RCP6.0", label = "6.0", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
+                prettyCheckbox(inputId = "input_RCP8.5", label = "8.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check")))
+              # checkboxInput(inputId="input_RCP26", label = "2.6", value = FALSE, width=80),
+              # checkboxInput(inputId="input_RCP45", label = "4.5", value = FALSE, width=80),
+              # checkboxInput(inputId="input_RCP60", label = "6.0", value = FALSE, width=80),
+              # checkboxInput(inputId="input_RCP85", label = "8.5", value = FALSE, width=80)
+            ),
             # radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
-            textInput("input_ScenarioName", "Scenario Name", width=200, value = ""),
+            textInput("input_ScenarioName", "Scenario Name:", width=200, value = ""),
 
         div(h4("Custom Scenario"),
             tags$hr(class="hrNav"),
-            fileInput("input_ScenarioFile", "Upload Emissions File", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
+            fileInput("input_ScenarioFile", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
             actionButton(inputId="input_Driven", label="Load Scenario"))
         ),
-        div(id="myapp",h4("Model Parameters"),
-          tags$hr(class="hrNav"),
-          numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width=275, value = NA, step = 0.01),
-          numericInput("input_beta", "CO2 fertilization factor (unitless)", width=275, value = NA, step = 0.01),
-          numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width=275, value = NA, step = 0.01),
-          numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width=275, value = NA, step = 0.01),
-          numericInput("input_pco2", "Preindustrial CO2 concentration (ppmv CO2)", width=275, value = NA, step = 0.01),
-          numericInput("input_q10", "Temperature sensitivity factor (Q10) (unitless)", width=275, value = NA, step = 0.01),
-          numericInput("input_volc", "Volcanic forcing scaling factor (unitless)", width=275, value = NA, step = 0.01),
-          actionButton(inputId="set_Params", label="Set Parameters"),
-          actionButton(inputId="reset_Params", label="Reset Parameters")
+        div(id="myapp",
+            h4("Model Parameters"),
+            tags$hr(class="hrNav"),
+            selectInput("input_paramToggle", "Model:", list("Default" = "default", "MAGIC" = "magic", "Other" = "other"), width = 150),
+            # radioButtons("input_paramToggle", label = "Model:", choices = list("Default", "MAGIC", "Third")),
+            div(class="paramDivs",numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
+            div(class="paramDivs",numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
+            div(class="paramDivs",numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
+            div(class="paramDivs",numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
+            div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
+            div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
+            div(class="paramDivs",numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
+            div(class="paramDivs", actionButton(inputId="set_Params", label="Set Parameters"),
+                actionButton(inputId="reset_Params", label="Reset Parameters"))
         )
       ),
       mainPanel
@@ -60,35 +72,24 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
           (
             p(icon("info-circle", "fa-2x"), " System Information", value="infoTab"),
             h5("Background Information"), tags$hr(class="hrNav"),
-            p("The Hector Interactive Climate Model is a web-based user interface designed to interact with Hector, an open source, object-oriented, simple global climate carbon-cycle model
-            built in C++ with an R package based interface. This model was originally designed to run through R scripts, but is now web enabled to reach a broader audience.
-It  runs essentially instantaneously while still representing the most critical global scale earth system processes,
-and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses."),
-            p("
-For example, Hector's global temperature rise for the RCP 8.5 scenario, compared to observations and other model results,
-looks like this:"),
+            p("This is the repository for ", tags$b("Hector"),", an open source, object-oriented, simple global climate carbon-cycle model.
+              It runs essentially instantaneously while still representing the most critical global scale earth system processes,
+              and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses.
+              "),
+            p("For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:"),
             p(img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="350")),
-              p("
-The primary source for Hector model documentation is the ", a("Github Hector Wiki",href="https://github.com/JGCRI/hector/wiki", target="blank"),".
-Please note that the wiki documents are included in the repository as a ", a("Git
-Submodule",href="https://git-scm.com/book/en/v2/Git-Tools-Submodules", target="blank"),"."),
-            p("To clone the repository as well as the documentation,
-you can use `git clone --recursive`. If you have already cloned non-recursively, you can fetch (download) the documentation
-by running `git submodule init; git submodule update`. The code is also well documented with ", a("Doxygen-style", href="http://doxygen.org", target="blank"), "
-comments."),
-            p("A formal model description paper ", a("Hartin et al. 2015", href="http://www.geosci-model-dev.net/8/939/2015/gmd-8-939-2015.html", target="blank"),
-"documents its science internals and performance relative to observed data, the ", a("CMIP5", href="http://cmip-pcmdi.llnl.gov/cmip5/", target="blank"), "archive,
-and the reduced-complexity ", a("MAGICC", href="http://www.magicc.org", target="blank"), " model.
-This research was supported by the U.S. Department of Energy, Office of Science, as part of research in Multi-Sector Dynamics,
-Earth and Environmental System Modeling Program. The Pacific Northwest National Laboratory is operated for DOE by
-Battelle Memorial Institute under contract DE-AC05-76RL01830."),
-
+              p("The primary link to Hector model documentation is the ", a("online manual",href="https://jgcri.github.io/hector/articles/manual", target="blank"),",
+              which is included in the repository in the vignettes/manual directory. The code is also documented with ", a("Doxygen-style", href="http://doxygen.org", target="blank"),
+              " comments. A formal model description paper ", a("Hartin et al. 2015", href="http://www.geosci-model-dev.net/8/939/2015/gmd-8-939-2015.html", target="blank"),
+              " documents its science internals and performance relative to observed data, the ", a("CMIP5", href="http://cmip-pcmdi.llnl.gov/cmip5/", target="blank"),
+              " archive, and the reduced-complexity ", a("MAGICC", href="http://www.magicc.org", target="blank"), " model (as of ", a("version 1.0", href="https://github.com/JGCRI/hector/tree/v1.0", target="blank"),
+              "). In addition, we have developed two package vignettes demonstrating the ", a("basics of the Hector R interface",href="http://jgcri.github.io/hector/articles/intro-to-hector.html", target="blank"),
+              ", and an example application of ", a("solving for an emissions pathway", href="http://jgcri.github.io/hector/articles/hector_apply.html", target="blank"), "."),
             p("Tools and software that work with Hector:"),
-
             tags$ul(
               tags$li(a("GCAM", href="https://github.com/JGCRI/gcam-core", target="blank"),": Hector can be used as
               the climate component in the GCAM integrated assessment model."),
-            tags$li(a("Hector", href="https://github.com/openclimatedata/pyhector", target="blank"),": A python
+            tags$li(a("pyHector", href="https://github.com/openclimatedata/pyhector", target="blank"),": A python
               interface to Hector.")
             )
           ),
@@ -122,8 +123,8 @@ Battelle Memorial Institute under contract DE-AC05-76RL01830."),
                        'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Land Temp Anomaly"="t_lta", "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')), multiple = T, width=350
                 ),  actionButton(inputId="loadGraphs", label="Load Graphs", width = 200), downloadButton("dlData", label="Download Raw Data")
                ),
-              # plotOutput("plot"),
-              plotly::plotlyOutput("plot2", width = "100%", height = "500")
+               # plotly::plotlyOutput("plotly", width = "100%", height = "350"),
+            uiOutput("plots", class = "customPlot")
           ) # end tabpanel
         ) # end tabsetpanel
       ), # end mainpanel

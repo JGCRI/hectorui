@@ -67,6 +67,16 @@ label
 	border: none;
 }
 
+.checkbox
+{
+	display: inline-block;
+}
+
+.customPlot
+{
+  display:inline-block;
+}
+
 .form-control
 {
   height: 27px;
@@ -77,6 +87,11 @@ label
 .form-group
 {
   margin-bottom: 12px;
+}
+
+.group-output
+{
+  display:inline-block;
 }
 
 .hrNav
@@ -95,6 +110,11 @@ label
 .container-fluid
 {
   height:20px;
+}
+
+.paramDivs
+{
+  display:inline-block;
 }
 
 .progress
