@@ -6,6 +6,7 @@
 \alias{globalVars}
 \alias{globalScenarios}
 \alias{globalParameters}
+\alias{globalParamsDefault}
 \alias{globalCapabilities}
 \title{Global constants for the Hector-Shiny UI}
 \format{An object of class \code{numeric} of length 1.}
@@ -15,6 +16,8 @@ globalVars
 globalScenarios
 
 globalParameters
+
+globalParamsDefault
 
 globalCapabilities
 }
@@ -27,6 +30,8 @@ Global constants for the Hector-Shiny UI
 \code{globalScenarios} Scenario input files
 
 \code{globalParameters}: Capability strings for Hector parameters
+
+\code{globalParamsDefault}: Default Parameter Sets
 
 \code{globalCapabilities} Capability strings for Hector variables
 }

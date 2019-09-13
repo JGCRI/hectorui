@@ -2,6 +2,7 @@
 
 export(globalCapabilities)
 export(globalParameters)
+export(globalParamsDefault)
 export(globalScenarios)
 export(globalVars)
 import(hector)
