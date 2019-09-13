@@ -41,15 +41,24 @@ globalParameters['diff'] <- hector::DIFFUSIVITY() #2.3
 # globalParameters['flucv'] <- hector::F_LUCV()
 # globalParameters['flucd'] <- hector::F_LUCD()
 
-# Create master list of parameter lookups
+# Default Parameter Sets
 #' @details \code{globalParamsDefault}: Default Parameter Sets
 #' @rdname constants
 #' @export
 globalParamsDefault <- vector()
 globalParamsDefault <- c(1, 0.36, 2.3, 3, 276.09, 2, 1)
+
+# Default Parameter Sets
+#' @details \code{globalParamsOther}: Default Parameter Sets
+#' @rdname constants
+#' @export
 globalParamsMAGICC <- vector()
 globalParamsMAGICC <- c(1.2, 0.6, 2.1, 3.4, 300, 2.2, 0.75)
 
+# Default Parameter Sets
+#' @details \code{globalParamsOther}: Default Parameter Sets
+#' @rdname constants
+#' @export
 globalParamsOther <- vector()
 globalParamsOther <- c(1.4, 0.4, 2.4, 3.7, 307, 2.7, 0.45)
 

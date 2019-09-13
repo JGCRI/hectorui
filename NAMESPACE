@@ -3,6 +3,8 @@
 export(globalCapabilities)
 export(globalParameters)
 export(globalParamsDefault)
+export(globalParamsMAGICC)
+export(globalParamsOther)
 export(globalScenarios)
 export(globalVars)
 import(hector)
