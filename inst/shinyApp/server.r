@@ -24,7 +24,9 @@ server <- function(input, output, session)
 #----- End set up local vars
 
 
-  output$plots <- renderUI({
+#----- Setup plots
+  output$plots <- renderUI(
+  {
     plot_output_list <- lapply(1:4, function(i)
     {
      # plotname <- paste("plot", names(globalScenarios[i]), sep="")
@@ -43,6 +45,13 @@ server <- function(input, output, session)
     do.call(tagList, plot_output_list)
   })
 
+  #set initial plotting variables
+  for(i in 1:4)
+  {
+    plotname <- paste("plot", i, sep="")
+    shinyjs::hide(plotname)
+  }
+#----- End Setup plots
 
 #----- Set up observer functions to catch user interaction on the input fields
   observeEvent(input$capabilities, setCapabilities(), ignoreInit = TRUE)
@@ -50,24 +59,28 @@ server <- function(input, output, session)
   observeEvent(input$set_Params, setParameters(), ignoreInit = TRUE)
   observeEvent(input$input_ScenarioFile, loadScenario(), ignoreInit = TRUE)
   observeEvent(input$reset_Params, resetParams(), ignoreInit = TRUE)
-  #observeEvent(input$input_RCP, setRCP())
   observeEvent(input$input_RCP2.6, setRCP("2.6"), ignoreInit = TRUE)
   observeEvent(input$input_RCP4.5, setRCP("4.5"), ignoreInit = TRUE)
   observeEvent(input$input_RCP6.0, setRCP("6.0"), ignoreInit = TRUE)
   observeEvent(input$input_RCP8.5, setRCP("8.5"), ignoreInit = TRUE)
   observeEvent(input$input_Driven, loadCustomScenario(), ignoreInit = TRUE)
   observeEvent(input$input_paramToggle, loadModelParameters())
+  # Group Observers for the params fields
+  observe({
+    input$input_pco2
+    input$input_q10
+    input$input_volc
+    input$input_aero
+    input$input_beta
+    input$input_diff
+    input$input_ecs
+    setParamsChanged(TRUE)
+  })
 #----- End observer function setup
 
-  #set initial variables
 
 
-  for(i in 1:4)
-  {
-    plotname <- paste("plot", i, sep="")
-    shinyjs::hide(plotname)
-  }
-#---------- CORE RELATED FUNCTIONS
+#----- CORE RELATED FUNCTIONS
 
   # Main function that loads/starts the Hector Core and runs the default scenario
   loadScenario <- function(scenario)
@@ -116,7 +129,9 @@ server <- function(input, output, session)
    # startHector()
     loadGraph()
   }
-#---------- END CORE FUNCTIONS
+#----- END CORE FUNCTIONS
+
+#----- PARAMETER FUNCTIONS
 
   # Function that maintains persistence after the user has changed parameter values to the Hector core (after scenario change)
   restoreParameters <- function()
@@ -185,7 +200,7 @@ server <- function(input, output, session)
   # Function that gets the input parameters from the hector core and maps them to the input fields
   # This would normally be called on first load or when parameters are reset.
   loadParameters <- function()
-  {
+  {1
     print("in load params")
 
     # Fetch hector parameters from core
@@ -212,8 +227,6 @@ server <- function(input, output, session)
     paramsList['q10_rh']  <<- hdata[which(hdata$variable == "q10_rh"), 4]
     paramsList['volscl']  <<- hdata[which(hdata$variable == "volscl"), 4]
   }
-
-
 
   # Observer function to handle user click on the set parameters button.
   setParameters <- function()
@@ -320,6 +333,8 @@ server <- function(input, output, session)
     }
 
   }
+
+#----- END PARAMS FUNCTIONS
 
   # Observer function that responds to changes in inputs from the capabilities drop down field in the scenario output tab
   setCapabilities <- function()
@@ -440,12 +455,12 @@ server <- function(input, output, session)
               output[[plotname]] <- plotly::renderPlotly(localPlot)
               # output[[plottitle]] <- renderText({paste("1:", my_i, ".  n is ", 4, sep = "")})
               # output[[tablename]] <- renderTable({table(x = 1:my_i, y = 1:my_i)})
-             })
-           }
+           })
+         }
        }
        else
        {
-         #shinyalert::shinyalert("Invalid Input:", "Please choose an at least 1 output variable to view graphs.", type = "warning")
+
        }
 
       },
@@ -519,17 +534,6 @@ server <- function(input, output, session)
   # Initialize reactive values
   values <- reactiveValues()
   #values$themes <- themes
-
-  observe({
-    input$input_pco2
-    input$input_q10
-    input$input_volc
-    input$input_aero
-    input$input_beta
-    input$input_diff
-    input$input_ecs
-    setParamsChanged(TRUE)
-  })
 
   # Download handler for downloading the raw data output from a Hector run. This is activated upon button click.
   output$dlData <- downloadHandler(

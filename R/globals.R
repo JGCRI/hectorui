@@ -59,7 +59,6 @@ globalParamsMAGICC <- c(1.2, 0.6, 2.1, 3.4, 300, 2.2, 0.75)
 #' @details \code{globalParamsOther}: Default Parameter Sets
 #' @rdname constants
 #' @export
-globalParamsOther <- vector()
 globalParamsOther <- c(1.4, 0.4, 2.4, 3.7, 307, 2.7, 0.45)
 
 
@@ -81,6 +80,12 @@ attr(globalCapabilities[['cc_co2']], "name") <- "Atmospheric CO2"
 # "Atmospheric Carbon Pool"
 globalCapabilities[['cc_acp']] <- hector::ATMOSPHERIC_C()
 attr(globalCapabilities[['cc_acp']], "name") <- "Atmospheric Carbon Pool"
+# "Fossil Fuel and Industrial Emissions"
+globalCapabilities[['cc_ffi']] <- hector::FFI_EMISSIONS()
+attr(globalCapabilities[['cc_ffi']], "name") <- "FFI Emissions"
+# "Land Use Change Emissions"
+globalCapabilities[['cc_luc']] <- hector::LUC_EMISSIONS()
+attr(globalCapabilities[['cc_luc']], "name") <- "LUC Emissions"
 
 # CONCENTRATIONS
 # "Amospheric N2O"

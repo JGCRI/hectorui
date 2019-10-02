@@ -103,7 +103,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
             h5("Scenario Results"), tags$hr(class="hrNav"),
               p(selectInput
                 ("capabilities",  "Choose capability identifiers:",
-                  list('Carbon Cycle' = list("Atmospheric CO2"="cc_co2", "Atmospheric Carbon Pool"="cc_acp"),
+                  list('Carbon Cycle' = list("Atmospheric CO2"="cc_co2", "Atmospheric Carbon Pool"="cc_acp", "FFI Emissions"="cc_ffi", "LUC Emissions"="cc_luc"),
                        'Concentrations' = list("Amospheric N2O"='c_an20'),
                        'Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'),
                        'Forcings' = list("RF - Total"='f_rft', "RF - Albedo"='f_alb', "RF - CO2"='f_co2', "RF - N2O"='f_n2o', "RF - H2O"='f_h2o', "RF - Ozone"='f_oz', "RF - Black Carbon"='f_bc',
