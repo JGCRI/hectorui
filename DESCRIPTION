@@ -7,7 +7,7 @@ Authors@R: c(person("Jason", "Evanoff", email = "jason.evanoff@pnnl.gov", role =
 	     person("Corinne", "Hartin", email = "corinne.hartin@pnnl.gov", role = "aut"),
 	     person("Ben", "Bond-Lamberty", email = "BondLamberty@pnnl.gov", role = "aut"),
 	     person("Pralit", "Patel", email = "pralit.patel@pnnl.gov", role = "aut"))
-Maintainer: The package maintainer <yourself@somewhere.net>
+Maintainer: Jason Evanoff <jason.evanoff@pnnl.gov>
 Description: Provides a simple visual, interactive web interface for the simple climate model Hector from JGCRI. 
 License: GPL-3
 Encoding: UTF-8
@@ -31,7 +31,8 @@ Imports:
     tidyr,
     magrittr,
     shinythemes,
-    shinyWidgets
+    shinyWidgets,
+    tippy
 Depends:
 RoxygenNote: 6.1.1
 

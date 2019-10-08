@@ -52,7 +52,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
             tags$hr(class="hrNav"),
             selectInput("input_paramToggle", "Model:", list("Default" = "default", "MAGICC" = "magicc", "Other" = "other"), width = 150),
             # radioButtons("input_paramToggle", label = "Model:", choices = list("Default", "MAGIC", "Third")),
-            div(class="paramDivs",numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
+            div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01), title = "testing", trigger = "click")), div(class="paramDivs",id="div1", icon("info-circle", "fa-1x")),
             div(class="paramDivs",numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
             div(class="paramDivs",numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
             div(class="paramDivs",numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
@@ -60,7 +60,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
             div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
             div(class="paramDivs",numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
             div(class="paramDivs", actionButton(inputId="set_Params", label="Set Parameters"),
-                actionButton(inputId="reset_Params", label="Reset Parameters"))
+              tippy::tippy_this(actionButton(inputId="reset_Params", label="Reset Parameters"), tooltip = "testing 123")
         )
       ),
       mainPanel

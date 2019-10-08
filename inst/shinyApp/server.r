@@ -10,7 +10,9 @@ server <- function(input, output, session)
   shinyjs::useShinyjs()
   # shinyjs::disable("set_Params")
 
+
 #----- Set up non global variables in top level application scope
+
   # Keeps track of if this is the actual first load/run of this instance
   firstLoad <- TRUE
   outputVariables <- vector()
@@ -21,10 +23,16 @@ server <- function(input, output, session)
   # The se variables are for storing paremeter values so that if a change is made (like loading new scenario) the custom params set by user will persist
   paramsList <- list()
   paramsChanged <- FALSE
+
 #----- End set up local vars
+
+#----- Setup Tooltips
+  reactive({shinyBS::addTooltip(session, input$input_aero, "title test" , placement = "bottom", trigger = "hover",
+                                options = NULL)})
 
 
 #----- Setup plots
+
   output$plots <- renderUI(
   {
     plot_output_list <- lapply(1:4, function(i)
@@ -54,6 +62,7 @@ server <- function(input, output, session)
 #----- End Setup plots
 
 #----- Set up observer functions to catch user interaction on the input fields
+
   observeEvent(input$capabilities, setCapabilities(), ignoreInit = TRUE)
   observeEvent(input$loadGraphs, loadGraph(), ignoreInit = TRUE)
   observeEvent(input$set_Params, setParameters(), ignoreInit = TRUE)
@@ -76,6 +85,7 @@ server <- function(input, output, session)
     input$input_ecs
     setParamsChanged(TRUE)
   })
+
 #----- End observer function setup
 
 
@@ -350,8 +360,9 @@ server <- function(input, output, session)
         capabilityValues <- input$capabilities
         while(i <= length(capabilityValues))
         {
+         #browser()
           outputVariables[i] <<- globalCapabilities[capabilityValues[i]]
-          attr(outputVariables[[i]], "name") <<- attr(globalCapabilities[capabilityValues[i]], "name")
+          #attr(outputVariables[[i]], 'longName') <<- attr(globalCapabilities[capabilityValues[i]], 'longName')
           i <- i+1
         }
       }
@@ -432,23 +443,23 @@ server <- function(input, output, session)
            # of i in the renderPlot() will be the same across all instances, because
            # of when the expression is evaluated.
            local(
-           {#
+           {
               my_i <- i
               plotname <- paste("plot", i, sep="")
               plottitle <- paste("plottitle", globalScenarios[i], sep="")
               tablename <- paste("tablename", globalScenarios[i], sep="")
               for(j in 1:length(hcores))
               {
-               # browser()
                 hdata <- hector::fetchvars(core = hcores[[j]], dates = 1800:globalVars['endDate'], vars = outputVariables[i], "\n")
                 hdata <- dplyr::mutate(hdata, scenario=paste("RCP ", names(hcores[j])))
                 df_total <- rbind(df_total,hdata)
               }
               x <- dplyr::distinct(hdata, units)
-              ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=year, y=value, group=variable, color=scenario)) + ggplot2::geom_line() + ggplot2::facet_wrap(~variable, scales='free_y') +
-                            ggthemes::theme_solarized(light = TRUE)+ ggplot2::ylab(x)
+              #browser()
+              ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=year, y=value, group=variable, color=scenario)) + ggplot2::geom_line() +
+                            ggthemes::theme_solarized(light = TRUE)+ ggplot2::labs(y=x[[1]], title =  attr(outputVariables[[i]], 'longName')  )
               localPlot <- plotly::ggplotly(p = ggplotGraph)
-              plotly::layout(p=localPlot, title="testing 123", hovermode="closest", xaxis = a, yaxis = a )
+              plotly::layout(p=localPlot, xaxis = a, yaxis = a )
               #browser()
               # output$plot1 <<-  plotly::renderPlotly(localPlot)
 
