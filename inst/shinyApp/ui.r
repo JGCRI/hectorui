@@ -1,6 +1,6 @@
 #
 # This is a Shiny web application.
-
+library(shinyBS)
 # Define UI for application
 fluidPage(theme = shinythemes::shinytheme("darkly"),
   shinythemes::themeSelector(),
@@ -15,6 +15,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
     tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
   ),
   shinyjs::useShinyjs(),
+
   # Main component from which all other components fall under, navbarPage.
   navbarPage
   (
@@ -29,38 +30,38 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
         div(h4("Baseline Scenarios"),#, icon("info-circle", "fa-1x")),
             tags$hr(class="hrNav"),
             #checkboxGroupInput(inline=TRUE,"input_RCP", "RCP Scenario:", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6.0"="RCP 6.0", "8.5" = "RCP 8.5"), width=200),
-            div(class="checkboxDiv", "RCP Scenarios:", p(
+            div(class="checkboxDiv", "RCP Scenarios:",
+                p(
                 shinyWidgets::prettyCheckbox(inputId = "input_RCP2.6", label = "2.6", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
                 shinyWidgets::prettyCheckbox(inputId = "input_RCP4.5", label = "4.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
                 shinyWidgets::prettyCheckbox(inputId = "input_RCP6.0", label = "6.0", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
-                shinyWidgets::prettyCheckbox(inputId = "input_RCP8.5", label = "8.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check")))
-              # checkboxInput(inputId="input_RCP26", label = "2.6", value = FALSE, width=80),
-              # checkboxInput(inputId="input_RCP45", label = "4.5", value = FALSE, width=80),
-              # checkboxInput(inputId="input_RCP60", label = "6.0", value = FALSE, width=80),
-              # checkboxInput(inputId="input_RCP85", label = "8.5", value = FALSE, width=80)
+                shinyWidgets::prettyCheckbox(inputId = "input_RCP8.5", label = "8.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check"))
+                )
             ),
             # radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
-            textInput("input_ScenarioName", "Scenario Name:", width=200, value = ""),
+
 
         div(h4("Custom Scenario"),
             tags$hr(class="hrNav"),
+            textInput("input_ScenarioName", "Scenario Name:", width=200, value = ""),
             fileInput("input_ScenarioFile", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
-            actionButton(inputId="input_Driven", label="Load Scenario"))
+            div(class="paramDivs", actionButton(inputId="input_loadCustom", label="Load Scenario"), shinyWidgets::prettyCheckbox(inputId = "input_enableCustom", label = "Enable in graphs", value = FALSE, inline = TRUE, icon = icon("check"))))
         ),
         div(id="myapp",
             h4("Model Parameters"),
             tags$hr(class="hrNav"),
-            selectInput("input_paramToggle", "Model:", list("Default" = "default", "MAGICC" = "magicc", "Other" = "other"), width = 150),
-            # radioButtons("input_paramToggle", label = "Model:", choices = list("Default", "MAGIC", "Third")),
-            div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01), title = "testing", trigger = "click")), div(class="paramDivs",id="div1", icon("info-circle", "fa-1x")),
-            div(class="paramDivs",numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
-            div(class="paramDivs",numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
-            div(class="paramDivs",numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
-            div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
-            div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
-            div(class="paramDivs",numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), div(class="paramDivs",icon("info-circle", "fa-1x")),
+            div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model:", list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
+                                                                                          "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ),
+            div(class="paramDivs", numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            div(class="paramDivs", numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            div(class="paramDivs", numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01, min = 0.01, max = 25)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
             div(class="paramDivs", actionButton(inputId="set_Params", label="Set Parameters"),
-              tippy::tippy_this(actionButton(inputId="reset_Params", label="Reset Parameters"), tooltip = "testing 123")
+            actionButton(inputId="reset_Params", label="Reset Parameters"))
+            # radioButtons("input_paramToggle", label = "Model:", choices = list("Default", "MAGIC", "Third")),
         )
       ),
       mainPanel
@@ -102,7 +103,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
             p(icon("chart-line","fa-2x"), " Scenario Output", value="outputTab"),
             h5("Scenario Results"), tags$hr(class="hrNav"),
               p(selectInput
-                ("capabilities",  "Choose capability identifiers:",
+                ("capabilities",  "Choose capability identifiers (up to 4):",
                   list('Carbon Cycle' = list("Atmospheric CO2"="cc_co2", "Atmospheric Carbon Pool"="cc_acp", "FFI Emissions"="cc_ffi", "LUC Emissions"="cc_luc"),
                        'Concentrations' = list("Amospheric N2O"='c_an20'),
                        'Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'),
@@ -120,22 +121,19 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                        #                "Partial Pressure CO2 - High Lat"='o_hl_pp_co2',"Partial Pressure CO2 - Low Lat"='o_ll_pp_co2',"Dissolved Inorganic C - High Lat"='o_hl_dic', "Dissolved Inorganic C - Low Lat"='o_ll_dic', "Ocean Temperature - High Lat"='o_hl_t', "Ocean Temperature - Low Lat"='o_ll_t',
                        #                "Carbonate Concentration - High Lat"='o_hl_cc', "Carbonate Concentration - Low Lat"='o_ll_cc'),
                        'SO2' = list( "Anthropogenic SO2"='so2_a', "Natural CH4 Emissions"='so2_n_ch4', "Volcanic SO2"='so2_v'),
-                       'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Land Temp Anomaly"="t_lta", "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')), multiple = T, width=350
-                ),  actionButton(inputId="loadGraphs", label="Load Graphs", width = 200), downloadButton("dlData", label="Download Raw Data")
+                       'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Land Temp Anomaly"="t_lta", "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')),
+                  multiple = T, width=350, selected = "t_gmt"
+                ),
+                actionButton(inputId="loadGraphs", label="Load Graphs", width = 200), downloadButton("dlData", label="Download Raw Data")
                ),
                # plotly::plotlyOutput("plotly", width = "100%", height = "350"),
             uiOutput("plots", class = "customPlot")
           ) # end tabpanel
         ) # end tabsetpanel
-      ), # end mainpanel
-      tabPanel
-      (
-        p(icon("search"), "Custom CSV File Instructions")
-      )
-    )
-  )
-)
-
+      ) # end mainpanel
+    ) # end tabpanel
+  ) # end navbarpage
+) # end of everything.
 #)
 #disable(input_Driven)
 # Run the application

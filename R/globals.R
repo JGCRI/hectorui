@@ -10,6 +10,7 @@ NULL
 #' @rdname constants
 #' @export
 globalVars <- vector()
+globalVars['startDate'] <- 1800
 globalVars['endDate'] <- 2100
 
 # Create global file input vector
@@ -48,18 +49,47 @@ globalParameters['diff'] <- hector::DIFFUSIVITY() #2.3
 globalParamsDefault <- vector()
 globalParamsDefault <- c(1, 0.36, 2.3, 3, 276.09, 2, 1)
 
-# Default Parameter Sets
-#' @details \code{globalParamsOther}: Default Parameter Sets
+# CanESM2 Parameter Sets
+#' @details \code{globalParamsCanESM2}: Default Parameter Sets
 #' @rdname constants
 #' @export
-globalParamsMAGICC <- vector()
-globalParamsMAGICC <- c(1.2, 0.6, 2.1, 3.4, 300, 2.2, 0.75)
+globalParamsCanESM2 <- vector()
+globalParamsCanESM2 <- c(1.87, 0.08, 0.98, 3.88, 282.35, 1.75, 1.81)
 
-# Default Parameter Sets
-#' @details \code{globalParamsOther}: Default Parameter Sets
+# CESM1-BGC Parameter Sets
+#' @details \code{globalParamsCESM1BGC}: Default Parameter Sets
 #' @rdname constants
 #' @export
-globalParamsOther <- c(1.4, 0.4, 2.4, 3.7, 307, 2.7, 0.45)
+globalParamsCESM1BGC <- vector()
+globalParamsCESM1BGC <- c(-0.43, 0.01, 8, 2.4, 280.31, 1.78, 3.94)
+
+# GFDL-ESM2G Parameter Sets
+#' @details \code{globalParamsGFDLESM2G}: Default Parameter Sets
+#' @rdname constants
+#' @export
+globalParamsGFDLESM2G <- vector()
+globalParamsGFDLESM2G <- c(0.46, 0.07, 12.01, 2.03, 289.24, 1.76, 2.12)
+
+# MIROC-ESM Parameter Sets
+#' @details \code{globalParamsMIROCESM}: Default Parameter Sets
+#' @rdname constants
+#' @export
+globalParamsMIROCESM <- vector()
+globalParamsMIROCESM <- c(1.05, 0.02, 6.39, 5.83, 283.31, 1.77, 2.02)
+
+# MPI-ESM-LR Parameter Sets
+#' @details \code{globalParamsMPIESM-LR}: Default Parameter Sets
+#' @rdname constants
+#' @export
+globalParamsMPIESMLR <- vector()
+globalParamsMPIESMLR <- c(1.22, 0.28, 2.93, 3.66, 289.13, 1.75, 0.70)
+
+# MRI-ESM1 Parameter Sets
+#' @details \code{globalParamsMRIESM1}: Default Parameter Sets
+#' @rdname constants
+#' @export
+globalParamsMRIESM1 <- vector()
+globalParamsMRIESM1 <- c(1.42, 0.66, 4.21, 2.04, 289.49, 1.76, 0.27)
 
 
 # Output Variables: This section maps output variables (should match drop down item ids)

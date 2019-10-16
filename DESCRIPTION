@@ -31,8 +31,7 @@ Imports:
     tidyr,
     magrittr,
     shinythemes,
-    shinyWidgets,
-    tippy
+    shinyWidgets
 Depends:
 RoxygenNote: 6.1.1
 
