@@ -7,11 +7,15 @@
 \alias{globalScenarios}
 \alias{globalParameters}
 \alias{globalParamsDefault}
-\alias{globalParamsMAGICC}
-\alias{globalParamsOther}
+\alias{globalParamsCanESM2}
+\alias{globalParamsCESM1BGC}
+\alias{globalParamsGFDLESM2G}
+\alias{globalParamsMIROCESM}
+\alias{globalParamsMPIESMLR}
+\alias{globalParamsMRIESM1}
 \alias{globalCapabilities}
 \title{Global constants for the Hector-Shiny UI}
-\format{An object of class \code{numeric} of length 1.}
+\format{An object of class \code{numeric} of length 2.}
 \usage{
 globalVars
 
@@ -21,9 +25,17 @@ globalParameters
 
 globalParamsDefault
 
-globalParamsMAGICC
+globalParamsCanESM2
 
-globalParamsOther
+globalParamsCESM1BGC
+
+globalParamsGFDLESM2G
+
+globalParamsMIROCESM
+
+globalParamsMPIESMLR
+
+globalParamsMRIESM1
 
 globalCapabilities
 }
@@ -39,9 +51,17 @@ Global constants for the Hector-Shiny UI
 
 \code{globalParamsDefault}: Default Parameter Sets
 
-\code{globalParamsOther}: Default Parameter Sets
+\code{globalParamsCanESM2}: Default Parameter Sets
 
-\code{globalParamsOther}: Default Parameter Sets
+\code{globalParamsCESM1BGC}: Default Parameter Sets
+
+\code{globalParamsGFDLESM2G}: Default Parameter Sets
+
+\code{globalParamsMIROCESM}: Default Parameter Sets
+
+\code{globalParamsMPIESM-LR}: Default Parameter Sets
+
+\code{globalParamsMRIESM1}: Default Parameter Sets
 
 \code{globalCapabilities} Capability strings for Hector variables
 }
