@@ -95,27 +95,6 @@ server <- function(input, output, session)
     input$input_beta
     input$input_diff
     input$input_ecs
-    if(!is.na(input$input_beta) && (as.double(input$input_beta) < 0.01 ))
-    {
-      #browser()
-      updateNumericInput(session = session, inputId = input$input_beta, value = 1)
-    }
-    if(!is.na(input$input_diff) && (as.double(input$input_diff) < 0.01 ))
-    {
-      updateNumericInput(session = session, inputId = input$input_diff, value = 0.01)
-    }
-    if(!is.na(input$input_ecs) && (as.double(input$input_ecs) < 0.01 ))
-    {
-      updateNumericInput(session = session, inputId = input$input_ecs, value = 0.01)
-    }
-    if(!is.na(input$input_pco2) && (as.double(input$input_pco2) < 0.01 ))
-    {
-      updateNumericInput(session = session, inputId = input$input_pco2, value = 0.01)
-    }
-    if(!is.na(input$input_q10) && (as.double(input$input_q10) < 0.01 ))
-    {
-      updateNumericInput(session = session, inputId = input$input_q10, value = 0.01)
-    }
     setParamsChanged(TRUE)
   })
 
@@ -628,24 +607,27 @@ server <- function(input, output, session)
     },
     content = function(file)
     {
-      dataList <- list()
-      df <- data.frame()
-      seriesname <- ""
-      for(i in 1:length(hcores))
-      {
-        hdata <- hector::fetchvars(core = hcores[[i]], dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
-        hdata <- dplyr::mutate(hdata)
-        if(names(hcores[i])=="Custom")
-          seriesname <- input$input_ScenarioName
-        else
-          seriesname <- paste("RCP ", names(hcores[i]))
-        hdata <- dplyr::mutate(hdata, scenario=seriesname)
-        df <- data.frame(hdata)
-        dataList[[i]] <- df
-       # browser()
+      if(length (hcores) > 0)
+      {print("ghere")
+        dataList <- list()
+        df <- data.frame()
+        seriesname <- ""
+        for(i in 1:length(hcores))
+        {
+          hdata <- hector::fetchvars(core = hcores[[i]], dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
+          hdata <- dplyr::mutate(hdata)
+          if(names(hcores[i])=="Custom")
+            seriesname <- input$input_ScenarioName
+          else
+            seriesname <- paste("RCP ", names(hcores[i]))
+          hdata <- dplyr::mutate(hdata, scenario=seriesname)
+          df <- data.frame(hdata)
+          dataList[[i]] <- df
+         # browser()
+        }
       }
-
-      write.csv(dataList, file, row.names = FALSE)
+      lapply(dataList, function(x) write.table( data.frame(x), file  , append= T, sep=',', row.names = F ))
+      #write.csv(df, file, row.names = FALSE)
     }
   )
 }
