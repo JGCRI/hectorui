@@ -626,7 +626,11 @@ server <- function(input, output, session)
          # browser()
         }
       }
-      lapply(dataList, function(x) write.table( data.frame(x), file  , append= T, sep=',', row.names = F ))
+      header_text <- paste("File created with Hector UI - https://github.com/JGCRI/hector-ui\n" ,
+                      "Model Parameters: " , input$input_paramToggle , "\n")
+
+      cat(header_text, file = file)
+      lapply(dataList, function(x) write.table( data.frame(x), file  , append= T, sep=',', row.names = F,  ))
       #write.csv(df, file, row.names = FALSE)
     }
   )

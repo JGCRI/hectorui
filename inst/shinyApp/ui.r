@@ -20,7 +20,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
   navbarPage
   (
     "Navigation:",
-    # multi-page user-interface that includes a navigation bar.
+    # Multi-page user-interface that includes a navigation bar.
     tabPanel
     (
       "Run Scenario",
@@ -33,7 +33,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
           # Information Tab Panel
           tabPanel
           ( p(icon("info-circle", "fa-1x"), "Base Scenarios", value="infoTab"),
-            div(h4("Baseline Scenarios"),#, icon("info-circle", "fa-1x")),
+            div(h4("RCP Scenarios"),#, icon("info-circle", "fa-1x")),
                 tags$hr(class="hrNav"),
                 #checkboxGroupInput(inline=TRUE,"input_RCP", "RCP Scenario:", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6.0"="RCP 6.0", "8.5" = "RCP 8.5"), width=200),
                 div(class="checkboxDiv", "RCP Scenarios:",
@@ -51,7 +51,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                 tags$hr(class="hrNav"),
                 textInput("input_ScenarioName", "Scenario Name:", width=200, value = ""),
                 fileInput("input_ScenarioFile", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
-                div(class="paramDivs", actionButton(inputId="input_loadCustom", label="Load Scenario"), shinyWidgets::prettyCheckbox(inputId = "input_enableCustom", label = "Enable in graphs", value = FALSE, inline = TRUE, icon = icon("check"))))
+                div(class="paramDivs", actionButton(inputId="input_loadCustom", label="Load Scenario")))
             ),
             div(id="myapp",
                 h4("Model Parameters"),
@@ -71,7 +71,36 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
           ),
           tabPanel
           ( p(icon("edit", "fa-1x"), "Custom Scenarios", value="infoTab"),
-            div()
+            div(h4("Baseline Scenarios"),#, icon("info-circle", "fa-1x")),
+                tags$hr(class="hrNav"),
+                selectInput("input_custom_RCP", "RCP Scenario", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6"="RCP 6.0", "8.5" = "RCP 8.5", "Custom" = "custom"), width=200, selected = "RCP 4.5"),
+                 radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
+
+
+                conditionalPanel(
+                  condition = "input.input_custom_RCP == 'custom'",
+                  h4("Custom Scenario"),
+                    tags$hr(class="hrNav"),
+                    textInput("input_custom_scenarioName", "Scenario Name:", width=200, value = ""),
+                    fileInput("input_custom_scenarioFile", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
+                    div(class="paramDivs", actionButton(inputId="input_load_custom", label="Load Scenario"))
+                  )
+            ),
+            div(id="myapp",
+                h4("Model Parameters"),
+                tags$hr(class="hrNav"),
+                div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model:", list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
+                                                                                              "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01, min = 0.01, max = 25)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+                div(class="paramDivs", actionButton(inputId="set_Params", label="Set Parameters"),
+                    actionButton(inputId="reset_Params", label="Reset Parameters"))
+            )
           )
         )
       ),
