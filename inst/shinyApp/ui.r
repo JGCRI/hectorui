@@ -36,7 +36,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
             div(h4("RCP Scenarios"),#, icon("info-circle", "fa-1x")),
                 tags$hr(class="hrNav"),
                 #checkboxGroupInput(inline=TRUE,"input_RCP", "RCP Scenario:", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6.0"="RCP 6.0", "8.5" = "RCP 8.5"), width=200),
-                div(class="checkboxDiv", "RCP Scenarios:",
+                div(class="checkboxDiv", "Choose 1 or more Scenarios:",
                     p(
                     shinyWidgets::prettyCheckbox(inputId = "input_RCP2.6", label = "2.6", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
                     shinyWidgets::prettyCheckbox(inputId = "input_RCP4.5", label = "4.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
@@ -46,13 +46,26 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                 ),
                 # radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
 
-
-            div(h4("Custom Scenario"),
-                tags$hr(class="hrNav"),
-                textInput("input_ScenarioName", "Scenario Name:", width=200, value = ""),
-                fileInput("input_ScenarioFile", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
-                div(class="paramDivs", actionButton(inputId="input_loadCustom", label="Load Scenario")))
-            ),
+                div(h4("Custom Emissions"),
+                    tags$hr(class="hrNav"),
+                    shiny::selectInput(inputId = "input_custom_emissions", label =  "Emissions:", width = 200, multiple = F,
+                                       choices = list('Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'))),
+                    div(
+                        fluidRow(
+                          column(3, shiny::textInput(inputId = "input_custom_start", label = "Start Year:",  placeholder = 1900)),
+                          column(3, shiny::textInput(inputId = "input_custom_end", label = "End Year:",  placeholder = 2100)),
+                          column(3, shiny::textInput(inputId = "input_emissions_value", label = "Value:"))
+                        ),
+                        actionButton(inputId="input_set_custom_emissions", label="Set Emissions")
+                    )
+                )
+              ),
+            # div(h4("Custom Emissions"),
+            #     tags$hr(class="hrNav"),
+            #     textInput("input_ScenarioName", "Scenario Name:", width=200, value = ""),
+            #     fileInput("input_ScenarioFile", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
+            #     div(class="paramDivs", actionButton(inputId="input_loadCustom", label="Load Scenario")))
+            # ),
             div(id="myapp",
                 h4("Model Parameters"),
                 tags$hr(class="hrNav"),
@@ -165,7 +178,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                   multiple = T, width=350, selected = "t_gmt"
                 ),
                 actionButton(inputId="loadGraphs", label="Load Graphs", width = 200), downloadButton("dlData", label="Download Raw Data")
-               ),
+               ), verbatimTextOutput("click"),
                # plotly::plotlyOutput("plotly", width = "100%", height = "350"),
             uiOutput("plots", class = "customPlot")
           ) # end tabpanel

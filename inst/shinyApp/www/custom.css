@@ -85,8 +85,15 @@ label
 .form-control
 {
   height: 27px;
-  width: 200px;
   font-size: 12px;
+
+}
+
+.form-control-small
+{
+  display: inline;
+  vertical-align:top;
+
 }
 
 .form-dropDownDiv
