@@ -157,6 +157,21 @@ label
  /* visibility: visible;*/
 }
 
+#shiny-notification-panel
+{
+  top: 50% !important;
+  left: 50% !important;
+  margin-top: -100px !important;
+  margin-left: -250px !important;
+  /*color: blue;
+  border: solid 2px;
+  border-color: #AC7023;;*/
+  font-size: 20px;
+  font-style: italic;
+  height: auto;
+  width: 250px;
+}
+
 .well
 {
   padding: 17px;

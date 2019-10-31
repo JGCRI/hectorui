@@ -18,45 +18,50 @@ loadGraph <- function()
         {
           if(length(outputVariables) >= 1)
           {
-            for (i in 1:length(outputVariables))
+            withProgress(message = 'Loading Output Graphs...\n', value = 0,
             {
-              # Need local so that each item gets its own number. Without it, the value
-              # of i in the renderPlot() will be the same across all instances, because
-              # of when the expression is evaluated.
-              local(
-                {#browser()
-                  my_i <- i
-                  plotname <- paste("plot", i, sep="")
-                  plottitle <- paste("plottitle", globalScenarios[i], sep="")
-                  tablename <- paste("tablename", globalScenarios[i], sep="")
-                  seriesname <- ""
-                  for(j in 1:length(hcores))
-                  {
-                    hdata <- hector::fetchvars(core = hcores[[j]], dates = 1800:globalVars['endDate'], vars = outputVariables[i], "\n")
-                    if(names(hcores[j])=="Custom")
-                      seriesname <- input$input_ScenarioName
-                    else
-                      seriesname <- paste("RCP ", names(hcores[j]))
-                    hdata <- dplyr::mutate(hdata, scenario=seriesname)
-                    df_total <- rbind(df_total,hdata)
-                  }
-                  x <- dplyr::distinct(hdata, units)
-                  #browser()
-                  ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=year, y=value, group=variable, color=scenario)) + ggplot2::geom_line() +
-                    ggthemes::theme_solarized(light = TRUE)+ ggplot2::labs(y=x[[1]], title =  attr(outputVariables[[i]], 'longName'))
-                  # +  ggplot2::guides(color = ggplot2::guide_colorbar(title = expression(beta)))
-                  # +  ggplot2::scale_color_viridis_c()
+              for (i in 1:length(outputVariables))
+              {
+                # Need local so that each item gets its own number. Without it, the value
+                # of i in the renderPlot() will be the same across all instances, because
+                # of when the expression is evaluated.
+                local(
+                {
+                    my_i <- i
+                    plotname <- paste("plot", i, sep="")
+                    plottitle <- paste("plottitle", globalScenarios[i], sep="")
+                    tablename <- paste("tablename", globalScenarios[i], sep="")
+                    seriesname <- ""
+                    for(j in 1:length(hcores))
+                    {
+                      hdata <- hector::fetchvars(core = hcores[[j]], dates = 1800:globalVars['endDate'], vars = outputVariables[i], "\n")
+                      if(names(hcores[j])=="Custom")
+                        seriesname <- input$input_ScenarioName
+                      else
+                        seriesname <- paste("RCP ", names(hcores[j]))
+                      hdata <- dplyr::mutate(hdata, scenario=seriesname)
+                      df_total <- rbind(df_total,hdata)
+                    }
+                    x <- dplyr::distinct(hdata, units)
+                    #browser()
+                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=year, y=value, group=variable, color=scenario)) + ggplot2::geom_line() +
+                      ggthemes::theme_solarized(light = TRUE)+ ggplot2::labs(y=x[[1]], title =  attr(outputVariables[[i]], 'longName'))
+                    # +  ggplot2::guides(color = ggplot2::guide_colorbar(title = expression(beta)))
+                    # +  ggplot2::scale_color_viridis_c()
 
-                  localPlot <- plotly::ggplotly(p = ggplotGraph)
-                  plotly::layout(p=localPlot, xaxis = a, yaxis = a )
-                  #browser()
-                  # output$plot1 <<-  plotly::renderPlotly(localPlot)
+                    localPlot <- plotly::ggplotly(p = ggplotGraph)
+                    plotly::layout(p=localPlot, xaxis = a, yaxis = a )
+                    #browser()
+                    # output$plot1 <<-  plotly::renderPlotly(localPlot)
 
-                  output[[plotname]] <- plotly::renderPlotly(localPlot)
-                  # output[[plottitle]] <- renderText({paste("1:", my_i, ".  n is ", 4, sep = "")})
-                  # output[[tablename]] <- renderTable({table(x = 1:my_i, y = 1:my_i)})
+                    output[[plotname]] <- plotly::renderPlotly(localPlot)
+                    # output[[plottitle]] <- renderText({paste("1:", my_i, ".  n is ", 4, sep = "")})
+                    # output[[tablename]] <- renderTable({table(x = 1:my_i, y = 1:my_i)})
                 })
-            }
+                incProgress(1/length(hcores), detail = paste(attr(outputVariables[[i]], 'longName'), " loaded."))
+                Sys.sleep(0.5)
+              }
+            })
             if(length(outputVariables) < 4)
             { #browser()
               output[["plot4"]] <<- NULL
@@ -99,15 +104,18 @@ loadGraph <- function()
 }
 
 # Download handler for downloading the raw data output from a Hector run. This is activated upon button click.
-output$dlData <- downloadHandler(
+output$downloadData <- downloadHandler(
+
   filename = function()
   {
-    paste('data-', Sys.Date(), '.csv', sep='')
+    paste('Hector-data-', Sys.Date(), '.csv', sep='')
   },
+
   content = function(file)
   {
     if(length (hcores) > 0)
-    {print("ghere")
+    {
+      browser()
       dataList <- list()
       df <- data.frame()
       seriesname <- ""

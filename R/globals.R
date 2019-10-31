@@ -132,6 +132,7 @@ attr(globalCapabilities[['c_po']], 'longName') <- "Preindustrial Ozone Concentra
 # "Black Carbon Emissions"
 globalCapabilities[['e_bc']] <- hector::EMISSIONS_BC()
 attr(globalCapabilities[['e_bc']], 'longName') <- "Black Carbon Emissions"
+attr(globalCapabilities[['e_bc']], 'unit') <- "Tg"
 # "N20 Emissions"
 globalCapabilities[['e_n2o']] <- hector::EMISSIONS_N2O()
 attr(globalCapabilities[['e_n2o']], 'longName') <- "N20 Emissions"
@@ -147,6 +148,7 @@ attr(globalCapabilities[['e_nmvoc']], 'longName') <- "NMVOC Emissions"
 # "Organic Carbon Emissions"
 globalCapabilities[['e_oc']] <- hector::EMISSIONS_OC()
 attr(globalCapabilities[['e_oc']], 'longName') <- "Organic Carbon Emissions"
+attr(globalCapabilities[['e_oc']], 'unit') <- "Tg"
 
 # FORCINGS
 # "RF - Total"

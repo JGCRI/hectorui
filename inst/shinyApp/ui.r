@@ -1,41 +1,43 @@
 #
-# This is a Shiny web application.
+# This is a Shiny web application UI document. It describes the on screen components that define the application.
+
 library(shinyBS)
-# Define UI for application
+
+# Using Shiny FluidPage layout -  A fluid page layout consists of rows and columns in a structured format
 fluidPage(theme = shinythemes::shinytheme("darkly"),
   shinythemes::themeSelector(),
   shinyalert::useShinyalert(),
   # Application title
   titlePanel("Hector Interactive Climate Model"),
-  # shinyjs::inlineCSS(list(.big = "font-size: 2em")),
 
   # Function that gets called on first load of application to load in any themes/css etc
+  # Loads the custom.css file that contains custom styles and overwrites some built in styles
   tags$head
   (
     tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
   ),
   shinyjs::useShinyjs(),
 
-  # Main component from which all other components fall under, navbarPage.
+  # Main component from which all other components fall under, navbarPage, a multi-page user-interface that includes a navigation bar
   navbarPage
   (
     "Navigation:",
-    # Multi-page user-interface that includes a navigation bar.
+    # Main navigation - currently only used for one item, run scenario. Expandable
     tabPanel
     (
       "Run Scenario",
-
+      # The sidebar panel splist the page into a left hand nav and right side content
       sidebarPanel
       (
         width=3,
+        # A tabsetPanel creates a group of tabs within the left hand nav
         tabsetPanel
         (
-          # Information Tab Panel
+          # Information Tab Panel - a tab panel is an item within a tabset
           tabPanel
           ( p(icon("info-circle", "fa-1x"), "Base Scenarios", value="infoTab"),
             div(h4("RCP Scenarios"),#, icon("info-circle", "fa-1x")),
                 tags$hr(class="hrNav"),
-                #checkboxGroupInput(inline=TRUE,"input_RCP", "RCP Scenario:", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6.0"="RCP 6.0", "8.5" = "RCP 8.5"), width=200),
                 div(class="checkboxDiv", "Choose 1 or more Scenarios:",
                     p(
                     shinyWidgets::prettyCheckbox(inputId = "input_RCP2.6", label = "2.6", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
@@ -56,22 +58,26 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                           column(3, shiny::textInput(inputId = "input_custom_end", label = "End Year:",  placeholder = 2100)),
                           column(3, shiny::textInput(inputId = "input_emissions_value", label = "Value:"))
                         ),
-                        actionButton(inputId="input_set_custom_emissions", label="Set Emissions")
+                        fluidRow(
+                          column(3, shinyWidgets::prettyCheckbox(inputId = "input_slope_emissions", label = "Slope Emissions", value = FALSE,  inline = TRUE, icon = icon("check"))),
+                          column(5, popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ))
+                        ),
+                        actionButton(inputId="input_set_custom_emissions", label="Set Emissions"),
+                        actionButton(inputId="input_reset_custom_emissions", label="Reset All Emissions"),
+                        popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
                     )
                 )
               ),
-            # div(h4("Custom Emissions"),
-            #     tags$hr(class="hrNav"),
-            #     textInput("input_ScenarioName", "Scenario Name:", width=200, value = ""),
-            #     fileInput("input_ScenarioFile", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
-            #     div(class="paramDivs", actionButton(inputId="input_loadCustom", label="Load Scenario")))
-            # ),
             div(id="myapp",
                 h4("Model Parameters"),
                 tags$hr(class="hrNav"),
-                div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model:", list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
+                div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model Emulation:", list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
                                                                                               "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)),popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ),
+                # fluidRow(
+               #   column(6, div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01))),
+               #   column(2, popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ))
+               #   ),
                 div(class="paramDivs", numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
                 div(class="paramDivs", numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
                 div(class="paramDivs", numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01, min = 0.01, max = 25)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
@@ -117,6 +123,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
           )
         )
       ),
+      # Right hand side panel - Main panel that is used for output
       mainPanel
       (
         tabsetPanel
@@ -177,8 +184,9 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                        'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Land Temp Anomaly"="t_lta", "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')),
                   multiple = T, width=350, selected = "t_gmt"
                 ),
-                actionButton(inputId="loadGraphs", label="Load Graphs", width = 200), downloadButton("dlData", label="Download Raw Data")
-               ), verbatimTextOutput("click"),
+                actionButton(inputId="loadGraphs", label="Load Graphs", width = 200),
+                downloadButton("downloadData", label="Download Raw Data")
+               ),
                # plotly::plotlyOutput("plotly", width = "100%", height = "350"),
             uiOutput("plots", class = "customPlot")
           ) # end tabpanel
@@ -187,21 +195,4 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
     ) # end tabpanel
   ) # end navbarpage
 ) # end of everything.
-#)
-#disable(input_Driven)
-# Run the application
-#shinyApp(ui = ui, server = server)
-
-# sliderInput("timeline",
-#             "Timeline:",
-#             min = 1950,
-#             max = 2017,
-#             value = c(1997, 2015)),
-
-#format = "####"),
-
-# actionButton(inputId = "selectAllTop",
-#              label = "Select all",
-#              icon = icon("check-square-o"))
-# uiOutput("themesControl"), # the id
 

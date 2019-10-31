@@ -36,31 +36,28 @@ server <- function(input, output, session)
   {
     plot_output_list <- lapply(1:4, function(i)
     {
-     # plotname <- paste("plot", names(globalScenarios[i]), sep="")
       plotname <- paste("plot", i, sep="")
       plottitle <- paste("plottitle",attr(globalScenarios[[i]], "name"), sep="")
       tablename <- paste("tablename", attr(globalScenarios[[i]], "name"), sep="")
-      plot <-  plotly::plotlyOutput(plotname, height = 275, width = 550) %>%
-               layout(dragmode = "select") %>%
-               event_register("plotly_selecting")
+      plot <-  plotly::plotlyOutput(plotname, height = 275, width = 550) #%>%
+               # layout(dragmode = "select") %>%
+               # event_register("plotly_selecting")
 
       tags$div(class = "group-output",
                textOutput(plottitle, container = h3),
                plotly::plotlyOutput(plotname, height = 275, width = 550) ,
                tableOutput(tablename)
-
       )
     })
 
-    # Convert the list to a tagList - this is necessary for the list of items
-    # to display properly.
+    # Convert the list to a tagList - this is necessary for the list of items to display properly.
     do.call(tagList, plot_output_list)
   })
 
-  output$click <- renderPrint({
-    d <- event_data("plotly_click")
-    if (is.null(d)) "Click events appear here (double-click to clear)" else d
-  })
+  # output$click <- renderPrint({
+  #   d <- event_data("plotly_click")
+  #   if (is.null(d)) "Click events appear here (double-click to clear)" else d
+  # })
 
   #set initial plotting variables
   for(i in 1:4)
@@ -85,7 +82,8 @@ server <- function(input, output, session)
   observeEvent(input$input_loadCustom, loadCustomScenario(), ignoreInit = TRUE)
   observeEvent(input$input_paramToggle, loadModelParameters())
   observeEvent(input$input_enableCustom, toggleCustom(), suspended = TRUE)
-  observeEvent(input$input_set_custom_emissions, setCustomEmissions())
+  observeEvent(input$input_set_custom_emissions, setCustomEmissions(), ignoreInit = TRUE)
+  observeEvent(input$input_reset_custom_emissions, resetCustomEmissions(), ignoreInit = TRUE)
 
   toggleCustom <- function()
   {
@@ -100,7 +98,7 @@ server <- function(input, output, session)
       updateNumericInput(session = session, inputId = "input_beta", value = 1)
     }
   }
-  # Group Observers for the params fields
+  # This is a group Observer block for all of the params fields because they all respond the same way
   observe({
     input$input_pco2
     input$input_q10

@@ -14,33 +14,20 @@ loadModelParameters <- function()
   print("in load model params")
   paramsGroup <- vector()
   if(input$input_paramToggle == "default")
-  {
     paramsGroup <- globalParamsDefault
-  }
   else if(input$input_paramToggle == "canesm2")
-  {
     paramsGroup <- globalParamsCanESM2
-  }
   else if(input$input_paramToggle == "cesm1-bgc")
-  {
     paramsGroup <- globalParamsCESM1BGC
-  }
   else if(input$input_paramToggle == "gfdl-esm2g")
-  {
     paramsGroup <- globalParamsGFDLESM2G
-  }
   else if(input$input_paramToggle == "miroc-esm")
-  {
     paramsGroup <- globalParamsMIROCESM
-  }
   else if(input$input_paramToggle == "mpi-esm-lr")
-  {
     paramsGroup <- globalParamsMPIESMLR
-  }
   else if(input$input_paramToggle == "mri-esm1")
-  {
     paramsGroup <- globalParamsMRIESM1
-  }
+
   # Update the on screen input components for parameters with the associated values from the chosen parameter group
   # Note - with the current code the parameters need to be in correct order or would have to switch to named calls
   updateNumericInput(session, "input_aero", value=paramsGroup[[1]])
@@ -65,7 +52,10 @@ loadModelParameters <- function()
 
     resetCore()
   }
-  setParamsChanged(toggle = TRUE)
+  if(!firstLoad)
+    setParamsChanged(toggle = TRUE)
+  if(length(hcores) > 0)
+    loadGraph()
 }
 
 # Observer function to handle the user input on the reset parameters button - reset hector parameters to defaults
@@ -86,7 +76,7 @@ resetParams <- function()
 # Function that gets the input parameters from the hector core and maps them to the input fields
 # This would normally be called on first load or when parameters are reset.
 loadParameters <- function()
-{1
+{
   print("in load params")
 
   # Fetch hector parameters from core
@@ -164,6 +154,8 @@ setParameters <- function()
           }
         }
         resetCore()
+        if(length(hcores) > 0)
+          loadGraph()
       },
       warning = function(war)
       {
@@ -183,7 +175,7 @@ setParameters <- function()
   }
 }
 
-# This function is used to both validate change parameter values and set the corresponding flag
+# This function is used to set the corresponding flag
 # so that they system knows the parameters have been changed
 setParamsChanged <- function(toggle)
 {
