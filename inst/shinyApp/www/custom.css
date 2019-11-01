@@ -110,6 +110,7 @@ label
 .group-output
 {
   display:inline-block;
+  padding: 5px;
 }
 
 .hrNav

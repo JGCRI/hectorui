@@ -8,7 +8,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
   shinythemes::themeSelector(),
   shinyalert::useShinyalert(),
   # Application title
-  titlePanel("Hector Interactive Climate Model"),
+  titlePanel("Hector: An Interactive Climate Model"),
 
   # Function that gets called on first load of application to load in any themes/css etc
   # Loads the custom.css file that contains custom styles and overwrites some built in styles
@@ -60,7 +60,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                         ),
                         fluidRow(
                           column(3, shinyWidgets::prettyCheckbox(inputId = "input_slope_emissions", label = "Slope Emissions", value = FALSE,  inline = TRUE, icon = icon("check"))),
-                          column(5, popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ))
+                          column(5, popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Sloping Emissions", content = "Choosing this option will create a smooth slope from the starting years value to the specified value at the end year.", placement = "top" ))
                         ),
                         actionButton(inputId="input_set_custom_emissions", label="Set Emissions"),
                         actionButton(inputId="input_reset_custom_emissions", label="Reset All Emissions"),

@@ -181,10 +181,8 @@ setParamsChanged <- function(toggle)
 {
   print("in set Params Changed")
   # Check input validation here
-  #browser()
 
-
-  if(toggle == TRUE)
+  if(toggle == TRUE & !firstLoad)
   {
     paramsChanged <<- TRUE
     # shinyjs::enable("set_Params")

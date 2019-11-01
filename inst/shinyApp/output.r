@@ -59,7 +59,7 @@ loadGraph <- function()
                     # output[[tablename]] <- renderTable({table(x = 1:my_i, y = 1:my_i)})
                 })
                 incProgress(1/length(hcores), detail = paste(attr(outputVariables[[i]], 'longName'), " loaded."))
-                Sys.sleep(0.5)
+                Sys.sleep(0.25)
               }
             })
             if(length(outputVariables) < 4)
@@ -115,7 +115,7 @@ output$downloadData <- downloadHandler(
   {
     if(length (hcores) > 0)
     {
-      browser()
+      #browser()
       dataList <- list()
       df <- data.frame()
       seriesname <- ""

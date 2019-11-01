@@ -44,7 +44,7 @@ server <- function(input, output, session)
                # event_register("plotly_selecting")
 
       tags$div(class = "group-output",
-               textOutput(plottitle, container = h3),
+               # textOutput(plottitle, container = h3),
                plotly::plotlyOutput(plotname, height = 275, width = 550) ,
                tableOutput(tablename)
       )
@@ -84,6 +84,16 @@ server <- function(input, output, session)
   observeEvent(input$input_enableCustom, toggleCustom(), suspended = TRUE)
   observeEvent(input$input_set_custom_emissions, setCustomEmissions(), ignoreInit = TRUE)
   observeEvent(input$input_reset_custom_emissions, resetCustomEmissions(), ignoreInit = TRUE)
+
+  # Parameters
+  # observeEvent(input$input_pco2, setParamsChanged(TRUE), ignoreInit = TRUE)
+  # observeEvent(input$input_q10, setParamsChanged(TRUE), ignoreInit = TRUE)
+  # observeEvent(input$input_volc, setParamsChanged(TRUE), ignoreInit = TRUE)
+  # observeEvent(input$input_aero, setParamsChanged(TRUE), ignoreInit = TRUE)
+  # observeEvent(input$input_beta, setParamsChanged(TRUE), ignoreInit = TRUE)
+  # observeEvent(input$input_diff, setParamsChanged(TRUE), ignoreInit = TRUE)
+  # observeEvent(input$input_ecs, setParamsChanged(TRUE), ignoreInit = TRUE)
+
 
   toggleCustom <- function()
   {
