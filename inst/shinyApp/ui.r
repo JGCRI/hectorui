@@ -4,7 +4,7 @@
 library(shinyBS)
 
 # Using Shiny FluidPage layout -  A fluid page layout consists of rows and columns in a structured format
-fluidPage(theme = shinythemes::shinytheme("darkly"),
+fixedPage(theme = shinythemes::shinytheme("darkly"),
   shinythemes::themeSelector(),
   shinyalert::useShinyalert(),
   # Application title
@@ -53,14 +53,14 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                     shiny::selectInput(inputId = "input_custom_emissions", label =  "Emissions:", width = 200, multiple = F,
                                        choices = list('Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'))),
                     div(
-                        fluidRow(
+                        fixedRow(
                           column(3, shiny::textInput(inputId = "input_custom_start", label = "Start Year:",  placeholder = 1900)),
                           column(3, shiny::textInput(inputId = "input_custom_end", label = "End Year:",  placeholder = 2100)),
                           column(3, shiny::textInput(inputId = "input_emissions_value", label = "Value:"))
                         ),
-                        fluidRow(
-                          column(3, shinyWidgets::prettyCheckbox(inputId = "input_slope_emissions", label = "Slope Emissions", value = FALSE,  inline = TRUE, icon = icon("check"))),
-                          column(5, popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Sloping Emissions", content = "Choosing this option will create a smooth slope from the starting years value to the specified value at the end year.", placement = "top" ))
+                        fixedRow(
+                          column(4, shinyWidgets::prettyCheckbox(inputId = "input_slope_emissions", label = "Slope Emissions", value = FALSE,  inline = TRUE, icon = icon("check"))),
+                          column(4, popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Sloping Emissions", content = "Choosing this option will create a smooth slope from the starting years value to the specified value at the end year.", placement = "top" ))
                         ),
                         actionButton(inputId="input_set_custom_emissions", label="Set Emissions"),
                         actionButton(inputId="input_reset_custom_emissions", label="Reset All Emissions"),
@@ -74,7 +74,7 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                 div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model Emulation:", list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
                                                                                               "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
                 div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)),popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ),
-                # fluidRow(
+                # fixedRow(
                #   column(6, div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01))),
                #   column(2, popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ))
                #   ),
@@ -84,8 +84,11 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                 div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
                 div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
                 div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", actionButton(inputId="set_Params", label="Set Parameters"),
-                actionButton(inputId="reset_Params", label="Reset Parameters"))
+                div(class="paramDivs",
+                   actionButton(inputId="set_Params", label="Set Parameters"),
+                   actionButton(inputId="reset_Params", label="Reset Parameters"),
+                   popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Parameters", content = "This will reset any/all parameters for each active Hector core, overwriting any custom parameter changes. Custom emissions will remain.", placement = "top" )
+                )
             )
           ),
           tabPanel
@@ -117,15 +120,18 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                 div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
                 div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
                 div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", actionButton(inputId="set_Params", label="Set Parameters"),
-                    actionButton(inputId="reset_Params", label="Reset Parameters"))
+                div(class="paramDivs",
+                    actionButton(inputId="set_Params", label="Set Parameters"),
+                    actionButton(inputId="reset_Params", label="Reset Parameters"),
+                    popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
+                )
             )
           )
         )
       ),
-      # Right hand side panel - Main panel that is used for output
+      # Right side panel - Main panel that is used for output
       mainPanel
-      (
+      ( width = 9,
         tabsetPanel
         (
           # Information Tab Panel
@@ -154,12 +160,12 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
               interface to Hector.")
             )
           ),
-          tabPanel( fluid=TRUE, p(icon("chalkboard-teacher", "fa-2x"), " Instructions", value="infoTab"),
+          tabPanel( fixed=TRUE, p(icon("chalkboard-teacher", "fa-2x"), " Instructions", value="infoTab"),
                     h5("How the system works"), tags$hr(class="hrNav")
 
                   ),
           tabPanel
-          ( fluid = TRUE,
+          ( fixed = TRUE,
             p(icon("chart-line","fa-2x"), " Scenario Output", value="outputTab"),
             h5("Scenario Results"), tags$hr(class="hrNav"),
               p(selectInput

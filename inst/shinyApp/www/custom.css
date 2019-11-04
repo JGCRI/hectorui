@@ -72,6 +72,17 @@ label
 	display: inline-block;
 }
 
+.col-sm-3
+{
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.container
+{
+  width: 1600px;
+}
+
 .container-fluid
 {
   height:20px;
@@ -86,6 +97,8 @@ label
 {
   height: 27px;
   font-size: 12px;
+  padding-right: 12px;
+  padding-left: 12px;
 
 }
 
