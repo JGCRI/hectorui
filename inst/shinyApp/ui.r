@@ -45,9 +45,9 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     shinyWidgets::prettyCheckbox(inputId = "input_RCP6.0", label = "6.0", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
                     shinyWidgets::prettyCheckbox(inputId = "input_RCP8.5", label = "8.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check"))
                     )
-                ),
-                # radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
+                ), # radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
 
+                # Divider that holds the custom emissions options/controls
                 div(h4("Custom Emissions"),
                     tags$hr(class="hrNav"),
                     shiny::selectInput(inputId = "input_custom_emissions", label =  "Emissions:", width = 200, multiple = F,
@@ -68,65 +68,70 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     )
                 )
               ),
+            # Divider that holds the parameter options/controls
             div(id="myapp",
                 h4("Model Parameters"),
                 tags$hr(class="hrNav"),
-                div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model Emulation:", list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
-                                                                                              "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)),popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ),
+                div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model Emulation:",
+                                                          list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
+                                                               "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)),
+                                              popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "Choosing a model will load a unique set of parameters that correspond to that model for emulation in Hector.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)),popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "Setting this value will change the Aerosol Forcing Factor for any active Hector cores.", placement = "top" ),
                 # fixedRow(
                #   column(6, div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01))),
                #   column(2, popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ))
                #   ),
-                div(class="paramDivs", numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01, min = 0.01, max = 25)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "Setting this value will change the CO2 Forcing Factor for any active Hector cores.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "Setting this value will change the Ocean Heat Diffusivity for any active Hector cores.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01, min = 0.01, max = 25)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "Setting this value will change the Equilibrium climate sensitivity for any active Hector cores.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "Setting this value will change the Preindustrial CO2 concentration for any active Hector cores.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "Setting this value will change the Temperature sensitivity factor for any active Hector cores.", placement = "top" ),
+                div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "Setting this value will change the Volcanic forcing scaling factor for any active Hector cores.", placement = "top" ),
                 div(class="paramDivs",
                    actionButton(inputId="set_Params", label="Set Parameters"),
                    actionButton(inputId="reset_Params", label="Reset Parameters"),
                    popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Parameters", content = "This will reset any/all parameters for each active Hector core, overwriting any custom parameter changes. Custom emissions will remain.", placement = "top" )
                 )
             )
-          ),
-          tabPanel
-          ( p(icon("edit", "fa-1x"), "Custom Scenarios", value="infoTab"),
-            div(h4("Baseline Scenarios"),#, icon("info-circle", "fa-1x")),
-                tags$hr(class="hrNav"),
-                selectInput("input_custom_RCP", "RCP Scenario", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6"="RCP 6.0", "8.5" = "RCP 8.5", "Custom" = "custom"), width=200, selected = "RCP 4.5"),
-                 radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
-
-
-                conditionalPanel(
-                  condition = "input.input_custom_RCP == 'custom'",
-                  h4("Custom Scenario"),
-                    tags$hr(class="hrNav"),
-                    textInput("input_custom_scenarioName", "Scenario Name:", width=200, value = ""),
-                    fileInput("input_custom_scenarioFile", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
-                    div(class="paramDivs", actionButton(inputId="input_load_custom", label="Load Scenario"))
-                  )
-            ),
-            div(id="myapp",
-                h4("Model Parameters"),
-                tags$hr(class="hrNav"),
-                div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model:", list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
-                                                                                              "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01, min = 0.01, max = 25)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs",
-                    actionButton(inputId="set_Params", label="Set Parameters"),
-                    actionButton(inputId="reset_Params", label="Reset Parameters"),
-                    popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
-                )
-            )
           )
+          # ,
+          # # Tab Panel
+          # tabPanel
+          # ( p(icon("edit", "fa-1x"), "Custom Scenarios", value="infoTab"),
+          #   div(h4("Baseline Scenarios"),#, icon("info-circle", "fa-1x")),
+          #       tags$hr(class="hrNav"),
+          #       selectInput("input_custom_RCP", "RCP Scenario", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6"="RCP 6.0", "8.5" = "RCP 8.5", "Custom" = "custom"), width=200, selected = "RCP 4.5"),
+          #        radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
+          #
+          #
+          #       conditionalPanel(
+          #         condition = "input.input_custom_RCP == 'custom'",
+          #         h4("Custom Scenario"),
+          #           tags$hr(class="hrNav"),
+          #           textInput("input_custom_scenarioName", "Scenario Name:", width=200, value = ""),
+          #           fileInput("input_custom_scenarioFile", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
+          #           div(class="paramDivs", actionButton(inputId="input_load_custom", label="Load Scenario"))
+          #         )
+          #   ),
+          #   div(id="myapp",
+          #       h4("Model Parameters"),
+          #       tags$hr(class="hrNav"),
+          #       div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model:", list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
+          #                                                                                     "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+          #       div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ),
+          #       div(class="paramDivs", numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+          #       div(class="paramDivs", numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+          #       div(class="paramDivs", numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01, min = 0.01, max = 25)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+          #       div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+          #       div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+          #       div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+          #       div(class="paramDivs",
+          #           actionButton(inputId="set_Params", label="Set Parameters"),
+          #           actionButton(inputId="reset_Params", label="Reset Parameters"),
+          #           popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
+          #       )
+          #   )
+          # )
         )
       ),
       # Right side panel - Main panel that is used for output
@@ -160,10 +165,10 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
               interface to Hector.")
             )
           ),
-          tabPanel( fixed=TRUE, p(icon("chalkboard-teacher", "fa-2x"), " Instructions", value="infoTab"),
-                    h5("How the system works"), tags$hr(class="hrNav")
-
-                  ),
+          # tabPanel( fixed=TRUE, p(icon("chalkboard-teacher", "fa-2x"), " Instructions", value="infoTab"),
+          #           h5("How the system works"), tags$hr(class="hrNav")
+          #
+          #         ),
           tabPanel
           ( fixed = TRUE,
             p(icon("chart-line","fa-2x"), " Scenario Output", value="outputTab"),

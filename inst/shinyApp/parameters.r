@@ -1,14 +1,26 @@
 
-#----- PARAMETER FUNCTIONS
-
-# Function that maintains persistence after the user has changed parameter values to the Hector core (after scenario change)
+#' Restore Parameters after changing model state
+#'
+#' Function that maintains persistence after the user has changed parameter values to the Hector core (after scenario change)
+#'
+#' @return no return value
+#' @export
+#'
+#' @examples
 restoreParameters <- function()
 {
   print('in restore params')
   setParameters()
 }
 
-# Observer function that responds to changes in input from the drop down in the model parameters section
+#' Load an alternative model's parameters for emulation
+#'
+#' Observer function that responds to changes in input from the drop down in the model parameters section and loads a set of model params
+#'
+#' @return no return value
+#' @export
+#'
+#' @examples
 loadModelParameters <- function()
 {
   print("in load model params")
@@ -58,7 +70,14 @@ loadModelParameters <- function()
     loadGraph()
 }
 
-# Observer function to handle the user input on the reset parameters button - reset hector parameters to defaults
+#' Reset parameter values to current model's default
+#'
+#' Observer function to handle the user input on the reset parameters button - reset hector parameters to model defaults
+#'
+#' @return no return value
+#' @export
+#'
+#' @examples
 resetParams <- function()
 {
   print("in reset params")
@@ -73,8 +92,15 @@ resetParams <- function()
   # }
 }
 
-# Function that gets the input parameters from the hector core and maps them to the input fields
-# This would normally be called on first load or when parameters are reset.
+
+#' Map Hector parameters to field values
+#'
+#' Function that gets the input parameters from the hector core and maps them to the input fields. This would normally be called on first load or when parameters are reset.
+#'
+#' @return no return value
+#' @export
+#'
+#' @examples
 loadParameters <- function()
 {
   print("in load params")
@@ -104,7 +130,15 @@ loadParameters <- function()
   paramsList['volscl']  <<- hdata[which(hdata$variable == "volscl"), 4]
 }
 
-# Observer function to handle user click on the set parameters button.
+
+#' Set parameters to active Hector cores after user change
+#'
+#' Observer function to handle user click on the set parameters button.
+#'
+#' @return no return value
+#' @export
+#'
+#' @examples
 setParameters <- function()
 {
   print("in set parameters")
@@ -175,8 +209,17 @@ setParameters <- function()
   }
 }
 
-# This function is used to set the corresponding flag
-# so that they system knows the parameters have been changed
+
+#' Notifies system that parameters have changed state
+#'
+#' This function is used to set the corresponding flag so that they system knows the parameters have been changed
+#'
+#' @param toggle
+#'
+#' @return no return value
+#' @export
+#'
+#' @examples
 setParamsChanged <- function(toggle)
 {
   print("in set Params Changed")
@@ -197,5 +240,3 @@ setParamsChanged <- function(toggle)
   }
 
 }
-
-#----- END PARAMS FUNCTIONS

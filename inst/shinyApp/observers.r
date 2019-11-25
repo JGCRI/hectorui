@@ -1,7 +1,13 @@
 
-# This file contains miscellaneous observers (all excluding those from the parameters which are in the parameters.r file)
+# This file contains miscellaneous observers (all except for those from the parameters which are in the parameters.r file)
 
-# Observer function that responds to changes in inputs from the capabilities drop down field in the scenario output tab
+#' Keeps a list of the selected output variables for graphs
+#'
+#' Observer function that responds to changes in user input from the capabilities drop down field in the scenario output tab
+#' @return
+#' @export
+#'
+#' @examples
 setCapabilities <- function()
 {
   print('in set capabilities')
@@ -29,8 +35,16 @@ setCapabilities <- function()
     })
 }
 
-# Observer function that is activated on a change to the RCP Scenario checkboxes.
-# This function will load the chosen scenario and rerun Hector
+
+#' Load the chosen scenario and rerun Hector
+#'
+#' Observer function that is activated on a change to the RCP Scenario checkboxes. Will load the scenario into a new Hector core
+#' @param scenarioName
+#'
+#' @return
+#' @export
+#'
+#' @examples
 setRCP <- function(scenarioName)
 {
   print("in set RCP")
@@ -86,7 +100,13 @@ setRCP <- function(scenarioName)
     })
 }
 
-# Observer function responsible for processing the custom emissions file when the user creates a custom scenario
+#' Load custom scenario
+#'
+#' Observer function responsible for processing the custom emissions file when the user creates a custom scenario
+#' @return
+#' @export
+#'
+#' @examples
 loadCustomScenario <- function()
 {
   print("in load custom")
@@ -131,7 +151,13 @@ loadCustomScenario <- function()
       })
 }
 
-# Observer function that handles the set custom emissions feature
+#' Sets custom emissions set from the user input
+#'
+#' Observer function that handles the set custom emissions feature. Sets emissions for all active cores.
+#' @return
+#' @export
+#'
+#' @examples
 setCustomEmissions <- function()
 {
   print("in Set Custom Emissions")
@@ -186,12 +212,26 @@ setCustomEmissions <- function()
   })
 }
 
-# Observer function that resets any custom emissions inputted by the user
+#' Reset custom emissions
+#'
+#' Observer function that resets any custom emissions inputted by the user back to hector defaults. This also forces a restart which will reset parameters
+#' @return
+#' @export
+#'
+#' @examples
 resetCustomEmissions <- function()
 {
   restartCore()
 }
 
+#' Open URL link
+#'
+#' @param url
+#'
+#' @return
+#' @export
+#'
+#' @examples
 openPage <- function(url) {
   return(tags$a(href=url, "Click here!", target="_blank"))
 

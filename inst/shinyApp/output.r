@@ -1,10 +1,22 @@
 
+#' Load graph by proxy
+#'
+#' @return
+#' @export
+#'
+#' @examples
 loadGraphProxy <- function()
 {
   loadGraph()
 }
 
-# Observer function designed to handle the loading/creation of the output graphs from the Hector model.
+#' Main output function that generates the graphs
+#'
+#' Observer function designed to handle the loading/creation of the output graphs from the Hector model.
+#' @return no return value
+#' @export
+#'
+#' @examples
 loadGraph <- function()
 {
   print("in load graph")
@@ -32,21 +44,22 @@ loadGraph <- function()
                     plottitle <- paste("plottitle", globalScenarios[i], sep="")
                     tablename <- paste("tablename", globalScenarios[i], sep="")
                     seriesname <- ""
+                    scale_colors <- vector()
                     for(j in 1:length(hcores))
                     {
                       hdata <- hector::fetchvars(core = hcores[[j]], dates = 1800:globalVars['endDate'], vars = outputVariables[i], "\n")
                       if(names(hcores[j])=="Custom")
                         seriesname <- input$input_ScenarioName
                       else
-                        seriesname <- paste("RCP ", names(hcores[j]))
-                      hdata <- dplyr::mutate(hdata, scenario=seriesname)
+                        seriesname <- paste("RCP", names(hcores[j]))
+                      hdata <- dplyr::mutate(hdata, scenario = seriesname)
                       df_total <- rbind(df_total,hdata)
                     }
                     x <- dplyr::distinct(hdata, units)
-                    #browser()
-                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=year, y=value, group=variable, color=scenario)) + ggplot2::geom_line() +
+                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=year, y=value, group=variable, color=scenario, ymin=(0.9*value), ymax=(1.1*value), fill = scenario)) + ggplot2::geom_line() +
                       ggthemes::theme_solarized(light = TRUE)+ ggplot2::labs(y=x[[1]], title =  attr(outputVariables[[i]], 'longName'))
-                    # +  ggplot2::guides(color = ggplot2::guide_colorbar(title = expression(beta)))
+                    #+ ggplot2::scale_color_manual(values=globalScenarioColors) + ggplot2::geom_ribbon(alpha=0.5)
+                    # +  ggplot2::guides(color = ggplot2::guide_colorbar(title  = expression(beta)))
                     # +  ggplot2::scale_color_viridis_c()
 
                     localPlot <- plotly::ggplotly(p = ggplotGraph)
@@ -63,7 +76,7 @@ loadGraph <- function()
               }
             })
             if(length(outputVariables) < 4)
-            { #browser()
+            {
               output[["plot4"]] <<- NULL
               if(length(outputVariables) < 3)
                 output[["plot3"]] <<- NULL
@@ -102,6 +115,7 @@ loadGraph <- function()
     shinyalert::shinyalert("No active Hector cores", "Please set at least one of the RCP scenarios to active or upload a custom emissions scenario.", type = "warning")
   }
 }
+
 
 # Download handler for downloading the raw data output from a Hector run. This is activated upon button click.
 output$downloadData <- downloadHandler(

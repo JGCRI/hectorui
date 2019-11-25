@@ -1,7 +1,15 @@
 
-#----- CORE RELATED FUNCTIONS
 
-# Main function that loads/starts the Hector Core and runs the specified scenario
+#' Loads one of the preset RCP scenarios
+#'
+#' Main function that loads/starts the Hector Core and runs the specified scenario
+#'
+#' @param scenario
+#'
+#' @return The Hector core object created from the scenario
+#' @export
+#'
+#' @examples
 loadScenario <- function(scenario)
 {
   print("in load scenario")
@@ -18,7 +26,13 @@ loadScenario <- function(scenario)
   return(hcore)
 }
 
-# Function to reset (not restart via shutdown) a Hector core. A core reset should only be called when input parameters have changed.
+#' Reset the active Hector cores and run the spinup
+#'
+#' Function to reset (not restart via shutdown) a Hector core. A core reset should only be called when input parameters have changed.
+#' @return no return value
+#' @export
+#'
+#' @examples
 resetCore <- function()
 {
   print("in reset core")
@@ -31,7 +45,13 @@ resetCore <- function()
   #loadGraph()
 }
 
-# Function to shutdown and create a new Hector core. A core restart is called when the scenario has changed/been loaded or emissions reset
+#' Restart the active Hector cores
+#'
+#' Function to shutdown and restart active Hector cores. A core restart is called when the scenario has changed/been loaded or emissions changes
+#' @return
+#' @export
+#'
+#' @examples
 restartCore <- function()
 {
   print("in restart core")
@@ -59,5 +79,3 @@ restartCore <- function()
     shinyalert::shinyalert("Warning:", "There are no active cores to reset emissions", type = "warning")
   }
 }
-#----- END CORE FUNCTIONS
-

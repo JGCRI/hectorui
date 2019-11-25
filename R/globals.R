@@ -17,10 +17,15 @@ globalVars['endDate'] <- 2100
 #' @details \code{globalScenarios} Scenario input files
 #' @rdname constants
 #' @export
-globalScenarios <- NULL
+globalScenarios <- list()
 rcps <- c(26,45,60,85)
-globalScenarios <- file.path('input',paste0('hector_rcp',rcps,'.ini'))
-names(globalScenarios) <- paste('RCP', c('2.6', '4.5', '6.0', '8.5'))
+# globalScenarios <- file.path('input',paste0('hector_rcp',rcps,'.ini'))
+# names(globalScenarios) <- paste('RCP', c('2.6', '4.5', '6.0', '8.5'))
+globalScenarios[['RCP 2.6']] <-  file.path('input',paste0('hector_rcp',rcps[1],'.ini'))
+globalScenarios[['RCP 4.5']] <-  file.path('input',paste0('hector_rcp',rcps[2],'.ini'))
+globalScenarios[['RCP 6.0']] <-  file.path('input',paste0('hector_rcp',rcps[3],'.ini'))
+globalScenarios[['RCP 8.5']] <-  file.path('input',paste0('hector_rcp',rcps[4],'.ini'))
+globalScenarioColors <- c("RCP 2.6" = "#99cc33", "RCP 4.5" = "#FFFF00", "RCP 6.0" = "#ff9900", "RCP 8.5" = "#ff3333")
 
 # Create master list of parameter lookups
 #' @details \code{globalParameters}: Capability strings for Hector parameters

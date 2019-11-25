@@ -1,9 +1,18 @@
 
 library(HectorShiny)
 
-# Main data processing function
-# The server function is the main function that processes inputs and handles data i/o. This is required for Shiny apps.
-# Define server logic to set up data fields and drive UI interactions.
+#' Main server/data processing function
+#'
+#' The server function is the main function that processes inputs and handles data i/o. This is required for Shiny apps.
+#'
+#' @param input
+#' @param output
+#' @param session
+#'
+#' @return no return value
+#' @export
+#'
+#' @examples
 server <- function(input, output, session)
 {
   # Needed to interact Shiny with client side JS
@@ -24,7 +33,8 @@ server <- function(input, output, session)
   totalActivePlots <- 0
   customLoaded <- FALSE
 
-  # The se variables are for storing paremeter values so that if a change is made (like loading new scenario) the custom params set by user will persist
+  # These variables are for storing the current parameter values so that if a change is made (like loading new scenario)
+  # then the custom params set by user will persist beyond core restarts
   paramsList <- list()
   paramsChanged <- FALSE
 
@@ -85,29 +95,6 @@ server <- function(input, output, session)
   observeEvent(input$input_set_custom_emissions, setCustomEmissions(), ignoreInit = TRUE)
   observeEvent(input$input_reset_custom_emissions, resetCustomEmissions(), ignoreInit = TRUE)
 
-  # Parameters
-  # observeEvent(input$input_pco2, setParamsChanged(TRUE), ignoreInit = TRUE)
-  # observeEvent(input$input_q10, setParamsChanged(TRUE), ignoreInit = TRUE)
-  # observeEvent(input$input_volc, setParamsChanged(TRUE), ignoreInit = TRUE)
-  # observeEvent(input$input_aero, setParamsChanged(TRUE), ignoreInit = TRUE)
-  # observeEvent(input$input_beta, setParamsChanged(TRUE), ignoreInit = TRUE)
-  # observeEvent(input$input_diff, setParamsChanged(TRUE), ignoreInit = TRUE)
-  # observeEvent(input$input_ecs, setParamsChanged(TRUE), ignoreInit = TRUE)
-
-
-  toggleCustom <- function()
-  {
-    shinyjs::disable("input_enableCustom")
-  }
-
-  testMe <- function()
-  {
-    if(!is.na(input$input_beta) && (as.double(input$input_beta) < 0.01 ))
-    {
-      #browser()
-      updateNumericInput(session = session, inputId = "input_beta", value = 1)
-    }
-  }
   # This is a group Observer block for all of the params fields because they all respond the same way
   observe({
     input$input_pco2
@@ -122,4 +109,17 @@ server <- function(input, output, session)
 
 #----- End observer function setup
 
+  toggleCustom <- function()
+  {
+    shinyjs::disable("input_enableCustom")
+  }
+
+  testMe <- function()
+  {
+    if(!is.na(input$input_beta) && (as.double(input$input_beta) < 0.01 ))
+    {
+      #browser()
+      updateNumericInput(session = session, inputId = "input_beta", value = 1)
+    }
+  }
 }
