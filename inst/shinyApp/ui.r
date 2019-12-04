@@ -25,6 +25,66 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
     # Main navigation - currently only used for one item, run scenario. Expandable
     tabPanel
     (
+      "System Information",
+      mainPanel
+      ( width = 9,
+        tabsetPanel
+        (
+          # Information Tab Panel
+          tabPanel
+          (
+            p(icon("info-circle", "fa-2x"), " System Information", value="infoTab"),
+            h5("Background Information"), tags$hr(class="hrNav"),
+            p("This is the repository for ", tags$b("Hector"),", an open source, object-oriented, simple global climate carbon-cycle model.
+                It runs essentially instantaneously while still representing the most critical global scale earth system processes,
+                and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses.
+                "),
+            p("For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:"),
+            p(img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="350")),
+            p("The primary link to Hector model documentation is the ", a("online manual",href="https://jgcri.github.io/hector/articles/manual", target="blank"),",
+                which is included in the repository in the vignettes/manual directory. The code is also documented with ", a("Doxygen-style", href="http://doxygen.org", target="blank"),
+              " comments. A formal model description paper ", a("Hartin et al. 2015", href="http://www.geosci-model-dev.net/8/939/2015/gmd-8-939-2015.html", target="blank"),
+              " documents its science internals and performance relative to observed data, the ", a("CMIP5", href="http://cmip-pcmdi.llnl.gov/cmip5/", target="blank"),
+              " archive, and the reduced-complexity ", a("MAGICC", href="http://www.magicc.org", target="blank"), " model (as of ", a("version 1.0", href="https://github.com/JGCRI/hector/tree/v1.0", target="blank"),
+              "). In addition, we have developed two package vignettes demonstrating the ", a("basics of the Hector R interface",href="http://jgcri.github.io/hector/articles/intro-to-hector.html", target="blank"),
+              ", and an example application of ", a("solving for an emissions pathway", href="http://jgcri.github.io/hector/articles/hector_apply.html", target="blank"), "."),
+            p("Tools and software that work with Hector:"),
+            tags$ul(
+              tags$li(a("GCAM", href="https://github.com/JGCRI/gcam-core", target="blank"),": Hector can be used as
+                the climate component in the GCAM integrated assessment model."),
+              tags$li(a("pyHector", href="https://github.com/openclimatedata/pyhector", target="blank"),": A python
+                interface to Hector.")
+            )
+          ),
+          # Citation Tab Panel
+          tabPanel
+          (
+            p(icon("copyright", "fa-2x"), "How to Cite", value="citeTab"),
+            h5("Background Information"), tags$hr(class="hrNav")
+          ),
+          # tabPanel( fixed=TRUE, p(icon("chalkboard-teacher", "fa-2x"), " Instructions", value="infoTab"),
+          #           h5("How the system works"), tags$hr(class="hrNav")
+          #
+          #         ),
+
+          # Feedback Tab Panel
+          tabPanel
+          (
+            p(icon("comment", "fa-2x"), "Feedback/Bug Report", value="feedbackTab"),
+            h5("Submit Feedback"), tags$hr(class="hrNav"),
+            p("Please use the form below to contact the Hector team regarding any questions, concerns, suggestions, or problems you may encounter."),
+            htmlOutput("feedbackFrame")
+          )
+          # tabPanel( fixed=TRUE, p(icon("chalkboard-teacher", "fa-2x"), " Instructions", value="infoTab"),
+          #           h5("How the system works"), tags$hr(class="hrNav")
+          #
+          #         ),
+
+        )
+      )
+    ),
+    tabPanel
+    (
       "Run Scenario",
       # The sidebar panel splist the page into a left hand nav and right side content
       sidebarPanel
@@ -47,6 +107,32 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     )
                 ), # radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
 
+                # Divider that holds the parameter options/controls
+                div(id="myapp",
+                    h4("Model Parameters"),
+                    tags$hr(class="hrNav"),
+                    div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model Emulation:",
+                                                              list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
+                                                                   "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)),
+                    popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "Choosing a model will load a unique set of parameters that correspond to that model for emulation in Hector.", placement = "top" ),
+                    div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)),popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "Setting this value will change the Aerosol Forcing Factor for any active Hector cores.", placement = "top" ),
+                    # fixedRow(
+                    #   column(6, div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01))),
+                    #   column(2, popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ))
+                    #   ),
+                    div(class="paramDivs", numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "Setting this value will change the CO2 Forcing Factor for any active Hector cores.", placement = "top" ),
+                    div(class="paramDivs", numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "Setting this value will change the Ocean Heat Diffusivity for any active Hector cores.", placement = "top" ),
+                    div(class="paramDivs", numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01, min = 0.01, max = 25)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "Setting this value will change the Equilibrium climate sensitivity for any active Hector cores.", placement = "top" ),
+                    div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "Setting this value will change the Preindustrial CO2 concentration for any active Hector cores.", placement = "top" ),
+                    div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "Setting this value will change the Temperature sensitivity factor for any active Hector cores.", placement = "top" ),
+                    div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "Setting this value will change the Volcanic forcing scaling factor for any active Hector cores.", placement = "top" ),
+                    div(class="paramDivs",
+                        actionButton(inputId="set_Params", label="Set Parameters"),
+                        actionButton(inputId="reset_Params", label="Reset Parameters"),
+                        popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Parameters", content = "This will reset any/all parameters for each active Hector core, overwriting any custom parameter changes. Custom emissions will remain.", placement = "top" )
+                    )
+                ),
+
                 # Divider that holds the custom emissions options/controls
                 div(h4("Custom Emissions"),
                     tags$hr(class="hrNav"),
@@ -67,32 +153,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                         popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
                     )
                 )
-              ),
-            # Divider that holds the parameter options/controls
-            div(id="myapp",
-                h4("Model Parameters"),
-                tags$hr(class="hrNav"),
-                div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model Emulation:",
-                                                          list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
-                                                               "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)),
-                                              popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "Choosing a model will load a unique set of parameters that correspond to that model for emulation in Hector.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)),popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "Setting this value will change the Aerosol Forcing Factor for any active Hector cores.", placement = "top" ),
-                # fixedRow(
-               #   column(6, div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01))),
-               #   column(2, popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ))
-               #   ),
-                div(class="paramDivs", numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "Setting this value will change the CO2 Forcing Factor for any active Hector cores.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "Setting this value will change the Ocean Heat Diffusivity for any active Hector cores.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01, min = 0.01, max = 25)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "Setting this value will change the Equilibrium climate sensitivity for any active Hector cores.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "Setting this value will change the Preindustrial CO2 concentration for any active Hector cores.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "Setting this value will change the Temperature sensitivity factor for any active Hector cores.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "Setting this value will change the Volcanic forcing scaling factor for any active Hector cores.", placement = "top" ),
-                div(class="paramDivs",
-                   actionButton(inputId="set_Params", label="Set Parameters"),
-                   actionButton(inputId="reset_Params", label="Reset Parameters"),
-                   popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Parameters", content = "This will reset any/all parameters for each active Hector core, overwriting any custom parameter changes. Custom emissions will remain.", placement = "top" )
-                )
-            )
+              )
           )
           # ,
           # # Tab Panel
@@ -139,39 +200,9 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
       ( width = 9,
         tabsetPanel
         (
-          # Information Tab Panel
-          tabPanel
-          (
-            p(icon("info-circle", "fa-2x"), " System Information", value="infoTab"),
-            h5("Background Information"), tags$hr(class="hrNav"),
-            p("This is the repository for ", tags$b("Hector"),", an open source, object-oriented, simple global climate carbon-cycle model.
-              It runs essentially instantaneously while still representing the most critical global scale earth system processes,
-              and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses.
-              "),
-            p("For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:"),
-            p(img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="350")),
-              p("The primary link to Hector model documentation is the ", a("online manual",href="https://jgcri.github.io/hector/articles/manual", target="blank"),",
-              which is included in the repository in the vignettes/manual directory. The code is also documented with ", a("Doxygen-style", href="http://doxygen.org", target="blank"),
-              " comments. A formal model description paper ", a("Hartin et al. 2015", href="http://www.geosci-model-dev.net/8/939/2015/gmd-8-939-2015.html", target="blank"),
-              " documents its science internals and performance relative to observed data, the ", a("CMIP5", href="http://cmip-pcmdi.llnl.gov/cmip5/", target="blank"),
-              " archive, and the reduced-complexity ", a("MAGICC", href="http://www.magicc.org", target="blank"), " model (as of ", a("version 1.0", href="https://github.com/JGCRI/hector/tree/v1.0", target="blank"),
-              "). In addition, we have developed two package vignettes demonstrating the ", a("basics of the Hector R interface",href="http://jgcri.github.io/hector/articles/intro-to-hector.html", target="blank"),
-              ", and an example application of ", a("solving for an emissions pathway", href="http://jgcri.github.io/hector/articles/hector_apply.html", target="blank"), "."),
-            p("Tools and software that work with Hector:"),
-            tags$ul(
-              tags$li(a("GCAM", href="https://github.com/JGCRI/gcam-core", target="blank"),": Hector can be used as
-              the climate component in the GCAM integrated assessment model."),
-            tags$li(a("pyHector", href="https://github.com/openclimatedata/pyhector", target="blank"),": A python
-              interface to Hector.")
-            )
-          ),
-          # tabPanel( fixed=TRUE, p(icon("chalkboard-teacher", "fa-2x"), " Instructions", value="infoTab"),
-          #           h5("How the system works"), tags$hr(class="hrNav")
-          #
-          #         ),
           tabPanel
           ( fixed = TRUE,
-            p(icon("chart-line","fa-2x"), " Scenario Output", value="outputTab"),
+            p(icon("chart-line","fa-2x"), "Scenario Output", value="outputTab"),
             h5("Scenario Results"), tags$hr(class="hrNav"),
               p(selectInput
                 ("capabilities",  "Choose capability identifiers (up to 4):",
@@ -200,6 +231,11 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                ),
                # plotly::plotlyOutput("plotly", width = "100%", height = "350"),
             uiOutput("plots", class = "customPlot")
+          ), # end tabpanel
+          tabPanel
+          ( fixed = TRUE,
+            p(icon("chart-line","fa-2x"), "Downscaled Maps", value="outputTab"),
+            h5("Scenario Results"), tags$hr(class="hrNav")
           ) # end tabpanel
         ) # end tabsetpanel
       ) # end mainpanel

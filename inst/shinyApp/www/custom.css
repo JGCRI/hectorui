@@ -30,6 +30,11 @@ hr
   border-top: 2px solid #375a7f;
 }
 
+iframe
+{
+  border: none;
+}
+
 img
 {
   padding: 10px;

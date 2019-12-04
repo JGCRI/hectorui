@@ -109,6 +109,12 @@ server <- function(input, output, session)
 
 #----- End observer function setup
 
+  output$feedbackFrame <- renderUI({
+    frame_link <- tags$iframe(src="https://docs.google.com/forms/d/e/1FAIpQLSf6inU3DHAE5tZo4vdgtTjtFZvw7OCuH_5xbLvnj5tdqiRVNA/viewform?embedded=true",
+                              height=1100, width=700, seamless=NA)
+    frame_link
+  })
+
   toggleCustom <- function()
   {
     shinyjs::disable("input_enableCustom")
