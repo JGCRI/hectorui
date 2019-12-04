@@ -14,7 +14,7 @@ globalVars['startDate'] <- 1800
 globalVars['endDate'] <- 2100
 
 # Create global file input vector
-#' @details \code{globalScenarios} Scenario input files
+#' @details \code{globalScenarios} Scenario input file names and paths
 #' @rdname constants
 #' @export
 globalScenarios <- list()
@@ -28,7 +28,7 @@ globalScenarios[['RCP 8.5']] <-  file.path('input',paste0('hector_rcp',rcps[4],'
 globalScenarioColors <- c("RCP 2.6" = "#99cc33", "RCP 4.5" = "#FFFF00", "RCP 6.0" = "#ff9900", "RCP 8.5" = "#ff3333")
 
 # Create master list of parameter lookups
-#' @details \code{globalParameters}: Capability strings for Hector parameters
+#' @details \code{globalParameters}: Capability strings (internal name lookup/mapping) for Hector parameters
 #' @rdname constants
 #' @export
 globalParameters <- vector()
@@ -55,42 +55,42 @@ globalParamsDefault <- vector()
 globalParamsDefault <- c(1, 0.36, 2.3, 3, 276.09, 2, 1)
 
 # CanESM2 Parameter Sets
-#' @details \code{globalParamsCanESM2}: Default Parameter Sets
+#' @details \code{globalParamsCanESM2}: CanESM2 Parameters for model emulation
 #' @rdname constants
 #' @export
 globalParamsCanESM2 <- vector()
 globalParamsCanESM2 <- c(1.87, 0.08, 0.98, 3.88, 282.35, 1.75, 1.81)
 
 # CESM1-BGC Parameter Sets
-#' @details \code{globalParamsCESM1BGC}: Default Parameter Sets
+#' @details \code{globalParamsCESM1BGC}: CESM1-BGC Parameters for model emulation
 #' @rdname constants
 #' @export
 globalParamsCESM1BGC <- vector()
 globalParamsCESM1BGC <- c(-0.43, 0.01, 8, 2.4, 280.31, 1.78, 3.94)
 
 # GFDL-ESM2G Parameter Sets
-#' @details \code{globalParamsGFDLESM2G}: Default Parameter Sets
+#' @details \code{globalParamsGFDLESM2G}: GFDL-ESM2G Parameters for model emulation
 #' @rdname constants
 #' @export
 globalParamsGFDLESM2G <- vector()
 globalParamsGFDLESM2G <- c(0.46, 0.07, 12.01, 2.03, 289.24, 1.76, 2.12)
 
 # MIROC-ESM Parameter Sets
-#' @details \code{globalParamsMIROCESM}: Default Parameter Sets
+#' @details \code{globalParamsMIROCESM}: MIROC-ESM Parameters for model emulation
 #' @rdname constants
 #' @export
 globalParamsMIROCESM <- vector()
 globalParamsMIROCESM <- c(1.05, 0.02, 6.39, 5.83, 283.31, 1.77, 2.02)
 
 # MPI-ESM-LR Parameter Sets
-#' @details \code{globalParamsMPIESM-LR}: Default Parameter Sets
+#' @details \code{globalParamsMPIESM-LR}: MPI-ESM-LR Parameters for model emulation
 #' @rdname constants
 #' @export
 globalParamsMPIESMLR <- vector()
 globalParamsMPIESMLR <- c(1.22, 0.28, 2.93, 3.66, 289.13, 1.75, 0.70)
 
 # MRI-ESM1 Parameter Sets
-#' @details \code{globalParamsMRIESM1}: Default Parameter Sets
+#' @details \code{globalParamsMRIESM1}: MRI-ESM1 Parameters for model emulation
 #' @rdname constants
 #' @export
 globalParamsMRIESM1 <- vector()
@@ -100,7 +100,7 @@ globalParamsMRIESM1 <- c(1.42, 0.66, 4.21, 2.04, 289.49, 1.76, 0.27)
 # Output Variables: This section maps output variables (should match drop down item ids)
 
 # Create master list of variable lookups for "capabilities" (output variables for graphing)
-#' @details \code{globalCapabilities} Capability strings for Hector variables
+#' @details \code{globalCapabilities} Capability string (internal name lookup/mapping) for Hector output variables
 #' @rdname constants
 #' @export
 globalCapabilities <- list()
