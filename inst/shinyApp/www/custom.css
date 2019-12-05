@@ -3,7 +3,7 @@
 
 body
 {
-  font-size: 12px;
+  font-size: 13px;
 }
 
 fas,fab
@@ -122,7 +122,7 @@ label
 
 .form-group
 {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .group-output
@@ -135,6 +135,13 @@ label
 {
   margin-top: -5px;
   margin-bottom: 10px;
+
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
+{
+  color: #FFFFFF;
+  background-color: #375a7f;
 
 }
 
@@ -195,5 +202,5 @@ label
 {
   padding: 17px;
   padding-top: 8px;
-
+  margin-bottom: 5px;
 }
