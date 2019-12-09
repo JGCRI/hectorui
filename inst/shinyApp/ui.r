@@ -35,33 +35,84 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           (
             p(icon("info-circle", "fa-2x"), "Hector Information", value="infoTab"),
             h5("Background Information"), tags$hr(class="hrNav"),
+            # tags$table(
+            #   tags$tr(
+            #     tags$td(width = "40%", p(align="top", "Welcome to ", tags$b("Hector"),", an open source, object-oriented, and interactive simple global climate carbon-cycle model.
+            #     It runs essentially instantaneously while still representing the most critical global scale earth system processes,
+            #     and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses.
+            #     For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:")),
+            #     tags$td(img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="350"))
+            #   )
+            # ),
             p("Welcome to ", tags$b("Hector"),", an open source, object-oriented, and interactive simple global climate carbon-cycle model.
                 It runs essentially instantaneously while still representing the most critical global scale earth system processes,
                 and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses.
-                "),
-            p("For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:"),
+                For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:"),
+            # p("For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:"),
             p(img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="350")),
             h5("Documentation"), tags$hr(class="hrNav"),
             p("The primary link to Hector model documentation is the ", a("online manual",href="https://jgcri.github.io/hector/articles/manual", target="blank"),",
                 which is included in the repository in the vignettes/manual directory. The code is also documented with ", a("Doxygen-style", href="http://doxygen.org", target="blank"),
-              " comments. A formal model description paper ", a("Hartin et al. 2015", href="http://www.geosci-model-dev.net/8/939/2015/gmd-8-939-2015.html", target="blank"),
+              " comments."),
+            p("A formal model description paper via ", a("Hartin et al. 2015", href="http://www.geosci-model-dev.net/8/939/2015/gmd-8-939-2015.html", target="blank"),
               " documents its science internals and performance relative to observed data, the ", a("CMIP5", href="http://cmip-pcmdi.llnl.gov/cmip5/", target="blank"),
               " archive, and the reduced-complexity ", a("MAGICC", href="http://www.magicc.org", target="blank"), " model (as of ", a("version 1.0", href="https://github.com/JGCRI/hector/tree/v1.0", target="blank"),
               "). In addition, we have developed two package vignettes demonstrating the ", a("basics of the Hector R interface",href="http://jgcri.github.io/hector/articles/intro-to-hector.html", target="blank"),
               ", and an example application of ", a("solving for an emissions pathway", href="http://jgcri.github.io/hector/articles/hector_apply.html", target="blank"), "."),
-            p("Tools and software that work with Hector:"),
+            h5("Tools and software that work with Hector"), tags$hr(class="hrNav"),
             tags$ul(
               tags$li(a("GCAM", href="https://github.com/JGCRI/gcam-core", target="blank"),": Hector can be used as
                 the climate component in the GCAM integrated assessment model."),
               tags$li(a("pyHector", href="https://github.com/openclimatedata/pyhector", target="blank"),": A python
-                interface to Hector.")
+                interface to Hector."),
+              tags$li(a("R/Shiny", href="https://shiny.rstudio.com/", target="blank"),": This application was built as an R-Shiny package
+                      as a wrapper to the existing model code.")
             )
           ),
           # Citation Tab Panel
           tabPanel
           (
-            p(icon("copyright", "fa-2x"), "How to Cite", value="citeTab"),
+            p(icon("copyright", "fa-2x"), "How to Cite/License", value="citeTab"),
+            h5("License Information"), tags$hr(class="hrNav"),
+
+            tags$div(class="citationsDiv", style="width: 500px;",
+               tags$table(class="citationsTable",
+                 tags$tr(
+                   tags$td(rowspan=2, width=45, icon("balance-scale", "fa-2x")),
+                   tags$td(("JGCRI/hector is licensed under the")
+
+                   ),
+                   tags$tr(
+                     tags$td(tags$a(href="https://github.com/JGCRI/hector/blob/master/LICENSE.md", target="blank", h6("GNU General Public License v3.0")))
+                   )
+                 ),
+                 tags$table(class="citationsTable",
+                   tags$tr(
+                     tags$td(p("Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications,
+                               which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved.
+                               Contributors provide an express grant of patent rights.")
+                     )
+                   )
+                 )
+               )
+
+            ),
+            div(class="citationsDiv",
+              tags$span(class="citationsHeader", "Permissions"),
+              tags$ul(class="ul-None",tags$li(icon("check"),"Commercial use"),tags$li(icon("check"),"Modification"),
+                                       tags$li(icon("check"),"Distribution"),tags$li(icon("check"),"Patent use"),tags$li(icon("check"),"Private use"))
+            ),
+            div(class="citationsDiv",
+              tags$span(class="citationsHeader", "Limitations"),
+              tags$ul(class="ul-None",tags$li(icon("times")," Liability"),tags$li(icon("times")," Warranty"))
+            ),
+            div(class="citationsDiv",
+              tags$span(class="citationsHeader", "Conditions"),
+              tags$ul(class="ul-None", tags$li(icon("info"),"License and copyright notice"),tags$li(icon("info"),"State changes"),
+                                       tags$li(icon("info"),"Disclose source"),tags$li(icon("info"),"Same license"))
+            ),
             h5("How to Cite Hector"), tags$hr(class="hrNav")
+
           ),
 
           # Feedback Tab Panel
@@ -92,10 +143,10 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                 tags$hr(class="hrNav"),
                 div(class="checkboxDiv", "Choose 1 or more Scenarios:",
                     p(
-                    shinyWidgets::prettyCheckbox(inputId = "input_RCP2.6", label = "2.6", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
-                    shinyWidgets::prettyCheckbox(inputId = "input_RCP4.5", label = "4.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
-                    shinyWidgets::prettyCheckbox(inputId = "input_RCP6.0", label = "6.0", value = FALSE, width = 45, inline = TRUE, icon = icon("check")),
-                    shinyWidgets::prettyCheckbox(inputId = "input_RCP8.5", label = "8.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check"))
+                    shinyWidgets::prettyCheckbox(inputId = "input_RCP2.6", label = "2.6", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "info"),
+                    shinyWidgets::prettyCheckbox(inputId = "input_RCP4.5", label = "4.5", value = TRUE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "success"),
+                    shinyWidgets::prettyCheckbox(inputId = "input_RCP6.0", label = "6.0", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "warning"),
+                    shinyWidgets::prettyCheckbox(inputId = "input_RCP8.5", label = "8.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "danger")
                     )
                 ), # radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
 
@@ -105,50 +156,50 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     tags$hr(class="hrNav"),
                     tags$table(
                       tags$tr(width = "100%",
-                              tags$td(width = "10%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "Choosing a model will load a unique set of parameters that correspond to that model for emulation in Hector.", placement = "top" )),
-                              tags$td(width = "55%", div("Model Emulation:")),
-                              tags$td(width = "35%",  selectInput("input_paramToggle", label = NULL,
+                              tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "Choosing a model will load a unique set of parameters that correspond to that model for emulation in Hector.", placement = "top" )),
+                              tags$td(width = "34%", div("Model Emulation:")),
+                              tags$td(width = "58%", class="tdPushBottom",  selectInput("input_paramToggle", label = NULL,
                                                                   choices =  list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
-                                                                       "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 180))
+                                                                       "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 190))
 
                       )
                     ),
                     tags$table(
                       tags$tr(width = "100%",
-                              tags$td(width = "10%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "Setting this value will change the Aerosol Forcing Factor for any active Hector cores.", placement = "top" )),
-                              tags$td(width = "75%", div("Aerosol forcing scaling factor (unitless)")),
-                              tags$td(width = "15%", numericInput("input_aero", width = 85, label = NULL, value = NA, step = 0.01))
+                              tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "Setting this value will change the Aerosol Forcing Factor for any active Hector cores.", placement = "top" )),
+                              tags$td(width = "68%", div("Aerosol forcing scaling factor (unitless)")),
+                              tags$td(width = "24%", numericInput("input_aero", width = 80, label = NULL, value = NA, step = 0.01))
                               ),
                       tags$tr(width = "100%",
-                              tags$td(width = "10%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "Setting this value will change the CO2 Forcing Factor for any active Hector cores.", placement = "top" )),
-                              tags$td(width = "75%", div("CO2 fertilization factor (unitless)")),
-                              tags$td(width = "15%", numericInput("input_beta", width = 85, label = NULL, value = NA, step = 0.01, min = 0.01))
+                              tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "Setting this value will change the CO2 Forcing Factor for any active Hector cores.", placement = "top" )),
+                              tags$td(width = "68%", div("CO2 fertilization factor (unitless)")),
+                              tags$td(width = "24%", numericInput("input_beta", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01))
                       ),
                       tags$tr(width = "100%",
-                              tags$td(width = "10%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "Setting this value will change the Ocean Heat Diffusivity for any active Hector cores.", placement = "top" )),
-                              tags$td(width = "75%", div("Ocean heat diffusivity (cm2/s)")),
-                              tags$td(width = "15%", numericInput("input_diff", width = 85, label = NULL, value = NA, step = 0.01))
+                              tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "Setting this value will change the Ocean Heat Diffusivity for any active Hector cores.", placement = "top" )),
+                              tags$td(width = "68%", div("Ocean heat diffusivity (cm2/s)")),
+                              tags$td(width = "24%", numericInput("input_diff", width = 80, label = NULL, value = NA, step = 0.01))
                       ),
                       tags$tr(width = "100%",
-                              tags$td(width = "10%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "Setting this value will change the Equilibrium climate sensitivity for any active Hector cores.", placement = "top" )),
-                              tags$td(width = "75%", div("Equilibrium climate sensitivity (degC)")),
-                              tags$td(width = "15%", numericInput("input_ecs", width = 85, label = NULL, value = NA, step = 0.01, min = 0.01, max = 25))
+                              tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "Setting this value will change the Equilibrium climate sensitivity for any active Hector cores.", placement = "top" )),
+                              tags$td(width = "68%", div("Equilibrium climate sensitivity (degC)")),
+                              tags$td(width = "24%", numericInput("input_ecs", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01, max = 25))
                       ),
                       tags$tr(width = "100%",
-                              tags$td(width = "10%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "Setting this value will change the Preindustrial CO2 concentration for any active Hector cores.", placement = "top" )),
-                              tags$td(width = "75%", div("Preindustrial CO2 conc. (ppmv CO2)")),
-                              tags$td(width = "15%", numericInput("input_pco2", width = 85, label = NULL, value = NA, step = 0.01, min = 250, max = 350))
+                              tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "Setting this value will change the Preindustrial CO2 concentration for any active Hector cores.", placement = "top" )),
+                              tags$td(width = "68%", div("Preindustrial CO2 conc. (ppmv CO2)")),
+                              tags$td(width = "24%", numericInput("input_pco2", width = 80, label = NULL, value = NA, step = 0.01, min = 250, max = 350))
                       ),
                       tags$tr(width = "100%",
-                              tags$td(width = "10%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "Setting this value will change the Temperature sensitivity factor for any active Hector cores.", placement = "top" )),
-                              tags$td(width = "75%", div("Temp. sensitivity factor (Q10) (unitless)")),
-                              tags$td(width = "15%", numericInput("input_q10", width = 85, label = NULL, value = NA, step = 0.01, min = 0.01))
+                              tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "Setting this value will change the Temperature sensitivity factor for any active Hector cores.", placement = "top" )),
+                              tags$td(width = "68%", div("Temp. sensitivity factor (Q10) (unitless)")),
+                              tags$td(width = "24%", numericInput("input_q10", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01))
                       ),
                       tags$tr(width = "100%",
-                              tags$td(width = "10%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "Setting this value will change the Volcanic forcing scaling factor for any active Hector cores.", placement = "top" )),
-                              tags$td(width = "75%", div("Volcanic forcing scaling factor (unitless)")),
-                              tags$td(width = "15%", numericInput("input_volc", label = NULL, value = NA, step = 0.01))
-                      ),
+                              tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "Setting this value will change the Volcanic forcing scaling factor for any active Hector cores.", placement = "top" )),
+                              tags$td(width = "68%", div("Volcanic forcing scaling factor (unitless)")),
+                              tags$td(width = "24%", numericInput("input_volc", width = 80, label = NULL, value = NA, step = 0.01))
+                      )
                     ),
                     div(class="paramDivs",
                         actionButton(inputId="set_Params", label="Set Parameters"),
@@ -162,16 +213,24 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     tags$hr(class="hrNav"),
                     shiny::selectInput(inputId = "input_custom_emissions", label =  "Emissions:", width = 200, multiple = F,
                                        choices = list('Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'))),
+                    tags$table(
+                      tags$tr(width = "100%",
+                              tags$td(align = "left", shiny::textInput(inputId = "input_custom_start", label = "Start Year:", width = 60, placeholder = 1900)),
+                              tags$td(width = 15),
+                              tags$td(align = "left", shiny::textInput(inputId = "input_custom_end", label = "End Year:",  width = 60, placeholder = 2100)),
+                              tags$td(width = 15),
+                              tags$td(align = "left", shiny::textInput(inputId = "input_emissions_value", label = "Value:", width = 60)),
+                              tags$td()
+                      )
+                    ),
+                    tags$table(
+                      tags$tr(width = "100%",
+                              tags$td(width = "15%", align="left", class="tdPushTop", popify(div(class="paramDivsPushTop", icon("info-circle", "fa-1x")), title = "Sloping Emissions", content = "Choosing this option will create a smooth slope from the starting years value to the specified value at the end year.", placement = "top" )),
+                              tags$td(width = "85%",shinyWidgets::prettyCheckbox( animation = "pulse", inputId = "input_slope_emissions", label = "Slope Emissions", value = FALSE,  inline = TRUE, icon = icon("check"))),
+
+                      )
+                    ),
                     div(
-                        fixedRow(
-                          column(3, shiny::textInput(inputId = "input_custom_start", label = "Start Year:",  placeholder = 1900)),
-                          column(3, shiny::textInput(inputId = "input_custom_end", label = "End Year:",  placeholder = 2100)),
-                          column(3, shiny::textInput(inputId = "input_emissions_value", label = "Value:"))
-                        ),
-                        fixedRow(
-                          column(4, shinyWidgets::prettyCheckbox(inputId = "input_slope_emissions", label = "Slope Emissions", value = FALSE,  inline = TRUE, icon = icon("check"))),
-                          column(4, popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Sloping Emissions", content = "Choosing this option will create a smooth slope from the starting years value to the specified value at the end year.", placement = "top" ))
-                        ),
                         actionButton(inputId="input_set_custom_emissions", label="Set Emissions"),
                         actionButton(inputId="input_reset_custom_emissions", label="Reset All Emissions"),
                         popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
@@ -196,25 +255,25 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     fileInput("input_custom_scenarioFile", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
                     div(class="paramDivs", actionButton(inputId="input_load_custom", label="Load Scenario"))
                   )
-            ),
-            div(id="myapp",
-                h4("Model Parameters"),
-                tags$hr(class="hrNav"),
-                div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model:", list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
-                                                                                              "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01, min = 0.01, max = 25)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-                div(class="paramDivs",
-                    actionButton(inputId="set_Params", label="Set Parameters"),
-                    actionButton(inputId="reset_Params", label="Reset Parameters"),
-                    popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
-                )
             )
+            # div(id="myapp",
+            #     h4("Model Parameters"),
+            #     tags$hr(class="hrNav"),
+            #     div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model:", list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
+            #                                                                                   "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            #     div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ),
+            #     div(class="paramDivs", numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            #     div(class="paramDivs", numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            #     div(class="paramDivs", numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01, min = 0.01, max = 25)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            #     div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            #     div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            #     div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
+            #     div(class="paramDivs",
+            #         actionButton(inputId="set_Params", label="Set Parameters"),
+            #         actionButton(inputId="reset_Params", label="Reset Parameters"),
+            #         popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
+            #     )
+            # )
           )
         )
       ),

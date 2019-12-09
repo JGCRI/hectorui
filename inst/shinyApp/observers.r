@@ -91,6 +91,8 @@ setRCP <- function(scenarioName)
       }
       if(length(hcores) > 0)
         loadGraph()
+      else
+        cleanPlots()
     },
     error = function(err)
     {

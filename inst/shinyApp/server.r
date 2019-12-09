@@ -32,6 +32,7 @@ server <- function(input, output, session)
   hcores <- list()
   totalActivePlots <- 0
   customLoaded <- FALSE
+  scale_colors <- vector()
 
   # These variables are for storing the current parameter values so that if a change is made (like loading new scenario)
   # then the custom params set by user will persist beyond core restarts
@@ -85,7 +86,7 @@ server <- function(input, output, session)
   # observeEvent(input$input_ScenarioFile, loadScenario(), ignoreInit = TRUE)
   observeEvent(input$reset_Params, resetParams(), ignoreInit = TRUE)
   observeEvent(input$input_RCP2.6, setRCP("2.6"), ignoreInit = TRUE)
-  observeEvent(input$input_RCP4.5, setRCP("4.5"), ignoreInit = TRUE)
+  observeEvent(input$input_RCP4.5, setRCP("4.5"), ignoreInit = FALSE)
   observeEvent(input$input_RCP6.0, setRCP("6.0"), ignoreInit = TRUE)
   observeEvent(input$input_RCP8.5, setRCP("8.5"), ignoreInit = TRUE)
   observeEvent(input$input_enableCustom, setRCP("Custom"), ignoreInit = TRUE)

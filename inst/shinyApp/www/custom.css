@@ -24,6 +24,14 @@ h4
   font-size: 16px;
 }
 
+h6
+{
+	font-size:15px;
+	font-weight: bold;
+	margin-top: 5px;
+	margin-bottom: 10px;
+}
+
 hr
 {
   color: #375a7f;
@@ -49,6 +57,21 @@ label
 {
   font-weight: normal;
   margin-bottom: 3px;
+}
+
+#shiny-notification-panel
+{
+  top: 50% !important;
+  left: 50% !important;
+  margin-top: -100px !important;
+  margin-left: -250px !important;
+  /*color: blue;
+  border: solid 2px;
+  border-color: #AC7023;;*/
+  font-size: 20px;
+  font-style: italic;
+  height: auto;
+  width: 250px;
 }
 
 .btn
@@ -77,6 +100,36 @@ label
 	display: inline-block;
 }
 
+.citationsDiv
+{
+	display: inline-block;
+	vertical-align: top;
+	padding: 10px;
+}
+
+.citationsTable
+{
+	padding:5px;
+}
+
+
+.citationsTable a
+{
+	text-decoration: none;
+}
+
+.citationsTable a.hover
+{
+	text-decoration: underline;
+}
+
+.citationsHeader
+{
+	font-size: 15px;
+	font-weight: bold;
+}
+
+
 .col-sm-3
 {
   padding-right: 10px;
@@ -96,6 +149,27 @@ label
 .customPlot
 {
   display:inline-block;
+}
+
+.fa-check
+{
+	color:limegreen;
+	padding:2px;
+	padding-right: 4px;
+}
+
+.fa-info
+{
+	color:cornflowerblue;
+	padding:2px;
+	padding-right: 4px;
+}
+
+.fa-times
+{
+	color: red;
+	padding:2px;
+	padding-right: 4px;
 }
 
 .form-control
@@ -183,24 +257,24 @@ label
  /* visibility: visible;*/
 }
 
-#shiny-notification-panel
+.tdPushTop
 {
-  top: 50% !important;
-  left: 50% !important;
-  margin-top: -100px !important;
-  margin-left: -250px !important;
-  /*color: blue;
-  border: solid 2px;
-  border-color: #AC7023;;*/
-  font-size: 20px;
-  font-style: italic;
-  height: auto;
-  width: 250px;
+	vertical-align: top;
+}
+
+.tdPushBottom
+{
+	vertical-align: bottom;
+}
+
+.ul-None {
+	list-style: none;
+	padding-left: 10px;
 }
 
 .well
 {
-  padding: 17px;
+  padding: 12px;
   padding-top: 8px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
 }

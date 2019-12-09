@@ -4,6 +4,7 @@
 \name{constants}
 \alias{constants}
 \alias{globalVars}
+\alias{globalColorScales}
 \alias{globalScenarios}
 \alias{globalParameters}
 \alias{globalParamsDefault}
@@ -18,6 +19,8 @@
 \format{An object of class \code{numeric} of length 2.}
 \usage{
 globalVars
+
+globalColorScales
 
 globalScenarios
 
@@ -45,24 +48,26 @@ Global constants for the Hector-Shiny UI
 \details{
 \code{globalVars}: Miscellaneous global variables
 
-\code{globalScenarios} Scenario input files
+\code{globalColorScales}: Scale colors
 
-\code{globalParameters}: Capability strings for Hector parameters
+\code{globalScenarios} Scenario input file names and paths
+
+\code{globalParameters}: Capability strings (internal name lookup/mapping) for Hector parameters
 
 \code{globalParamsDefault}: Default Parameter Sets
 
-\code{globalParamsCanESM2}: Default Parameter Sets
+\code{globalParamsCanESM2}: CanESM2 Parameters for model emulation
 
-\code{globalParamsCESM1BGC}: Default Parameter Sets
+\code{globalParamsCESM1BGC}: CESM1-BGC Parameters for model emulation
 
-\code{globalParamsGFDLESM2G}: Default Parameter Sets
+\code{globalParamsGFDLESM2G}: GFDL-ESM2G Parameters for model emulation
 
-\code{globalParamsMIROCESM}: Default Parameter Sets
+\code{globalParamsMIROCESM}: MIROC-ESM Parameters for model emulation
 
-\code{globalParamsMPIESM-LR}: Default Parameter Sets
+\code{globalParamsMPIESM-LR}: MPI-ESM-LR Parameters for model emulation
 
-\code{globalParamsMRIESM1}: Default Parameter Sets
+\code{globalParamsMRIESM1}: MRI-ESM1 Parameters for model emulation
 
-\code{globalCapabilities} Capability strings for Hector variables
+\code{globalCapabilities} Capability string (internal name lookup/mapping) for Hector output variables
 }
 \keyword{datasets}

@@ -1,3 +1,32 @@
+#' Clean up visual elements on change of number of output variables or scenarios
+#'
+#' @return
+#' @export
+#'
+#' @examples
+cleanPlots <- function()
+{
+  print("in clean plots")
+  print(length(hcores))
+  if(length(hcores) < 1)
+  {
+    output[["plot1"]] <<- NULL
+    output[["plot2"]] <<- NULL
+    output[["plot3"]] <<- NULL
+    output[["plot4"]] <<- NULL
+  }
+  else
+  {
+    if(length(outputVariables) < 4)
+      output[["plot4"]] <<- NULL
+    if(length(outputVariables) < 3)
+      output[["plot3"]] <<- NULL
+    if(length(outputVariables) < 2)
+      output[["plot2"]] <<- NULL
+    if(length(outputVariables) < 1)
+      output[["plot1"]] <<- NULL
+  }
+}
 
 #' Load graph by proxy
 #'
@@ -22,6 +51,7 @@ loadGraph <- function()
   print("in load graph")
   hdata <- data.frame()
   df_total <- data.frame()
+  scale_colors <<- vector()
   if(length(hcores) > 0)
   {
     if(length(outputVariables) < 5)
@@ -44,7 +74,6 @@ loadGraph <- function()
                     plottitle <- paste("plottitle", globalScenarios[i], sep="")
                     tablename <- paste("tablename", globalScenarios[i], sep="")
                     seriesname <- ""
-                    scale_colors <- vector()
                     for(j in 1:length(hcores))
                     {
                       hdata <- hector::fetchvars(core = hcores[[j]], dates = 1800:globalVars['endDate'], vars = outputVariables[i], "\n")
@@ -54,10 +83,18 @@ loadGraph <- function()
                         seriesname <- paste("RCP", names(hcores[j]))
                       hdata <- dplyr::mutate(hdata, scenario = seriesname)
                       df_total <- rbind(df_total,hdata)
+                      # scale_colors[j] <<- globalColorScales[[seriesname]]
+                      # print(scale_colors)
+
                     }
                     x <- dplyr::distinct(hdata, units)
-                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=year, y=value, group=variable, color=scenario, ymin=(0.9*value), ymax=(1.1*value), fill = scenario)) + ggplot2::geom_line() +
-                      ggthemes::theme_solarized(light = TRUE)+ ggplot2::labs(y=x[[1]], title =  attr(outputVariables[[i]], 'longName'))
+                    # scale_colors <- as.character(c("RCP 2.6"="#428bca", "RCP 4.5"="#5cb85c", "RCP 6.0"="#f0ad4e", "RCP 8.5"="#d9534f"))
+                    # colorscale <- ggplot2::scale_colour_manual(name="fScenario", values=scale_colors)
+                    # df_total$fScenario <- factor(df_total$scenario)
+                    #browser()
+                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=year, y=value, group=variable, color=scenario)) + ggplot2::geom_line() +
+                      ggthemes::theme_solarized(light = TRUE)+ ggplot2::labs(y=x[[1]], title =  attr(outputVariables[[i]], 'longName')) +  ggplot2::scale_color_manual(values = globalColorScales)
+
                     #+ ggplot2::scale_color_manual(values=globalScenarioColors) + ggplot2::geom_ribbon(alpha=0.5)
                     # +  ggplot2::guides(color = ggplot2::guide_colorbar(title  = expression(beta)))
                     # +  ggplot2::scale_color_viridis_c()
@@ -74,14 +111,12 @@ loadGraph <- function()
                 incProgress(1/length(hcores), detail = paste(attr(outputVariables[[i]], 'longName'), " loaded."))
                 Sys.sleep(0.25)
               }
+
+              #browser()
             })
             if(length(outputVariables) < 4)
             {
-              output[["plot4"]] <<- NULL
-              if(length(outputVariables) < 3)
-                output[["plot3"]] <<- NULL
-              if(length(outputVariables) < 2)
-                output[["plot2"]] <<- NULL
+              cleanPlots()
             }
           }
           else

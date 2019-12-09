@@ -13,6 +13,13 @@ globalVars <- vector()
 globalVars['startDate'] <- 1800
 globalVars['endDate'] <- 2100
 
+# Global vars for scale colors
+#' @details \code{globalColorScales}: Scale colors
+#' @rdname constants
+#' @export
+globalColorScales <- vector()
+globalColorScales <- c("RCP 2.6"="#428bca", "RCP 4.5"="#5cb85c", "RCP 6.0"="#f0ad4e", "RCP 8.5"="#d9534f")
+
 # Create global file input vector
 #' @details \code{globalScenarios} Scenario input file names and paths
 #' @rdname constants
