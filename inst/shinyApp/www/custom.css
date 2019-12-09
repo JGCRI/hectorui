@@ -12,6 +12,11 @@ fas,fab
   border: #A23739 thick;
 }
 
+figcaption
+{
+	font-style: italic;
+}
+
 h2
 {
   font-size: 28px;
@@ -109,7 +114,7 @@ label
 
 .citationsTable
 {
-	padding:5px;
+	padding:3px;
 }
 
 

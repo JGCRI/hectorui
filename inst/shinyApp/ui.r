@@ -35,30 +35,37 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           (
             p(icon("info-circle", "fa-2x"), "Hector Information", value="infoTab"),
             h5("Background Information"), tags$hr(class="hrNav"),
-            # tags$table(
-            #   tags$tr(
-            #     tags$td(width = "40%", p(align="top", "Welcome to ", tags$b("Hector"),", an open source, object-oriented, and interactive simple global climate carbon-cycle model.
+            tags$table(
+              tags$tr(
+                tags$td(width = "50%", style="vertical-align: middle;", p("Welcome to ", tags$b("Hector"),", an open source, object-oriented, and interactive simple global
+                climate carbon-cycle model. It runs essentially instantaneously while still representing the most critical global scale earth system processes,
+                and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses."),
+                        p("This interactive version is built upon previous work by developers at the Joint Global Change Research Institute (JGCRI), including the development
+                        of the initial C++ version of Hector, and the follow up R Package, \"Hector R\". The simple diagram below outlines the relationships:"),
+                        img(src="images/Hector-sm.png")),
+                tags$td(tags$figure(img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="330"),
+                                    tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results")
+                                    ),
+                        style="text-align: center"
+                )
+              )
+            ),
+            # p("Welcome to ", tags$b("Hector"),", an open source, object-oriented, and interactive simple global climate carbon-cycle model.
             #     It runs essentially instantaneously while still representing the most critical global scale earth system processes,
             #     and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses.
-            #     For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:")),
-            #     tags$td(img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="350"))
-            #   )
-            # ),
-            p("Welcome to ", tags$b("Hector"),", an open source, object-oriented, and interactive simple global climate carbon-cycle model.
-                It runs essentially instantaneously while still representing the most critical global scale earth system processes,
-                and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses.
-                For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:"),
-            # p("For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:"),
-            p(img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="350")),
+            #     For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:"),
+            # # p("For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:"),
+            # p(img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="350")),
             h5("Documentation"), tags$hr(class="hrNav"),
-            p("The primary link to Hector model documentation is the ", a("online manual",href="https://jgcri.github.io/hector/articles/manual", target="blank"),",
-                which is included in the repository in the vignettes/manual directory. The code is also documented with ", a("Doxygen-style", href="http://doxygen.org", target="blank"),
+            p("The primary link to the Hector model documentation is the ", a("online manual",href="https://jgcri.github.io/hector/articles/manual", target="blank"),",
+                which is included in the vignettes/manual directory. The code is also documented with ", a("Doxygen-style", href="http://doxygen.org", target="blank"),
               " comments."),
             p("A formal model description paper via ", a("Hartin et al. 2015", href="http://www.geosci-model-dev.net/8/939/2015/gmd-8-939-2015.html", target="blank"),
               " documents its science internals and performance relative to observed data, the ", a("CMIP5", href="http://cmip-pcmdi.llnl.gov/cmip5/", target="blank"),
               " archive, and the reduced-complexity ", a("MAGICC", href="http://www.magicc.org", target="blank"), " model (as of ", a("version 1.0", href="https://github.com/JGCRI/hector/tree/v1.0", target="blank"),
               "). In addition, we have developed two package vignettes demonstrating the ", a("basics of the Hector R interface",href="http://jgcri.github.io/hector/articles/intro-to-hector.html", target="blank"),
               ", and an example application of ", a("solving for an emissions pathway", href="http://jgcri.github.io/hector/articles/hector_apply.html", target="blank"), "."),
+            br(),
             h5("Tools and software that work with Hector"), tags$hr(class="hrNav"),
             tags$ul(
               tags$li(a("GCAM", href="https://github.com/JGCRI/gcam-core", target="blank"),": Hector can be used as
@@ -66,7 +73,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
               tags$li(a("pyHector", href="https://github.com/openclimatedata/pyhector", target="blank"),": A python
                 interface to Hector."),
               tags$li(a("R/Shiny", href="https://shiny.rstudio.com/", target="blank"),": This application was built as an R-Shiny package
-                      as a wrapper to the existing model code.")
+                      wrapper to the existing model code.")
             )
           ),
           # Citation Tab Panel
@@ -79,7 +86,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                tags$table(class="citationsTable",
                  tags$tr(
                    tags$td(rowspan=2, width=45, icon("balance-scale", "fa-2x")),
-                   tags$td(("JGCRI/hector is licensed under the")
+                   tags$td(("All Hector applications are licensed under the")
 
                    ),
                    tags$tr(
