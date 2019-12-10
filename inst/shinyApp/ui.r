@@ -14,7 +14,8 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
   # Loads the custom.css file that contains custom styles and overwrites some built in styles
   tags$head
   (
-    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+    tags$link(href="google-analytics.js")
   ),
   shinyjs::useShinyjs(),
 
@@ -26,6 +27,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
     tabPanel
     (
       "System Information",
+      # Main Panel that holds the tabs for the Information section
       mainPanel
       ( width = 9,
         tabsetPanel
@@ -37,26 +39,22 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
             h5("Background Information"), tags$hr(class="hrNav"),
             tags$table(
               tags$tr(
-                tags$td(width = "50%", style="vertical-align: middle;", p("Welcome to ", tags$b("Hector"),", an open source, object-oriented, and interactive simple global
+                tags$td(width = "50%", style="vertical-align: middle;", p("Welcome to the user interface for", tags$b("Hector,")," an open source, object-oriented, and interactive simple global
                 climate carbon-cycle model. It runs essentially instantaneously while still representing the most critical global scale earth system processes,
                 and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses."),
-                        p("This interactive version is built upon previous work by developers at the Joint Global Change Research Institute (JGCRI), including the development
+                        p("This interactive version is built upon previous work by developers at the ", a("Joint Global Change Research Institute (JGCRI)", href="http://globalchange.umd.edu/", target="blank"),
+                        " including the development
                         of the initial C++ version of Hector, and the follow up R Package, \"Hector R\". The simple diagram below outlines the relationships:"),
                         img(src="images/Hector-sm.png")),
-                tags$td(tags$figure(img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="330"),
-                                    tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results")
+                tags$td(tags$figure(
+                                    tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results"),
+                                    img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="330")
                                     ),
                         style="text-align: center"
                 )
               )
             ),
-            # p("Welcome to ", tags$b("Hector"),", an open source, object-oriented, and interactive simple global climate carbon-cycle model.
-            #     It runs essentially instantaneously while still representing the most critical global scale earth system processes,
-            #     and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses.
-            #     For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:"),
-            # # p("For example, Hector’s global temperature rise for the RCP 8.5 scenario, compared to observations and other model results, looks like this:"),
-            # p(img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="350")),
-            h5("Documentation"), tags$hr(class="hrNav"),
+            h5("Documentation/Downloads"), tags$hr(class="hrNav"),
             p("The primary link to the Hector model documentation is the ", a("online manual",href="https://jgcri.github.io/hector/articles/manual", target="blank"),",
                 which is included in the vignettes/manual directory. The code is also documented with ", a("Doxygen-style", href="http://doxygen.org", target="blank"),
               " comments."),
@@ -65,6 +63,10 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
               " archive, and the reduced-complexity ", a("MAGICC", href="http://www.magicc.org", target="blank"), " model (as of ", a("version 1.0", href="https://github.com/JGCRI/hector/tree/v1.0", target="blank"),
               "). In addition, we have developed two package vignettes demonstrating the ", a("basics of the Hector R interface",href="http://jgcri.github.io/hector/articles/intro-to-hector.html", target="blank"),
               ", and an example application of ", a("solving for an emissions pathway", href="http://jgcri.github.io/hector/articles/hector_apply.html", target="blank"), "."),
+            tags$ul(
+              tags$li(a(h5("Hector User Interface package download/source link "), href="https://github.com/JGCRI/Hector-ui", target="blank")),
+              tags$li(a(h5("Hector R / Hector C++ package download/source link"), href="https://github.com/JGCRI/Hector", target="blank"))
+            ),
             br(),
             h5("Tools and software that work with Hector"), tags$hr(class="hrNav"),
             tags$ul(
@@ -73,7 +75,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
               tags$li(a("pyHector", href="https://github.com/openclimatedata/pyhector", target="blank"),": A python
                 interface to Hector."),
               tags$li(a("R/Shiny", href="https://shiny.rstudio.com/", target="blank"),": This application was built as an R-Shiny package
-                      wrapper to the existing model code.")
+                      wrapper over the existing model code.")
             )
           ),
           # Citation Tab Panel
@@ -90,7 +92,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
 
                    ),
                    tags$tr(
-                     tags$td(tags$a(href="https://github.com/JGCRI/hector/blob/master/LICENSE.md", target="blank", h6("GNU General Public License v3.0")))
+                     tags$td(tags$a(h6("GNU General Public License v3.0"), href="https://github.com/JGCRI/hector/blob/master/LICENSE.md", target="blank"))
                    )
                  ),
                  tags$table(class="citationsTable",
@@ -143,7 +145,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
         # A tabsetPanel creates a group of tabs within the left hand nav
         tabsetPanel
         (
-          # Information Tab Panel - a tab panel is an item within a tabset
+          # Information Tab Panel
           tabPanel
           ( p( "Standard Scenarios", value="infoTab"),
             div(h4("RCP Scenarios"),#, icon("info-circle", "fa-1x")),
@@ -244,8 +246,9 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     )
                 )
               )
-          ),
-          # Tab Panel
+          ), # End Information Panel
+
+          # Custom Scenarios Tab Panel
           tabPanel
           ( p(icon("edit", "fa-1x"), "Custom Scenarios", value="infoTab"),
             div(h4("Baseline Scenarios"),#, icon("info-circle", "fa-1x")),
@@ -261,7 +264,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     textInput("input_custom_scenarioName", "Scenario Name:", width=200, value = ""),
                     fileInput("input_custom_scenarioFile", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
                     div(class="paramDivs", actionButton(inputId="input_load_custom", label="Load Scenario"))
-                  )
+                  ) # End conditional Panel
             )
             # div(id="myapp",
             #     h4("Model Parameters"),
@@ -281,10 +284,11 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
             #         popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
             #     )
             # )
-          )
-        )
-      ),
-      # Right side panel - Main panel that is used for output
+          ) # End Custom Scenarios
+        ) # End Tabset
+      ), # End Sidebar Panel
+
+      # Right side tab panel - Main panel that is used for output
       mainPanel
       ( width = 9,
         tabsetPanel
@@ -321,14 +325,15 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                # plotly::plotlyOutput("plotly", width = "100%", height = "350"),
             uiOutput("plots", class = "customPlot")
           ), # end tabpanel
+
           tabPanel
           ( fixed = TRUE,
             p(icon("globe-americas","fa-2x"), "Downscaled Maps", value="outputTab"),
             h5("Scenario Results"), tags$hr(class="hrNav")
-          ) # end tabpanel
-        ) # end tabsetpanel
-      ) # end mainpanel
-    ) # end tabpanel
-  ) # end navbarpage
-) # end of everything.
+          ) # End tab panel
+        ) # End tabset panel
+      ) # End mainpanel
+    ) # End tabpanel
+  ) # End navbarpage
+) # End of everything.
 

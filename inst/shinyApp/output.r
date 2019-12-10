@@ -7,7 +7,6 @@
 cleanPlots <- function()
 {
   print("in clean plots")
-  print(length(hcores))
   if(length(hcores) < 1)
   {
     output[["plot1"]] <<- NULL
@@ -83,15 +82,9 @@ loadGraph <- function()
                         seriesname <- paste("RCP", names(hcores[j]))
                       hdata <- dplyr::mutate(hdata, scenario = seriesname)
                       df_total <- rbind(df_total,hdata)
-                      # scale_colors[j] <<- globalColorScales[[seriesname]]
-                      # print(scale_colors)
 
                     }
                     x <- dplyr::distinct(hdata, units)
-                    # scale_colors <- as.character(c("RCP 2.6"="#428bca", "RCP 4.5"="#5cb85c", "RCP 6.0"="#f0ad4e", "RCP 8.5"="#d9534f"))
-                    # colorscale <- ggplot2::scale_colour_manual(name="fScenario", values=scale_colors)
-                    # df_total$fScenario <- factor(df_total$scenario)
-                    #browser()
                     ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=year, y=value, group=variable, color=scenario)) + ggplot2::geom_line() +
                       ggthemes::theme_solarized(light = TRUE)+ ggplot2::labs(y=x[[1]], title =  attr(outputVariables[[i]], 'longName')) +  ggplot2::scale_color_manual(values = globalColorScales)
 
@@ -101,8 +94,6 @@ loadGraph <- function()
 
                     localPlot <- plotly::ggplotly(p = ggplotGraph)
                     plotly::layout(p=localPlot, xaxis = a, yaxis = a )
-                    #browser()
-                    # output$plot1 <<-  plotly::renderPlotly(localPlot)
 
                     output[[plotname]] <- plotly::renderPlotly(localPlot)
                     # output[[plottitle]] <- renderText({paste("1:", my_i, ".  n is ", 4, sep = "")})

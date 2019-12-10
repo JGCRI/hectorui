@@ -1,4 +1,25 @@
 
+
+#' Assign Parameters
+#'
+#' S
+#'
+#' @return no return value
+#' @export
+#'
+#' @examples
+assignParameters <- function()
+{
+  print('in assign params')
+  updateNumericInput(session, "input_aero", value=paramsList[[1]])
+  updateNumericInput(session, "input_beta", value=paramsList[[2]])
+  updateNumericInput(session, "input_diff", value=paramsList[[3]])
+  updateNumericInput(session, "input_ecs",  value=paramsList[[4]])
+  updateNumericInput(session, "input_pco2", value=paramsList[[5]])
+  updateNumericInput(session, "input_q10",  value=paramsList[[6]])
+  updateNumericInput(session, "input_volc", value=paramsList[[7]])
+}
+
 #' Restore Parameters after changing model state
 #'
 #' Function that maintains persistence after the user has changed parameter values to the Hector core (after scenario change)
@@ -49,6 +70,7 @@ loadModelParameters <- function()
   updateNumericInput(session, "input_pco2", value=paramsGroup[[5]])
   updateNumericInput(session, "input_q10",  value=paramsGroup[[6]])
   updateNumericInput(session, "input_volc", value=paramsGroup[[7]])
+
   if(length(hcores) > 0)
   {
     for(i in 1:length(hcores))

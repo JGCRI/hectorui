@@ -37,6 +37,14 @@ server <- function(input, output, session)
   # These variables are for storing the current parameter values so that if a change is made (like loading new scenario)
   # then the custom params set by user will persist beyond core restarts
   paramsList <- list()
+  paramsList['alpha']   <- globalParamsDefault[1]
+  paramsList['beta']    <- globalParamsDefault[2]
+  paramsList['diff']    <- globalParamsDefault[3]
+  paramsList['S']       <- globalParamsDefault[4]
+  paramsList['C']       <- globalParamsDefault[5]
+  paramsList['q10_rh']  <- globalParamsDefault[6]
+  paramsList['volscl']  <- globalParamsDefault[7]
+  assignParameters()
   paramsChanged <- FALSE
 
 #----- End set up local vars
@@ -65,11 +73,6 @@ server <- function(input, output, session)
     do.call(tagList, plot_output_list)
   })
 
-  # output$click <- renderPrint({
-  #   d <- event_data("plotly_click")
-  #   if (is.null(d)) "Click events appear here (double-click to clear)" else d
-  # })
-
   #set initial plotting variables
   for(i in 1:4)
   {
@@ -83,7 +86,7 @@ server <- function(input, output, session)
   observeEvent(input$capabilities, setCapabilities(), ignoreInit = FALSE)
   observeEvent(input$loadGraphs, loadGraphProxy(), ignoreInit = TRUE)
   observeEvent(input$set_Params, setParameters(), ignoreInit = TRUE)
-  # observeEvent(input$input_ScenarioFile, loadScenario(), ignoreInit = TRUE)
+  observeEvent(input$input_ScenarioFile, loadScenario(), ignoreInit = TRUE)
   observeEvent(input$reset_Params, resetParams(), ignoreInit = TRUE)
   observeEvent(input$input_RCP2.6, setRCP("2.6"), ignoreInit = TRUE)
   observeEvent(input$input_RCP4.5, setRCP("4.5"), ignoreInit = FALSE)
@@ -91,7 +94,7 @@ server <- function(input, output, session)
   observeEvent(input$input_RCP8.5, setRCP("8.5"), ignoreInit = TRUE)
   observeEvent(input$input_enableCustom, setRCP("Custom"), ignoreInit = TRUE)
   observeEvent(input$input_loadCustom, loadCustomScenario(), ignoreInit = TRUE)
-  observeEvent(input$input_paramToggle, loadModelParameters())
+  observeEvent(input$input_paramToggle, loadModelParameters(), ignoreInit = TRUE)
   observeEvent(input$input_enableCustom, toggleCustom(), suspended = TRUE)
   observeEvent(input$input_set_custom_emissions, setCustomEmissions(), ignoreInit = TRUE)
   observeEvent(input$input_reset_custom_emissions, resetCustomEmissions(), ignoreInit = TRUE)
@@ -109,6 +112,8 @@ server <- function(input, output, session)
   })
 
 #----- End observer function setup
+
+#----- Custom Functions
 
   output$feedbackFrame <- renderUI({
     frame_link <- tags$iframe(src="https://docs.google.com/forms/d/e/1FAIpQLSf6inU3DHAE5tZo4vdgtTjtFZvw7OCuH_5xbLvnj5tdqiRVNA/viewform?embedded=true",
@@ -130,3 +135,5 @@ server <- function(input, output, session)
     }
   }
 }
+
+#----- End Custom Functions

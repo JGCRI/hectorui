@@ -1,5 +1,5 @@
 
-# This file contains miscellaneous observers (all except for those from the parameters which are in the parameters.r file)
+# This file contains miscellaneous observers (all EXCEPT for those from the parameters which are in the parameters.r file)
 
 #' Keeps a list of the selected output variables for graphs
 #'
@@ -21,9 +21,7 @@ setCapabilities <- function()
         capabilityValues <- input$capabilities
         while(i <= length(capabilityValues))
         {
-          #browser()
           outputVariables[i] <<- globalCapabilities[capabilityValues[i]]
-          #attr(outputVariables[[i]], 'longName') <<- attr(globalCapabilities[capabilityValues[i]], 'longName')
           i <- i+1
         }
       }
@@ -48,10 +46,8 @@ setCapabilities <- function()
 setRCP <- function(scenarioName)
 {
   print("in set RCP")
-  #browser()
   tryCatch(
     {
-      #browser()
       if(scenarioName == "Custom")
       {
         if(customLoaded == TRUE)
@@ -73,20 +69,20 @@ setRCP <- function(scenarioName)
           Sys.sleep(0.2)
         })
         # If this is the initial application load, then we need to assign the on screen input field values to hector's default params
-        if(firstLoad)
-        {
-          loadParameters()
-          firstLoad <<- FALSE
-        }
-        # If its not first load but the parameters have changed via user input, then need to restore those values after restarting core
-        else if(paramsChanged)
-        {
-          # Commenting out, appears unneccesary
-          #restoreParameters()
-        }
+        # if(firstLoad)
+        # {
+        #   loadParameters()
+        #   firstLoad <<- FALSE
+        # }
+        # # If its not first load but the parameters have changed via user input, then need to restore those values after restarting core
+        # else if(paramsChanged)
+        # {
+        #   # Commenting out, appears unneccesary
+        #   #restoreParameters()
+        # }
       }
       else
-      {#browser()
+      {
         hcores[[scenarioName]] <<- NULL
       }
       if(length(hcores) > 0)

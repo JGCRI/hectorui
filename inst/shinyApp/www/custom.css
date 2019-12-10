@@ -79,6 +79,17 @@ label
   width: 250px;
 }
 
+table a:not(.btn), .table a:not(.btn)
+{
+	text-decoration: none;
+}
+
+
+table a:not(.btn):hover, .table a:not(.btn):hover
+{
+	text-decoration: underline;
+}
+
 .btn
 {
   padding: 4px 10px;
@@ -274,7 +285,13 @@ label
 
 .ul-None {
 	list-style: none;
-	padding-left: 10px;
+	padding: 2px;
+	padding-left: 4px;
+}
+
+.ul-None li
+{
+	padding:1px;
 }
 
 .well

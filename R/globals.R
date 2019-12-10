@@ -10,7 +10,7 @@ NULL
 #' @rdname constants
 #' @export
 globalVars <- vector()
-globalVars['startDate'] <- 1800
+globalVars['startDate'] <- 1900
 globalVars['endDate'] <- 2100
 
 # Global vars for scale colors
@@ -35,11 +35,10 @@ globalScenarios[['RCP 8.5']] <-  file.path('input',paste0('hector_rcp',rcps[4],'
 globalScenarioColors <- c("RCP 2.6" = "#99cc33", "RCP 4.5" = "#FFFF00", "RCP 6.0" = "#ff9900", "RCP 8.5" = "#ff3333")
 
 # Create master list of parameter lookups
-#' @details \code{globalParameters}: Capability strings (internal name lookup/mapping) for Hector parameters
+#' @details \code{globalParameters}: Capability strings (internal name lookup/mapping) for Hector parameters - (should match UI component ids)
 #' @rdname constants
 #' @export
 globalParameters <- vector()
-# Load parameter strings into global variable (should match UI component ids)
 globalParameters['pco2'] <- hector::PREINDUSTRIAL_CO2()
 globalParameters['q10'] <- hector::Q10_RH() #2.0
 globalParameters['beta'] <- hector::BETA() #0.36
