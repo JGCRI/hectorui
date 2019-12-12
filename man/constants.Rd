@@ -52,7 +52,7 @@ Global constants for the Hector-Shiny UI
 
 \code{globalScenarios} Scenario input file names and paths
 
-\code{globalParameters}: Capability strings (internal name lookup/mapping) for Hector parameters
+\code{globalParameters}: Capability strings (internal name lookup/mapping) for Hector parameters - (should match UI component ids)
 
 \code{globalParamsDefault}: Default Parameter Sets
 

@@ -33,17 +33,13 @@ server <- function(input, output, session)
   totalActivePlots <- 0
   customLoaded <- FALSE
   scale_colors <- vector()
+  ggthemr('dust', type = "outer")
 
   # These variables are for storing the current parameter values so that if a change is made (like loading new scenario)
   # then the custom params set by user will persist beyond core restarts
   paramsList <- list()
-  paramsList['alpha']   <- globalParamsDefault[1]
-  paramsList['beta']    <- globalParamsDefault[2]
-  paramsList['diff']    <- globalParamsDefault[3]
-  paramsList['S']       <- globalParamsDefault[4]
-  paramsList['C']       <- globalParamsDefault[5]
-  paramsList['q10_rh']  <- globalParamsDefault[6]
-  paramsList['volscl']  <- globalParamsDefault[7]
+  paramsList <- globalParamsDefault
+
   assignParameters()
   paramsChanged <- FALSE
 
@@ -93,11 +89,12 @@ server <- function(input, output, session)
   observeEvent(input$input_RCP6.0, setRCP("6.0"), ignoreInit = TRUE)
   observeEvent(input$input_RCP8.5, setRCP("8.5"), ignoreInit = TRUE)
   observeEvent(input$input_enableCustom, setRCP("Custom"), ignoreInit = TRUE)
-  observeEvent(input$input_loadCustom, loadCustomScenario(), ignoreInit = TRUE)
+  observeEvent(input$input_load_custom, loadCustomScenario(), ignoreInit = TRUE)
   observeEvent(input$input_paramToggle, loadModelParameters(), ignoreInit = TRUE)
   observeEvent(input$input_enableCustom, toggleCustom(), suspended = TRUE)
   observeEvent(input$input_set_custom_emissions, setCustomEmissions(), ignoreInit = TRUE)
   observeEvent(input$input_reset_custom_emissions, resetCustomEmissions(), ignoreInit = TRUE)
+  observeEvent(input$test, changeTheme(), ignoreInit = TRUE)
 
   # This is a group Observer block for all of the params fields because they all respond the same way
   observe({
@@ -108,7 +105,7 @@ server <- function(input, output, session)
     input$input_beta
     input$input_diff
     input$input_ecs
-    setParamsChanged(TRUE)
+    #setParamsChanged(TRUE)
   })
 
 #----- End observer function setup

@@ -63,9 +63,7 @@ loadGraph <- function()
             {
               for (i in 1:length(outputVariables))
               {
-                # Need local so that each item gets its own number. Without it, the value
-                # of i in the renderPlot() will be the same across all instances, because
-                # of when the expression is evaluated.
+                # Need local so that each item gets its own number. Without it, the value of i in the renderPlot() will be the same across all instances.
                 local(
                 {
                     my_i <- i
@@ -75,7 +73,7 @@ loadGraph <- function()
                     seriesname <- ""
                     for(j in 1:length(hcores))
                     {
-                      hdata <- hector::fetchvars(core = hcores[[j]], dates = 1800:globalVars['endDate'], vars = outputVariables[i], "\n")
+                      hdata <- hector::fetchvars(core = hcores[[j]], dates = globalVars['startDate']:globalVars['endDate'], vars = outputVariables[i], "\n")
                       if(names(hcores[j])=="Custom")
                         seriesname <- input$input_ScenarioName
                       else
@@ -86,7 +84,8 @@ loadGraph <- function()
                     }
                     x <- dplyr::distinct(hdata, units)
                     ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=year, y=value, group=variable, color=scenario)) + ggplot2::geom_line() +
-                      ggthemes::theme_solarized(light = TRUE)+ ggplot2::labs(y=x[[1]], title =  attr(outputVariables[[i]], 'longName')) +  ggplot2::scale_color_manual(values = globalColorScales)
+                      # ggthemes::theme_solarized(light = TRUE)+ ggplot2::labs(y=x[[1]], title =  attr(outputVariables[[i]], 'longName')) +  ggplot2::scale_color_manual(values = globalColorScales)
+                       ggplot2::labs(y=x[[1]], title =  attr(outputVariables[[i]], 'longName')) #+  ggplot2::scale_color_manual(values = globalColorScales)
 
                     #+ ggplot2::scale_color_manual(values=globalScenarioColors) + ggplot2::geom_ribbon(alpha=0.5)
                     # +  ggplot2::guides(color = ggplot2::guide_colorbar(title  = expression(beta)))
@@ -174,7 +173,10 @@ output$downloadData <- downloadHandler(
       }
     }
     header_text <- paste("File created with Hector UI - https://github.com/JGCRI/hector-ui\n" ,
-                         "Model Parameters: " , input$input_paramToggle , "\n")
+                         "Model Parameters: " , input$input_paramToggle , "\n",
+                         "Alpha:,", input$input_aero, ",Beta:,", input$input_beta, ",Diff:,", input$input_diff,
+                         ",ECS:,", input$input_ecs, ",CO2:,", input$input_pco2, ",Q10:,", input$input_q10, ",Volc:,", input$input_volc,
+                         "\n")
 
     cat(header_text, file = file)
     lapply(dataList, function(x) write.table( data.frame(x), file  , append= T, sep=',', row.names = F,  ))

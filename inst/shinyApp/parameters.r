@@ -1,8 +1,21 @@
-
-
 #' Assign Parameters
 #'
-#' S
+#' @return no return value
+#' @export
+#'
+#' @examples
+setCoreParameters <- function(hcore)
+{
+  hector::setvar(hcore, dates = NA, var = globalParameters['aero'], values = c(as.double(paramsList[['alpha']])), unit = "unitless")
+  hector::setvar(hcore, dates = NA, var = globalParameters['beta'], values = c(as.double(paramsList[['beta']])), unit = "unitless")
+  hector::setvar(hcore, dates = NA, var = globalParameters['diff'], values = c(as.double(paramsList[['diff']])), unit = "cm2/s")
+  hector::setvar(hcore, dates = NA, var = globalParameters['ecs'],  values = c(as.double(paramsList[['S']])), unit = "degC")
+  hector::setvar(hcore, dates = NA, var = globalParameters['pco2'], values = c(as.double(paramsList[['C']])), unit = "ppmv CO2")
+  hector::setvar(hcore, dates = NA, var = globalParameters['q10'],  values = c(as.double(paramsList[['q10_rh']])), unit = "unitless")
+  hector::setvar(hcore, dates = NA, var = globalParameters['volc'], values = c(as.double(paramsList[['volscl']])), unit = "unitless")
+}
+
+#' Assign Parameters
 #'
 #' @return no return value
 #' @export
@@ -10,14 +23,16 @@
 #' @examples
 assignParameters <- function()
 {
+  # Update the on screen input components for parameters with the associated values from the chosen parameter group
+  # Note - with the current code the parameters need to be in correct order or would have to switch to named calls
   print('in assign params')
-  updateNumericInput(session, "input_aero", value=paramsList[[1]])
-  updateNumericInput(session, "input_beta", value=paramsList[[2]])
-  updateNumericInput(session, "input_diff", value=paramsList[[3]])
-  updateNumericInput(session, "input_ecs",  value=paramsList[[4]])
-  updateNumericInput(session, "input_pco2", value=paramsList[[5]])
-  updateNumericInput(session, "input_q10",  value=paramsList[[6]])
-  updateNumericInput(session, "input_volc", value=paramsList[[7]])
+  updateNumericInput(session, "input_aero", value=paramsList[['alpha']])
+  updateNumericInput(session, "input_beta", value=paramsList[['beta']])
+  updateNumericInput(session, "input_diff", value=paramsList[['diff']])
+  updateNumericInput(session, "input_ecs",  value=paramsList[['S']])
+  updateNumericInput(session, "input_pco2", value=paramsList[['C']])
+  updateNumericInput(session, "input_q10",  value=paramsList[['q10_rh']])
+  updateNumericInput(session, "input_volc", value=paramsList[['volscl']])
 }
 
 #' Restore Parameters after changing model state
@@ -45,49 +60,35 @@ restoreParameters <- function()
 loadModelParameters <- function()
 {
   print("in load model params")
-  paramsGroup <- vector()
-  if(input$input_paramToggle == "default")
-    paramsGroup <- globalParamsDefault
-  else if(input$input_paramToggle == "canesm2")
-    paramsGroup <- globalParamsCanESM2
-  else if(input$input_paramToggle == "cesm1-bgc")
-    paramsGroup <- globalParamsCESM1BGC
-  else if(input$input_paramToggle == "gfdl-esm2g")
-    paramsGroup <- globalParamsGFDLESM2G
-  else if(input$input_paramToggle == "miroc-esm")
-    paramsGroup <- globalParamsMIROCESM
-  else if(input$input_paramToggle == "mpi-esm-lr")
-    paramsGroup <- globalParamsMPIESMLR
-  else if(input$input_paramToggle == "mri-esm1")
-    paramsGroup <- globalParamsMRIESM1
 
-  # Update the on screen input components for parameters with the associated values from the chosen parameter group
-  # Note - with the current code the parameters need to be in correct order or would have to switch to named calls
-  updateNumericInput(session, "input_aero", value=paramsGroup[[1]])
-  updateNumericInput(session, "input_beta", value=paramsGroup[[2]])
-  updateNumericInput(session, "input_diff", value=paramsGroup[[3]])
-  updateNumericInput(session, "input_ecs",  value=paramsGroup[[4]])
-  updateNumericInput(session, "input_pco2", value=paramsGroup[[5]])
-  updateNumericInput(session, "input_q10",  value=paramsGroup[[6]])
-  updateNumericInput(session, "input_volc", value=paramsGroup[[7]])
+  if(input$input_paramToggle == "default")
+    paramsList <<- globalParamsDefault
+  else if(input$input_paramToggle == "canesm2")
+    paramsList <<- globalParamsCanESM2
+  else if(input$input_paramToggle == "cesm1-bgc")
+    paramsList <<- globalParamsCESM1BGC
+  else if(input$input_paramToggle == "gfdl-esm2g")
+    paramsList <<- globalParamsGFDLESM2G
+  else if(input$input_paramToggle == "miroc-esm")
+    paramsList <<- globalParamsMIROCESM
+  else if(input$input_paramToggle == "mpi-esm-lr")
+    paramsList <<- globalParamsMPIESMLR
+  else if(input$input_paramToggle == "mri-esm1")
+    paramsList <<- globalParamsMRIESM1
+
+  assignParameters()
 
   if(length(hcores) > 0)
   {
     for(i in 1:length(hcores))
     {
-      hector::setvar(hcores[[i]], dates = NA, var = globalParameters['aero'], values = c(as.double(paramsGroup[[1]])), unit = "unitless")
-      hector::setvar(hcores[[i]], dates = NA, var = globalParameters['beta'], values = c(as.double(paramsGroup[[2]])), unit = "unitless")
-      hector::setvar(hcores[[i]], dates = NA, var = globalParameters['diff'], values = c(as.double(paramsGroup[[3]])), unit = "cm2/s")
-      hector::setvar(hcores[[i]], dates = NA, var = globalParameters['ecs'],  values = c(as.double(paramsGroup[[4]])), unit = "degC")
-      hector::setvar(hcores[[i]], dates = NA, var = globalParameters['pco2'], values = c(as.double(paramsGroup[[5]])), unit = "ppmv CO2")
-      hector::setvar(hcores[[i]], dates = NA, var = globalParameters['q10'],  values = c(as.double(paramsGroup[[6]])), unit = "unitless")
-      hector::setvar(hcores[[i]], dates = NA, var = globalParameters['volc'], values = c(as.double(paramsGroup[[7]])), unit = "unitless")
+      setCoreParameters(hcores[[i]])
     }
 
     resetCore()
   }
-  if(!firstLoad)
-    setParamsChanged(toggle = TRUE)
+  # if(!firstLoad)
+  #   setParamsChanged(toggle = TRUE)
   if(length(hcores) > 0)
     loadGraph()
 }
@@ -104,7 +105,7 @@ resetParams <- function()
 {
   print("in reset params")
   loadModelParameters()
-  setParamsChanged(FALSE)
+  #setParamsChanged(FALSE)
   # if(length(hcores) >= 1)
   # {
   #

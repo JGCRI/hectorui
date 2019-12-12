@@ -16,7 +16,8 @@ loadScenario <- function(scenario)
     {
       inifile <<- system.file(globalScenarios[paste("RCP", scenario)], package='hector', mustWork=TRUE)
       hcore <- hector::newcore(inifile, suppresslogging=TRUE, name=paste(globalScenarios[paste("RCP", scenario)]))
-      hector::run(hcore, globalVars['startDate']:globalVars['endDate'])
+      setCoreParameters(hcore)
+      hector::run(hcore, globalVars['endDate'])
     },
     error = function(err)
     {

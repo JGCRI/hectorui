@@ -1,3 +1,8 @@
+changeTheme <- function()
+{
+  ggthemr(input$test, type = "outer")
+  loadGraph()
+}
 
 # This file contains miscellaneous observers (all EXCEPT for those from the parameters which are in the parameters.r file)
 
@@ -109,16 +114,22 @@ loadCustomScenario <- function()
 {
   print("in load custom")
   #browser()
-  if (is.null(input$input_ScenarioFile) | (is.na(input$input_ScenarioName) | is.null(input$input_ScenarioName) | (input$input_ScenarioName == "")))
+  if (is.null(input$input_custom_scenario_file) | (is.na(input$input_custom_scenarioName) | is.null(input$input_custom_scenarioName) | (input$input_custom_scenarioName == "")))
   {
     shinyalert::shinyalert("Missing Information", "Please name the scenario and load an emissions file before attempting to load the scenario.", type = "warning")
     return(NULL)
   }
+  scenarioName <- input$input_custom_scenarioName
   tryCatch(
     {
-      inifile <<-  Sys.glob(input$input_ScenarioFile$datapath)
-      hcores[["Custom"]] <<- hector::newcore(inifile, suppresslogging=TRUE, name="custom")
-      hector::run(hcore, globalVars['endDate'])
+      withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
+       {
+         inifile <<-  Sys.glob(input$input_custom_scenario_file$datapath)
+         hcores[[scenarioName]] <<- hector::newcore(inifile, suppresslogging=TRUE, name="custom")
+         hector::run( hcores[[scenarioName]], globalVars['endDate'])
+         incProgress(1/1, detail = paste("Load complete."))
+         Sys.sleep(0.2)
+       })
 
       # If this is the initial application load, then we need to assign the on screen input field values to hector's default params
       if(firstLoad)
@@ -126,10 +137,10 @@ loadCustomScenario <- function()
         loadParameters()
       }
       # If its not first load but the parameters have changed via user input, then need to restore those values after restarting core
-      else if(paramsChanged)
-      {
-        restoreParameters()
-      }
+      # else if(paramsChanged)
+      # {
+      #   restoreParameters()
+      # }
       customLoaded <<- TRUE
       loadGraph()
     },
@@ -219,6 +230,8 @@ setCustomEmissions <- function()
 #' @examples
 resetCustomEmissions <- function()
 {
+  print("in reset emissions")
+  updateSelectInput(session = session, inputId = "input_paramToggle", selected = "default")
   restartCore()
 }
 

@@ -18,7 +18,7 @@ globalVars['endDate'] <- 2100
 #' @rdname constants
 #' @export
 globalColorScales <- vector()
-globalColorScales <- c("RCP 2.6"="#428bca", "RCP 4.5"="#5cb85c", "RCP 6.0"="#f0ad4e", "RCP 8.5"="#d9534f")
+globalColorScales <- c("RCP 2.6"="#db735c", "RCP 4.5"="#EFA86E", "RCP 6.0"="#9A8A76", "RCP 8.5"="#7A6752")
 
 # Create global file input vector
 #' @details \code{globalScenarios} Scenario input file names and paths
@@ -57,50 +57,56 @@ globalParameters['diff'] <- hector::DIFFUSIVITY() #2.3
 #' @details \code{globalParamsDefault}: Default Parameter Sets
 #' @rdname constants
 #' @export
-globalParamsDefault <- vector()
-globalParamsDefault <- c(1, 0.36, 2.3, 3, 276.09, 2, 1)
+globalParamsDefault <- list()
+globalParamsDefault <- c('alpha' = 1, 'beta' = 0.36, 'diff' = 2.3, 'S' = 3, 'C' = 276.09, 'q10_rh' = 2, 'volscl' = 1)
 
 # CanESM2 Parameter Sets
 #' @details \code{globalParamsCanESM2}: CanESM2 Parameters for model emulation
 #' @rdname constants
 #' @export
-globalParamsCanESM2 <- vector()
-globalParamsCanESM2 <- c(1.87, 0.08, 0.98, 3.88, 282.35, 1.75, 1.81)
+globalParamsCanESM2 <- list()
+#globalParamsCanESM2 <- c(1.87, 0.08, 0.98, 3.88, 282.35, 1.75, 1.81)
+globalParamsCanESM2 <- c('alpha' = 1.87, 'beta' = 0.08, 'diff' = 0.98, 'S' = 3.88, 'C' = 282.35, 'q10_rh' = 1.75, 'volscl' = 1.81)
 
 # CESM1-BGC Parameter Sets
 #' @details \code{globalParamsCESM1BGC}: CESM1-BGC Parameters for model emulation
 #' @rdname constants
 #' @export
-globalParamsCESM1BGC <- vector()
-globalParamsCESM1BGC <- c(-0.43, 0.01, 8, 2.4, 280.31, 1.78, 3.94)
+globalParamsCESM1BGC <- list()
+#globalParamsCESM1BGC <- c(-0.43, 0.01, 8, 2.4, 280.31, 1.78, 3.94)
+globalParamsCESM1BGC <- c('alpha' = -0.43, 'beta' = 0.0, 'diff' = 8, 'S' = 2.4, 'C' = 280.31, 'q10_rh' = 1.78, 'volscl' = 3.94)
 
 # GFDL-ESM2G Parameter Sets
 #' @details \code{globalParamsGFDLESM2G}: GFDL-ESM2G Parameters for model emulation
 #' @rdname constants
 #' @export
-globalParamsGFDLESM2G <- vector()
-globalParamsGFDLESM2G <- c(0.46, 0.07, 12.01, 2.03, 289.24, 1.76, 2.12)
+globalParamsGFDLESM2G <- list()
+#globalParamsGFDLESM2G <- c(0.46, 0.07, 12.01, 2.03, 289.24, 1.76, 2.12)
+globalParamsGFDLESM2G <- c('alpha' = 0.46, 'beta' = 0.07, 'diff' = 12.01, 'S' = 2.03, 'C' = 289.24, 'q10_rh' = 1.76, 'volscl' = 2.12)
 
 # MIROC-ESM Parameter Sets
 #' @details \code{globalParamsMIROCESM}: MIROC-ESM Parameters for model emulation
 #' @rdname constants
 #' @export
-globalParamsMIROCESM <- vector()
-globalParamsMIROCESM <- c(1.05, 0.02, 6.39, 5.83, 283.31, 1.77, 2.02)
+globalParamsMIROCESM <- list()
+#globalParamsMIROCESM <- c(1.05, 0.02, 6.39, 5.83, 283.31, 1.77, 2.02)
+globalParamsMIROCESM <- c('alpha' = 1.05, 'beta' = 0.02, 'diff' = 6.39, 'S' = 5.83, 'C' = 283.31, 'q10_rh' = 1.77, 'volscl' = 2.02)
 
 # MPI-ESM-LR Parameter Sets
 #' @details \code{globalParamsMPIESM-LR}: MPI-ESM-LR Parameters for model emulation
 #' @rdname constants
 #' @export
-globalParamsMPIESMLR <- vector()
-globalParamsMPIESMLR <- c(1.22, 0.28, 2.93, 3.66, 289.13, 1.75, 0.70)
+globalParamsMPIESMLR <- list()
+#globalParamsMPIESMLR <- c(1.22, 0.28, 2.93, 3.66, 289.13, 1.75, 0.70)
+globalParamsMPIESMLR <- c('alpha' = 1.22, 'beta' = 0.28, 'diff' = 2.93, 'S' = 3.66, 'C' = 289.13, 'q10_rh' = 1.75, 'volscl' = 0.70)
 
 # MRI-ESM1 Parameter Sets
 #' @details \code{globalParamsMRIESM1}: MRI-ESM1 Parameters for model emulation
 #' @rdname constants
 #' @export
-globalParamsMRIESM1 <- vector()
-globalParamsMRIESM1 <- c(1.42, 0.66, 4.21, 2.04, 289.49, 1.76, 0.27)
+globalParamsMRIESM1 <- list()
+#globalParamsMRIESM1 <- c(1.42, 0.66, 4.21, 2.04, 289.49, 1.76, 0.27)
+globalParamsMRIESM1 <- c('alpha' = 1.42, 'beta' = 0.66, 'diff' = 4.21, 'S' = 2.04, 'C' = 289.49, 'q10_rh' = 1.76, 'volscl' = 0.27)
 
 
 # Output Variables: This section maps output variables (should match drop down item ids)
@@ -470,19 +476,19 @@ attr(globalCapabilities[['so2_v']], 'longName') <- "Volcanic SO2"
 # TEMPERATURE
 # "Global Mean Temp"
 globalCapabilities[['t_gmt']] <- hector::GLOBAL_TEMP()
-attr(globalCapabilities[['t_gmt']], 'longName') <- "Global Mean Temp"
+attr(globalCapabilities[['t_gmt']], 'longName') <- "Global Mean Temperature"
 # "Equilibrium Global Temp"
 globalCapabilities[['t_egt']] <- hector::GLOBAL_TEMPEQ()
-attr(globalCapabilities[['t_egt']], 'longName') <- "Equilibrium Global Temp"
+attr(globalCapabilities[['t_egt']], 'longName') <- "Equilibrium Global Temperature"
 # "Ocean Surface Temp"
 globalCapabilities[['t_ost']] <- hector::OCEAN_SURFACE_TEMP()
-attr(globalCapabilities[['t_ost']], 'longName') <- "Ocean Surface Temp"
+attr(globalCapabilities[['t_ost']], 'longName') <- "Ocean Surface Temperature"
 # "Ocean Air Temp"
 globalCapabilities[['t_oat']] <- hector::OCEAN_AIR_TEMP()
-attr(globalCapabilities[['t_oat']], 'longName') <- "Ocean Air Temp"
+attr(globalCapabilities[['t_oat']], 'longName') <- "Ocean Air Temperature"
 # "Land Temp Anomaly"
 globalCapabilities[['t_lta']] <- hector::LAND_TEMP()
-attr(globalCapabilities[['t_lta']], 'longName') <- "Land Temp Anomaly"
+attr(globalCapabilities[['t_lta']], 'longName') <- "Land Temperature Anomaly"
 # "Heat Flux - Mixed Layer Ocean"
 globalCapabilities[['t_hf_mlo']] <- hector::FLUX_MIXED()
 attr(globalCapabilities[['t_hf_mlo']], 'longName') <- "Heat Flux - Mixed Layer Ocean"

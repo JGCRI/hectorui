@@ -5,17 +5,18 @@ library(shinyBS)
 
 # Using Shiny FluidPage layout -  A fluid page layout consists of rows and columns in a structured format
 fixedPage(theme = shinythemes::shinytheme("darkly"),
-  shinythemes::themeSelector(),
+  # shinythemes::themeSelector(),
   shinyalert::useShinyalert(),
   # Application title
-  titlePanel("Hector: An Interactive Climate Model"),
+  h2("Hector: An Interactive Climate Model", class="titleText"),
 
   # Function that gets called on first load of application to load in any themes/css etc
   # Loads the custom.css file that contains custom styles and overwrites some built in styles
   tags$head
   (
-    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
-    tags$link(href="google-analytics.js")
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    # ,
+    # tags$link(href="google-analytics.js")
   ),
   shinyjs::useShinyjs(),
 
@@ -44,11 +45,14 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                 and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses."),
                         p("This interactive version is built upon previous work by developers at the ", a("Joint Global Change Research Institute (JGCRI)", href="http://globalchange.umd.edu/", target="blank"),
                         " including the development
-                        of the initial C++ version of Hector, and the follow up R Package, \"Hector R\". The simple diagram below outlines the relationships:"),
-                        img(src="images/Hector-sm.png")),
+                        of the initial C++ version of Hector, and the follow up R Package, \"Hector R\". The simple diagram below outlines their relationships:"),
+                        h3("The Hector Product Family", style="text-align: center"),
+                        img(src="images/Hector-sm.png")
+                       ),
                 tags$td(tags$figure(
-                                    tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results"),
+                  tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results"),
                                     img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="330")
+
                                     ),
                         style="text-align: center"
                 )
@@ -81,7 +85,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           # Citation Tab Panel
           tabPanel
           (
-            p(icon("copyright", "fa-2x"), "How to Cite/License", value="citeTab"),
+            p(icon("copyright", "fa-2x"), "License/How to Cite", value="citeTab"),
             h5("License Information"), tags$hr(class="hrNav"),
 
             tags$div(class="citationsDiv", style="width: 500px;",
@@ -148,11 +152,11 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           # Information Tab Panel
           tabPanel
           ( p( "Standard Scenarios", value="infoTab"),
-            div(h4("RCP Scenarios"),#, icon("info-circle", "fa-1x")),
+            div(h5("RCP Scenarios"),#, icon("info-circle", "fa-1x")),
                 tags$hr(class="hrNav"),
                 div(class="checkboxDiv", "Choose 1 or more Scenarios:",
                     p(
-                    shinyWidgets::prettyCheckbox(inputId = "input_RCP2.6", label = "2.6", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "info"),
+                    shinyWidgets::prettyCheckbox(inputId = "input_RCP2.6", label = "2.6", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "primary"),
                     shinyWidgets::prettyCheckbox(inputId = "input_RCP4.5", label = "4.5", value = TRUE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "success"),
                     shinyWidgets::prettyCheckbox(inputId = "input_RCP6.0", label = "6.0", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "warning"),
                     shinyWidgets::prettyCheckbox(inputId = "input_RCP8.5", label = "8.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "danger")
@@ -161,7 +165,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
 
                 # Divider that holds the parameter options/controls
                 div(id="myapp",
-                    h4("Model Parameters"),
+                    h5("Model Parameters"),
                     tags$hr(class="hrNav"),
                     tags$table(
                       tags$tr(width = "100%",
@@ -218,7 +222,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                 ),
 
                 # Divider that holds the custom emissions options/controls
-                div(h4("Custom Emissions"),
+                div(h5("Custom Emissions"),
                     tags$hr(class="hrNav"),
                     shiny::selectInput(inputId = "input_custom_emissions", label =  "Emissions:", width = 200, multiple = F,
                                        choices = list('Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'))),
@@ -251,23 +255,65 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           # Custom Scenarios Tab Panel
           tabPanel
           ( p(icon("edit", "fa-1x"), "Custom Scenarios", value="infoTab"),
-            div(h4("Baseline Scenarios"),#, icon("info-circle", "fa-1x")),
+            div(h5("Getting Started"),
                 tags$hr(class="hrNav"),
-                selectInput("input_custom_RCP", "RCP Scenario", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6"="RCP 6.0", "8.5" = "RCP 8.5", "Custom" = "custom"), width=200, selected = "RCP 4.5"),
-                 radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
+              p("There are two ways to run a custom scenario:"),
+              tags$ol(
+                tags$li("Use one of the baseline RCP scenarios as the starting point and then upload a set of custom emissions to use with that scenario"),
+                tags$li("Directly customize the scenario itself (requires a file download and upload) which allows you to customize all of the Hector variables as
+                well as set custom emissions.")
+              ),
+              p(tags$strong("Do not edit any field names, add additional fields, or modify the .INI or .CSV files in any way other than changing data."))
+            ),
+            div(h5("Starting Scenarios"),
+                tags$hr(class="hrNav"),
+                selectInput("input_custom_RCP", "Baseline Scenario:", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6"="RCP 6.0", "8.5" = "RCP 8.5", "Custom" = "custom"), width=200, selected = "RCP 4.5"),
+                textInput("input_custom_scenarioName", "Custom Scenario Name:", width=200, value = ""),
 
+                conditionalPanel(
+                  condition = "input.input_custom_RCP != 'custom'",
+                  div(h5("Custom Emissions Pathway"),
+                  tags$hr(class="hrNav"),
+
+                  conditionalPanel(
+                    condition = "input.input_custom_RCP == 'RCP 2.6'",
+                    a(h6("Download RCP 2.6 Emissions File Template"), href="input/emissions/RCP26_emissions.csv")
+                  ),
+                  conditionalPanel(
+                    condition = "input.input_custom_RCP == 'RCP 4.5'",
+                    a(h6("Download RCP 4.5 Emissions File Template"), href="input/emissions/RCP45_emissions.csv")
+                  ),
+                  conditionalPanel(
+                    condition = "input.input_custom_RCP == 'RCP 6.0'",
+                    a(h6("Download RCP 6.0 Emissions File Template"), href="input/emissions/RCP6_emissions.csv")
+                  ),
+                  conditionalPanel(
+                    condition = "input.input_custom_RCP == 'RCP 8.5'",
+                    a(h6("Download RCP 8.5 Emissions File Template"), href="input/emissions/RCP85_emissions.csv")
+                  ),
+
+                  fileInput("input_custom_emissions_file", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
+                  div(class="paramDivs", actionButton(inputId="input_load_emissions", label="Load Scenario"))
+                  )
+                ), # End conditional Panel
 
                 conditionalPanel(
                   condition = "input.input_custom_RCP == 'custom'",
-                  h4("Custom Scenario"),
-                    tags$hr(class="hrNav"),
-                    textInput("input_custom_scenarioName", "Scenario Name:", width=200, value = ""),
-                    fileInput("input_custom_scenarioFile", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
+                  h5("Custom Scenario (Advanced Users)"),
+                  tags$hr(class="hrNav"),
+                  p("To customize a scenario, first download the file package below, extract the files and follow these steps:"),
+                  tags$ol(
+                    tags$li("Edit variables in the .INI file that corresponds closest to your desired starting point (i.e. Hector_RCP26.ini)"),
+                    tags$li("Replace every emissions file path in the .INI file with a fully qualified local path (i.e. c:\\files\\emissions.csv)"),
+                    tags$li("After editing the .INI file and replacing the paths to the emissions, simply upload the .INI file below to create a custom scenario.")
+                  ),
+                  a(h6("Download Custom Scenario File Package"), href="input/HectorCustomFiles.zip"),
+                  fileInput("input_custom_scenario_file", "Upload Custom Scenario File:", width=275, buttonLabel = "Choose File", accept = c(".ini")),
                     div(class="paramDivs", actionButton(inputId="input_load_custom", label="Load Scenario"))
                   ) # End conditional Panel
             )
             # div(id="myapp",
-            #     h4("Model Parameters"),
+            #     h5("Model Parameters"),
             #     tags$hr(class="hrNav"),
             #     div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model:", list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
             #                                                                                   "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
@@ -319,6 +365,9 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                        'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Land Temp Anomaly"="t_lta", "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')),
                   multiple = T, width=350, selected = "t_gmt"
                 ),
+                selectInput(inputId = "test", width=150, label="theme", choices = c("dust", "grape", "flat", "flat dark", "light", "earth", "fresh", "chalk", "lilac",
+                                                                         "pale", "copper", "greyscale", "sky", "solarized", "grass", "sea", "camoflauge")),
+
                 actionButton(inputId="loadGraphs", label="Load Graphs", width = 200),
                 downloadButton("downloadData", label="Download Raw Data")
                ),
