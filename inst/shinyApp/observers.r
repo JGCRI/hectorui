@@ -176,7 +176,7 @@ loadCustomEmissions <- function()
     {
      # browser()
       inifile <- system.file(globalScenarios[input$input_custom_RCP], package='hector', mustWork=TRUE)
-      emissions_file <-  Sys.glob(gsub("\\\\", "/", input$input_custom_emissions_file$datapath))
+      emissions_file <- input$input_custom_emissions_file$datapath
       iniPath <- dirname(inifile)
       file.create("/tmp/temp.ini")
       withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
@@ -212,7 +212,7 @@ loadCustomEmissions <- function()
     {
       showModal(modalDialog(
         title = "Warning",
-        paste("Details:  ",war)
+        paste("Details:  ",war, "e = ", emissions_file, "i = ", newIniFile)
       ))
     },
     error = function(err)
