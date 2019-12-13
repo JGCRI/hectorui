@@ -1,8 +1,3 @@
-changeTheme <- function()
-{
-  ggthemr(input$test, type = "outer")
-  loadGraph()
-}
 
 # This file contains miscellaneous observers (all EXCEPT for those from the parameters which are in the parameters.r file)
 
@@ -105,7 +100,7 @@ setRCP <- function(scenarioName)
 
 #' Load custom scenario
 #'
-#' Observer function responsible for processing the custom emissions file when the user creates a custom scenario
+#' Observer function responsible for processing the custom scenario file when the user creates a custom scenario
 #' @return
 #' @export
 #'
@@ -124,12 +119,81 @@ loadCustomScenario <- function()
     {
       withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
        {
-         inifile <<-  Sys.glob(input$input_custom_scenario_file$datapath)
+         inifile <-  Sys.glob(input$input_custom_scenario_file$datapath)
          hcores[[scenarioName]] <<- hector::newcore(inifile, suppresslogging=TRUE, name="custom")
-         hector::run( hcores[[scenarioName]], globalVars['endDate'])
+         hector::run( hcores[[scenarioName]], globalVars[['endDate']])
          incProgress(1/1, detail = paste("Load complete."))
          Sys.sleep(0.2)
        })
+
+      # If this is the initial application load, then we need to assign the on screen input field values to hector's default params
+      if(firstLoad)
+      {
+        loadParameters()
+      }
+      # If its not first load but the parameters have changed via user input, then need to restore those values after restarting core
+      # else if(paramsChanged)
+      # {
+      #   restoreParameters()
+      # }
+      customLoaded <<- TRUE
+      loadGraph()
+    },
+    warning = function(war)
+    {
+      showModal(modalDialog(
+        title = "Warning",
+        paste("Details:  ",war)
+      ))
+    },
+    error = function(err)
+    {
+      shinyalert::shinyalert("Custom Scenario Error",print(paste('Error attempting to load custom scenario: ',err)), type = "error")
+    },
+    finally =
+      {
+      })
+}
+
+#' Load custom emissions
+#'
+#' Observer function responsible for processing the custom emissions file when the user creates a custom emissions scenario
+#' @return
+#' @export
+#'
+#' @examples
+loadCustomEmissions <- function()
+{
+   print("in load custom")
+  #browser()
+  if (is.null(input$input_custom_emissions_file) | (is.na(input$input_custom_scenarioName) | is.null(input$input_custom_scenarioName) | (input$input_custom_scenarioName == "")))
+  {
+    shinyalert::shinyalert("Missing Information", "Please name the scenario and load an emissions file before attempting to load the scenario.", type = "warning")
+    return(NULL)
+  }
+  scenarioName <- input$input_custom_scenarioName
+  tryCatch(
+    {
+     # browser()
+      inifile <- system.file(globalScenarios[input$input_custom_RCP], package='hector', mustWork=TRUE)
+      emissions_file <-  Sys.glob(gsub("\\\\", "/", input$input_custom_emissions_file$datapath))
+      iniPath <- dirname(inifile)
+      file.create(paste0(iniPath, "/temp.ini"))
+      withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
+      {
+        initext <- readLines(inifile)
+        newtext <- gsub(pattern="emissions/RCP45_emissions.csv", replacement = emissions_file, x = initext)
+       # browser()
+        fileConn <- file(paste0(iniPath, "/temp.ini"))
+        writeLines(newtext, con = fileConn)
+        close(fileConn)
+
+        newIniFile <- system.file("input/temp.ini", package='hector', mustWork=TRUE)
+        hcores[[scenarioName]] <<- hector::newcore(newIniFile, suppresslogging=TRUE, name="custom")
+        hector::run( hcores[[scenarioName]], globalVars[['endDate']])
+        incProgress(1/1, detail = paste("Load complete."))
+        Sys.sleep(0.2)
+      })
 
       # If this is the initial application load, then we need to assign the on screen input field values to hector's default params
       if(firstLoad)
@@ -246,4 +310,10 @@ resetCustomEmissions <- function()
 openPage <- function(url) {
   return(tags$a(href=url, "Click here!", target="_blank"))
 
+}
+
+changeTheme <- function()
+{
+  ggthemr(stringr::str_to_lower(input$test), type = "outer")
+  loadGraph()
 }

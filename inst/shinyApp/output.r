@@ -73,7 +73,7 @@ loadGraph <- function()
                     seriesname <- ""
                     for(j in 1:length(hcores))
                     {
-                      hdata <- hector::fetchvars(core = hcores[[j]], dates = globalVars['startDate']:globalVars['endDate'], vars = outputVariables[i], "\n")
+                      hdata <- hector::fetchvars(core = hcores[[j]], dates = globalVars[['startDate']]:globalVars[['endDate']], vars = outputVariables[i], "\n")
                       if(names(hcores[j])=="Custom")
                         seriesname <- input$input_ScenarioName
                       else
@@ -160,7 +160,7 @@ output$downloadData <- downloadHandler(
       seriesname <- ""
       for(i in 1:length(hcores))
       {
-        hdata <- hector::fetchvars(core = hcores[[i]], dates = 1800:globalVars['endDate'], vars = outputVariables, "\n")
+        hdata <- hector::fetchvars(core = hcores[[i]], dates = 1800:globalVars[['endDate']], vars = outputVariables, "\n")
         hdata <- dplyr::mutate(hdata)
         if(names(hcores[i])=="Custom")
           seriesname <- input$input_ScenarioName

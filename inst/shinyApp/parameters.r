@@ -1,3 +1,5 @@
+# Contains parameter related functions and observers
+
 #' Assign Parameters
 #'
 #' @return no return value
@@ -15,7 +17,7 @@ setCoreParameters <- function(hcore)
   hector::setvar(hcore, dates = NA, var = globalParameters['volc'], values = c(as.double(paramsList[['volscl']])), unit = "unitless")
 }
 
-#' Assign Parameters
+#' Assign Parameters to numeric input components
 #'
 #' @return no return value
 #' @export
@@ -105,14 +107,6 @@ resetParams <- function()
 {
   print("in reset params")
   loadModelParameters()
-  #setParamsChanged(FALSE)
-  # if(length(hcores) >= 1)
-  # {
-  #
-  #   updateSelectInput(session = session, inputId = "input_paramToggle", selected = "default")
-  #   # restartCore()
-  #   # loadParameters()
-  # }
 }
 
 
@@ -232,7 +226,6 @@ setParameters <- function()
   }
 }
 
-
 #' Notifies system that parameters have changed state
 #'
 #' This function is used to set the corresponding flag so that they system knows the parameters have been changed
@@ -251,15 +244,10 @@ setParamsChanged <- function(toggle)
   if(toggle == TRUE & !firstLoad)
   {
     paramsChanged <<- TRUE
-    # shinyjs::enable("set_Params")
-    # shinyjs::toggleClass(id = "set_Params", class = "changedParamsTrue")
-    # shinyjs::runjs(paste0('$("#set_Params").css({"border": "1px #AC7023 solid"})'))
   }
   else
   {
-
     paramsChanged <<- FALSE
-    # shinyjs::toggleClass(id = "set_Params", class = "changedParamsFalse")
   }
 
 }

@@ -32,7 +32,8 @@ Imports:
     magrittr,
     shinythemes,
     shinyWidgets,
-    ggthemr
+    ggthemr,
+    stringr
 Depends:
 RoxygenNote: 6.1.1
 

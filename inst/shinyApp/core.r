@@ -17,7 +17,7 @@ loadScenario <- function(scenario)
       inifile <<- system.file(globalScenarios[paste("RCP", scenario)], package='hector', mustWork=TRUE)
       hcore <- hector::newcore(inifile, suppresslogging=TRUE, name=paste(globalScenarios[paste("RCP", scenario)]))
       setCoreParameters(hcore)
-      hector::run(hcore, globalVars['endDate'])
+      hector::run(hcore, globalVars[['endDate']])
     },
     error = function(err)
     {
@@ -39,7 +39,7 @@ resetCore <- function()
   for(i in 1:length(hcores))
   {
     hector::reset(hcores[[i]])
-    hector::run(hcores[[i]], globalVars['endDate'])
+    hector::run(hcores[[i]], globalVars[['endDate']])
   }
 
   #loadGraph()
@@ -65,7 +65,7 @@ restartCore <- function()
           hcores[[i]] <<- hector::shutdown(core = hcores[[i]])
           inifile <<- system.file(globalScenarios[paste("RCP", names(hcores[i]))], package='hector', mustWork=TRUE)
           hcores[[i]] <<- hector::newcore(inifile, suppresslogging=TRUE, name=paste(globalScenarios[paste("RCP",  names(hcores[i]))]))
-          hector::run(hcores[[i]], globalVars['endDate'])
+          hector::run(hcores[[i]], globalVars[['endDate']])
           incProgress(1/length(hcores), detail = paste0("Core ", names(hcores[i]), " Restart Successful."))
           Sys.sleep(0.1)
       }

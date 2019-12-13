@@ -9,9 +9,10 @@ NULL
 #' @details \code{globalVars}: Miscellaneous global variables
 #' @rdname constants
 #' @export
-globalVars <- vector()
+globalVars <- list()
 globalVars['startDate'] <- 1900
 globalVars['endDate'] <- 2100
+globalVars['writeDirectory'] <- "temp"
 
 # Global vars for scale colors
 #' @details \code{globalColorScales}: Scale colors

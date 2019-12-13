@@ -76,27 +76,12 @@ label
 li
 {
 	padding-left: 2px;
-	
+
 }
 
 ol
 {
-	padding-left: 25px;
-}
-
-#shiny-notification-panel
-{
-  top: 50% !important;
-  left: 50% !important;
-  margin-top: -100px !important;
-  margin-left: -250px !important;
-  /*color: blue;
-  border: solid 2px;
-  border-color: #AC7023;;*/
-  font-size: 20px;
-  font-style: italic;
-  height: auto;
-  width: 250px;
+	padding-left: 20px;
 }
 
 table a:not(.btn), .table a:not(.btn)
@@ -154,7 +139,7 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 	text-decoration: none;
 }
 
-.citationsTable a.hover
+.citationsTable .hover
 {
 	text-decoration: underline;
 }
@@ -175,11 +160,6 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 .container
 {
   width: 1600px;
-}
-
-.container-fluid
-{
-	
 }
 
 .customPlot
@@ -313,15 +293,6 @@ table a:not(.btn):hover, .table a:not(.btn):hover
   margin-bottom: 15px;
 }
 
-.progress-bar
-{
-  /*visibility: visible;*/
-}
-.progress.shiny-file-input-progress
-{
- /* visibility: visible;*/
-}
-
 .tdPushTop
 {
 	vertical-align: top;
@@ -354,5 +325,22 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 {
   padding: 12px;
   padding-top: 8px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
+
+
+#shiny-notification-panel
+{
+  top: 50% !important;
+  left: 50% !important;
+  margin-top: -100px !important;
+  margin-left: -250px !important;
+  /*color: blue;
+  border: solid 2px;
+  border-color: #AC7023;;*/
+  font-size: 20px;
+  font-style: italic;
+  height: auto;
+  width: 250px;
+}
+

@@ -239,7 +239,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     tags$table(
                       tags$tr(width = "100%",
                               tags$td(width = "15%", align="left", class="tdPushTop", popify(div(class="paramDivsPushTop", icon("info-circle", "fa-1x")), title = "Sloping Emissions", content = "Choosing this option will create a smooth slope from the starting years value to the specified value at the end year.", placement = "top" )),
-                              tags$td(width = "85%",shinyWidgets::prettyCheckbox( animation = "pulse", inputId = "input_slope_emissions", label = "Slope Emissions", value = FALSE,  inline = TRUE, icon = icon("check"))),
+                              tags$td(width = "85%",shinyWidgets::prettyCheckbox( animation = "pulse", inputId = "input_slope_emissions", label = "Slope Emissions", value = FALSE,  inline = TRUE, icon = icon("check")))
 
                       )
                     ),
@@ -254,7 +254,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
 
           # Custom Scenarios Tab Panel
           tabPanel
-          ( p(icon("edit", "fa-1x"), "Custom Scenarios", value="infoTab"),
+          ( p(icon("edit", "fa-1x"), "Custom Scenarios - BETA", value="infoTab"),
             div(h5("Getting Started"),
                 tags$hr(class="hrNav"),
               p("There are two ways to run a custom scenario:"),
@@ -263,17 +263,33 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                 tags$li("Directly customize the scenario itself (requires a file download and upload) which allows you to customize all of the Hector variables as
                 well as set custom emissions.")
               ),
-              p(tags$strong("Do not edit any field names, add additional fields, or modify the .INI or .CSV files in any way other than changing data."))
+              p(tags$strong("Do not edit any field names, add additional fields, or modify the .INI or .CSV files in any way other than to change data."))
             ),
             div(h5("Starting Scenarios"),
                 tags$hr(class="hrNav"),
-                selectInput("input_custom_RCP", "Baseline Scenario:", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6"="RCP 6.0", "8.5" = "RCP 8.5", "Custom" = "custom"), width=200, selected = "RCP 4.5"),
-                textInput("input_custom_scenarioName", "Custom Scenario Name:", width=200, value = ""),
+                tags$table(
+                  tags$tr(width = "100%",
+                          tags$td(width = "145", "Baseline Scenario:"),
+                          tags$td(width = "155", selectInput("input_custom_RCP", label = NULL, list("RCP 2.6" = "RCP 2.6","RCP 4.5"="RCP 4.5", "RCP 6"="RCP 6.0", "RCP 8.5" = "RCP 8.5", "Custom" = "custom"), width=150, selected = "RCP 4.5"))
+                  ),
+                        tags$tr(width = "100%",
+                           tags$td(width = "145", "Custom Scenario Name:"),
+                           tags$td(width = "200",  textInput("input_custom_scenarioName", label = NULL, width=195, value = ""))
+                  )
+                ),
+                # selectInput("input_custom_RCP", "Baseline Scenario:", list("2.6" = "RCP 2.6","4.5"="RCP 4.5", "6"="RCP 6.0", "8.5" = "RCP 8.5", "Custom" = "custom"), width=200, selected = "RCP 4.5"),
+                # textInput("input_custom_scenarioName", "Custom Scenario Name:", width=200, value = ""),
 
                 conditionalPanel(
                   condition = "input.input_custom_RCP != 'custom'",
                   div(h5("Custom Emissions Pathway"),
                   tags$hr(class="hrNav"),
+
+                  p("To create a custom emissions pathway:"),
+                  tags$ol(
+                    tags$li("Choose your baseline scenario above and then download the template below"),
+                    tags$li("Edit/customize emissions in the template file and upload using the file selector below")
+                  ),
 
                   conditionalPanel(
                     condition = "input.input_custom_RCP == 'RCP 2.6'",
@@ -292,8 +308,8 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     a(h6("Download RCP 8.5 Emissions File Template"), href="input/emissions/RCP85_emissions.csv")
                   ),
 
-                  fileInput("input_custom_emissions_file", "Upload Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
-                  div(class="paramDivs", actionButton(inputId="input_load_emissions", label="Load Scenario"))
+                  fileInput("input_custom_emissions_file", "Upload Custom Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
+                  div(class="paramDivs", actionButton(inputId="input_load_emissions", label="Create Scenario"))
                   )
                 ), # End conditional Panel
 
@@ -303,38 +319,21 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                   tags$hr(class="hrNav"),
                   p("To customize a scenario, first download the file package below, extract the files and follow these steps:"),
                   tags$ol(
-                    tags$li("Edit variables in the .INI file that corresponds closest to your desired starting point (i.e. Hector_RCP26.ini)"),
+                    tags$li("Customize the .INI file that corresponds closest to your desired starting point (i.e. Hector_RCP26.ini)"),
                     tags$li("Replace every emissions file path in the .INI file with a fully qualified local path (i.e. c:\\files\\emissions.csv)"),
-                    tags$li("After editing the .INI file and replacing the paths to the emissions, simply upload the .INI file below to create a custom scenario.")
+                    tags$li("(Optional) Change emissions data in emissions file(s)"),
+                    tags$li("Upload the .INI file below to create a custom scenario")
                   ),
                   a(h6("Download Custom Scenario File Package"), href="input/HectorCustomFiles.zip"),
                   fileInput("input_custom_scenario_file", "Upload Custom Scenario File:", width=275, buttonLabel = "Choose File", accept = c(".ini")),
-                    div(class="paramDivs", actionButton(inputId="input_load_custom", label="Load Scenario"))
-                  ) # End conditional Panel
+                    div(class="paramDivs", actionButton(inputId="input_load_custom", label="Create Scenario"))
+                ) # End conditional Panel
             )
-            # div(id="myapp",
-            #     h5("Model Parameters"),
-            #     tags$hr(class="hrNav"),
-            #     div(class="paramDivsTopItem", selectInput("input_paramToggle", "Model:", list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
-            #                                                                                   "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 200)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-            #     div(class="paramDivs", numericInput("input_aero", "Aerosol forcing scaling factor (unitless)", width = 205,  value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor", content = "This is the tooltip information part here. It is three sentence long. This is the third sentence.", placement = "top" ),
-            #     div(class="paramDivs", numericInput("input_beta", "CO2 fertilization factor (unitless)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-            #     div(class="paramDivs", numericInput("input_diff", "Ocean heat diffusivity (cm2/s)", width = 205,  value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-            #     div(class="paramDivs", numericInput("input_ecs", "Equilibrium climate sensitivity (degC)", width = 205, value = NA, step = 0.01, min = 0.01, max = 25)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-            #     div(class="paramDivs", numericInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", width = 205,  value = NA, step = 0.01, min = 250, max = 350)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-            #     div(class="paramDivs", numericInput("input_q10", "Temp. sensitivity factor (Q10) (unitless)", width = 205, value = NA, step = 0.01, min = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-            #     div(class="paramDivs", numericInput("input_volc", "Volc. forcing scaling factor (unitless)", width = 205, value = NA, step = 0.01)), popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor", content = "This is the tooltip information part here. It is 2 sentence long.", placement = "top" ),
-            #     div(class="paramDivs",
-            #         actionButton(inputId="set_Params", label="Set Parameters"),
-            #         actionButton(inputId="reset_Params", label="Reset Parameters"),
-            #         popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
-            #     )
-            # )
           ) # End Custom Scenarios
         ) # End Tabset
       ), # End Sidebar Panel
 
-      # Right side tab panel - Main panel that is used for output
+      # Right hand content panel - Main panel that is used for output
       mainPanel
       ( width = 9,
         tabsetPanel
@@ -343,35 +342,44 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           ( fixed = TRUE,
             p(icon("chart-line","fa-2x"), "Scenario Output", value="outputTab"),
             h5("Scenario Results"), tags$hr(class="hrNav"),
-              p(selectInput
-                ("capabilities",  "Choose capability identifiers (up to 4):",
-                  list('Carbon Cycle' = list("Atmospheric CO2"="cc_co2", "Atmospheric Carbon Pool"="cc_acp", "FFI Emissions"="cc_ffi", "LUC Emissions"="cc_luc"),
-                       'Concentrations' = list("Amospheric N2O"='c_an20'),
-                       'Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'),
-                       'Forcings' = list("RF - Total"='f_rft', "RF - Albedo"='f_alb', "RF - CO2"='f_co2', "RF - N2O"='f_n2o', "RF - H2O"='f_h2o', "RF - Ozone"='f_oz', "RF - Black Carbon"='f_bc',
-                                         "RF - Organic Carbon"='f_oc', "RF - SO2 Direct"='f_so2d', "RF - SO2 Indirect"='f_so2i', "RF - SO2 Total"='f_so2t', "RF - Volcanic Activity"='f_va', "RF - CH4"='f_ch4'),
-                       # 'Halocarbon Emissions' = list("CF4 Emissions"='he_cf4', "C2F6 Emissions"='he_c2f6', "HFC-23 Emissions"='he_hfc23', "HFC-32 Emissions"='he_hfc32', "HFC-4310 Emissions"= 'he_hfc4310', "HFC-125 Emissions"='he_hfc125', "HFC-134a Emissions"='he_hfc134a', "HFC-143a Emissions"='he_hfc143a', "HFC-227ea Emissions"='he_hfc227ea',
-                       #                               "HFC-245fa Emissions"='he_hfc245fa', "SF6 Emissions"='he_sf6', "CFC-11 Emissions"='he_cfc11', "CFC-12 Emissions"='he_cfc12', "CFC-113 Emissions"='he_cfc113',"CFC-114 Emissions"='he_cfc114',"CFC-115 Emissions"='he_cfc115',"CCl4 Emissions"='he_ccl4', "CH3CCl3 Emissions"='he_ch3ccl3',
-                       #                               "HCFC-22 Emissions"='he_hcfc22', "HCFC-141b Emissions"='he_hcfc141b', "HCFC-142b Emissions"='he_hcfc142b', "Halon-1211 Emissions"='he_halon1211', "Halon-1301 Emissions"='he_halon1301', "Halon-2402 Emissions"='he_halon2402', "CH3Cl Emissions"='he_ch3cl', "CH3Br Emissions"='he_ch3br'),
-                       'Halocarbon Forcings' = list("CF4 Forcing"='hf_cf4', "C2F6 Forcing"='hf_c2f6', "HFC-23 Forcing"='hf_hfc23', "HFC-4310 Forcing"='hf_hfc4310', "HFC-125 Forcing"='hf_hfc125',  "HFC-143a Forcing"='hf_hfc143a',
-                                                    "HFC-254fa Forcing"='hf_hfc245fa', "SF6 Forcing"='hf_hfcsf6', "CFC-11 Forcing"='hf_cfc11', "CFC-12 Forcing"='hf_cfc12', "CFC-113 Forcing"='hf_cfc113',"CFC-114 Forcing"='hf_cfc114',"CFC-115 Forcing"='hf_cfc115',"CCl4 Forcing"='hf_ccl4', "CH3CCl3 Forcing"='hf_ch3ccl3',
-                                                    "HCFC-22 Forcing"='hf_hcfc22', "HCFC-141b Forcing"='hf_hcfc141b', "HCFC-142b Forcing"='hf_hcfc142b', "Halon-1211 Forcing"='hf_halon1211', "Halon-1301 Forcing"='hf_halon1301', "Halon-2402 Forcing"='hf_halon2402', "CH3Cl Forcing"='hf_ch3cl', "CH3Br Forcing"='hf_ch3br'),
-                       'Methane' = list("Atmospheric CH4"='m_a_ch4',  "Emissions CH4"='m_e_ch4'),
-                       # 'Ocean' = list("Ocean Carbon Flux"='o_cf', "Ocean Total Carbon"='o_tc', "Ocean Surface High-Lat Carbon"='o_os_hlc', "Ocean Surface Low-Lat Carbon"='o_os_llc', "Ocean Intermediate Carbon"='o_ic', "Ocean Deep Carbon"='o_dc', "Thermohaline Overturning"='o_to',
-                       #                "High-Lat Overturning"='o_hl_o', "Warm-Intermediate Exchange"='o_wie', "Intermediate-Deep Exchange"='o_ide', "High Latitude Ph"='o_hl_ph', "Low Latitude Ph"='o_ll_ph', "Atmosphere-Ocean Flux - High Lat"='o_hl_aof', "Atmosphere-Ocean Flux - Low Lat"='o_ll_aof',
-                       #                "Partial Pressure CO2 - High Lat"='o_hl_pp_co2',"Partial Pressure CO2 - Low Lat"='o_ll_pp_co2',"Dissolved Inorganic C - High Lat"='o_hl_dic', "Dissolved Inorganic C - Low Lat"='o_ll_dic', "Ocean Temperature - High Lat"='o_hl_t', "Ocean Temperature - Low Lat"='o_ll_t',
-                       #                "Carbonate Concentration - High Lat"='o_hl_cc', "Carbonate Concentration - Low Lat"='o_ll_cc'),
-                       'SO2' = list( "Anthropogenic SO2"='so2_a', "Natural CH4 Emissions"='so2_n_ch4', "Volcanic SO2"='so2_v'),
-                       'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Land Temp Anomaly"="t_lta", "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')),
-                  multiple = T, width=350, selected = "t_gmt"
+            tags$table
+            (
+              tags$tr
+              (
+                tags$td
+                (
+                  selectInput
+                  ("capabilities",  "Choose capability identifiers (up to 4):",
+                    list('Carbon Cycle' = list("Atmospheric CO2"="cc_co2", "Atmospheric Carbon Pool"="cc_acp", "FFI Emissions"="cc_ffi", "LUC Emissions"="cc_luc"),
+                         'Concentrations' = list("Amospheric N2O"='c_an20'),
+                         'Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'),
+                         'Forcings' = list("RF - Total"='f_rft', "RF - Albedo"='f_alb', "RF - CO2"='f_co2', "RF - N2O"='f_n2o', "RF - H2O"='f_h2o', "RF - Ozone"='f_oz', "RF - Black Carbon"='f_bc',
+                                           "RF - Organic Carbon"='f_oc', "RF - SO2 Direct"='f_so2d', "RF - SO2 Indirect"='f_so2i', "RF - SO2 Total"='f_so2t', "RF - Volcanic Activity"='f_va', "RF - CH4"='f_ch4'),
+                         # 'Halocarbon Emissions' = list("CF4 Emissions"='he_cf4', "C2F6 Emissions"='he_c2f6', "HFC-23 Emissions"='he_hfc23', "HFC-32 Emissions"='he_hfc32', "HFC-4310 Emissions"= 'he_hfc4310', "HFC-125 Emissions"='he_hfc125', "HFC-134a Emissions"='he_hfc134a', "HFC-143a Emissions"='he_hfc143a', "HFC-227ea Emissions"='he_hfc227ea',
+                         #                               "HFC-245fa Emissions"='he_hfc245fa', "SF6 Emissions"='he_sf6', "CFC-11 Emissions"='he_cfc11', "CFC-12 Emissions"='he_cfc12', "CFC-113 Emissions"='he_cfc113',"CFC-114 Emissions"='he_cfc114',"CFC-115 Emissions"='he_cfc115',"CCl4 Emissions"='he_ccl4', "CH3CCl3 Emissions"='he_ch3ccl3',
+                         #                               "HCFC-22 Emissions"='he_hcfc22', "HCFC-141b Emissions"='he_hcfc141b', "HCFC-142b Emissions"='he_hcfc142b', "Halon-1211 Emissions"='he_halon1211', "Halon-1301 Emissions"='he_halon1301', "Halon-2402 Emissions"='he_halon2402', "CH3Cl Emissions"='he_ch3cl', "CH3Br Emissions"='he_ch3br'),
+                         'Halocarbon Forcings' = list("CF4 Forcing"='hf_cf4', "C2F6 Forcing"='hf_c2f6', "HFC-23 Forcing"='hf_hfc23', "HFC-4310 Forcing"='hf_hfc4310', "HFC-125 Forcing"='hf_hfc125',  "HFC-143a Forcing"='hf_hfc143a',
+                                                      "HFC-254fa Forcing"='hf_hfc245fa', "SF6 Forcing"='hf_hfcsf6', "CFC-11 Forcing"='hf_cfc11', "CFC-12 Forcing"='hf_cfc12', "CFC-113 Forcing"='hf_cfc113',"CFC-114 Forcing"='hf_cfc114',"CFC-115 Forcing"='hf_cfc115',"CCl4 Forcing"='hf_ccl4', "CH3CCl3 Forcing"='hf_ch3ccl3',
+                                                      "HCFC-22 Forcing"='hf_hcfc22', "HCFC-141b Forcing"='hf_hcfc141b', "HCFC-142b Forcing"='hf_hcfc142b', "Halon-1211 Forcing"='hf_halon1211', "Halon-1301 Forcing"='hf_halon1301', "Halon-2402 Forcing"='hf_halon2402', "CH3Cl Forcing"='hf_ch3cl', "CH3Br Forcing"='hf_ch3br'),
+                         'Methane' = list("Atmospheric CH4"='m_a_ch4',  "Emissions CH4"='m_e_ch4'),
+                         # 'Ocean' = list("Ocean Carbon Flux"='o_cf', "Ocean Total Carbon"='o_tc', "Ocean Surface High-Lat Carbon"='o_os_hlc', "Ocean Surface Low-Lat Carbon"='o_os_llc', "Ocean Intermediate Carbon"='o_ic', "Ocean Deep Carbon"='o_dc', "Thermohaline Overturning"='o_to',
+                         #                "High-Lat Overturning"='o_hl_o', "Warm-Intermediate Exchange"='o_wie', "Intermediate-Deep Exchange"='o_ide', "High Latitude Ph"='o_hl_ph', "Low Latitude Ph"='o_ll_ph', "Atmosphere-Ocean Flux - High Lat"='o_hl_aof', "Atmosphere-Ocean Flux - Low Lat"='o_ll_aof',
+                         #                "Partial Pressure CO2 - High Lat"='o_hl_pp_co2',"Partial Pressure CO2 - Low Lat"='o_ll_pp_co2',"Dissolved Inorganic C - High Lat"='o_hl_dic', "Dissolved Inorganic C - Low Lat"='o_ll_dic', "Ocean Temperature - High Lat"='o_hl_t', "Ocean Temperature - Low Lat"='o_ll_t',
+                         #                "Carbonate Concentration - High Lat"='o_hl_cc', "Carbonate Concentration - Low Lat"='o_ll_cc'),
+                         'SO2' = list( "Anthropogenic SO2"='so2_a', "Natural CH4 Emissions"='so2_n_ch4', "Volcanic SO2"='so2_v'),
+                         'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Land Temp Anomaly"="t_lta", "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')),
+                    multiple = T, width=310, selected = "t_gmt")
                 ),
-                selectInput(inputId = "test", width=150, label="theme", choices = c("dust", "grape", "flat", "flat dark", "light", "earth", "fresh", "chalk", "lilac",
-                                                                         "pale", "copper", "greyscale", "sky", "solarized", "grass", "sea", "camoflauge")),
+                tags$td(style="padding-left: 5px;",
+                  selectInput(inputId = "test", width=150, label="Graph Theme:", choices = c("Camoflauge", "Chalk", "Copper", "Dust", "Earth",  "Flat", "Flat Dark", "Fresh", "Grape",  "Grass", "Greyscale",
+                                                                                             "Light", "Lilac", "Pale", "Sea", "Sky", "Solarized"), selected = "Dust")
+                )
+              )
+            ),
 
-                actionButton(inputId="loadGraphs", label="Load Graphs", width = 200),
-                downloadButton("downloadData", label="Download Raw Data")
-               ),
-               # plotly::plotlyOutput("plotly", width = "100%", height = "350"),
+            actionButton(inputId="loadGraphs", label="Load Graphs", width = 200),
+            downloadButton("downloadData", label="Download Raw Data"),
+           # plotly::plotlyOutput("plotly", width = "100%", height = "350"),
             uiOutput("plots", class = "customPlot")
           ), # end tabpanel
 
