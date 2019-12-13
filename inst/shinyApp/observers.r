@@ -187,11 +187,13 @@ loadCustomEmissions <- function()
         fileConn <- file("/tmp/temp.ini")
         writeLines(newtext, con = fileConn)
         close(fileConn)
+        newIniFile <- system.file("/tmp/temp.ini")
+
         showModal(modalDialog(
           title = "Warning",
           paste("Details:  ", "e = ", emissions_file, "i = ", newIniFile)
         ))
-        newIniFile <- system.file("/tmp/temp.ini")
+
         hcores[[scenarioName]] <<- hector::newcore(newIniFile, suppresslogging=TRUE, name="custom")
         hector::run( hcores[[scenarioName]], globalVars[['endDate']])
         incProgress(1/1, detail = paste("Load complete."))
