@@ -178,13 +178,13 @@ loadCustomEmissions <- function()
       inifile <- system.file(globalScenarios[input$input_custom_RCP], package='hector', mustWork=TRUE)
       emissions_file <-  Sys.glob(gsub("\\\\", "/", input$input_custom_emissions_file$datapath))
       iniPath <- dirname(inifile)
-      file.create(paste0(iniPath, "/temp.ini"))
+      file.create("/tmp/temp.ini")
       withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
       {
         initext <- readLines(inifile)
         newtext <- gsub(pattern="emissions/RCP45_emissions.csv", replacement = emissions_file, x = initext)
        # browser()
-        fileConn <- file(paste0(iniPath, "/temp.ini"))
+        fileConn <- file("/tmp/temp.ini")
         writeLines(newtext, con = fileConn)
         close(fileConn)
 
