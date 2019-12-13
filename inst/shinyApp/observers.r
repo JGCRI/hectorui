@@ -188,7 +188,7 @@ loadCustomEmissions <- function()
         writeLines(newtext, con = fileConn)
         close(fileConn)
 
-        newIniFile <- system.file("input/temp.ini", package='hector', mustWork=TRUE)
+        newIniFile <- system.file("tmp/temp.ini", package='hector', mustWork=TRUE)
         hcores[[scenarioName]] <<- hector::newcore(newIniFile, suppresslogging=TRUE, name="custom")
         hector::run( hcores[[scenarioName]], globalVars[['endDate']])
         incProgress(1/1, detail = paste("Load complete."))
