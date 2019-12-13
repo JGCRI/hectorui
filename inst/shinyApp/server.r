@@ -33,7 +33,7 @@ server <- function(input, output, session)
   totalActivePlots <- 0
   customLoaded <- FALSE
   scale_colors <- vector()
-  ggthemr('dust', type = "outer")
+  ggthemr::ggthemr('dust', type = "outer")
 
   # These variables are for storing the current parameter values so that if a change is made (like loading new scenario)
   # then the custom params set by user will persist beyond core restarts
