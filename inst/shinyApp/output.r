@@ -68,8 +68,6 @@ loadGraph <- function()
                 {
                     my_i <- i
                     plotname <- paste("plot", i, sep="")
-                    plottitle <- paste("plottitle", globalScenarios[i], sep="")
-                    tablename <- paste("tablename", globalScenarios[i], sep="")
                     seriesname <- ""
                     for(j in 1:length(hcores))
                     {
@@ -78,21 +76,20 @@ loadGraph <- function()
                         seriesname <- input$input_ScenarioName
                       else
                         seriesname <- paste("RCP", names(hcores[j]))
-                      hdata <- dplyr::mutate(hdata, scenario = seriesname)
+                      hdata <- dplyr::mutate(hdata, Scenario = seriesname, Year = year)
                       df_total <- rbind(df_total,hdata)
 
                     }
                     x <- dplyr::distinct(hdata, units)
-                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=year, y=value, group=variable, color=scenario)) + ggplot2::geom_line() +
-                      # ggthemes::theme_solarized(light = TRUE)+ ggplot2::labs(y=x[[1]], title =  attr(outputVariables[[i]], 'longName')) +  ggplot2::scale_color_manual(values = globalColorScales)
-                       ggplot2::labs(y=x[[1]], title =  attr(outputVariables[[i]], 'longName')) #+  ggplot2::scale_color_manual(values = globalColorScales)
+                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=Year, y=value, group=variable, color=Scenario)) + ggplot2::geom_line() +
+                       ggplot2::labs(y=Hmisc::capitalize(x[[1]]), title =  attr(outputVariables[[i]], 'longName')) #+  ggplot2::scale_color_manual(values = globalColorScales)
 
                     #+ ggplot2::scale_color_manual(values=globalScenarioColors) + ggplot2::geom_ribbon(alpha=0.5)
                     # +  ggplot2::guides(color = ggplot2::guide_colorbar(title  = expression(beta)))
                     # +  ggplot2::scale_color_viridis_c()
 
                     localPlot <- plotly::ggplotly(p = ggplotGraph)
-                    plotly::layout(p=localPlot, xaxis = a, yaxis = a )
+                    plotly::layout(p=localPlot, xaxis = a, yaxis = a, legend = list(orientation = 'h'))
 
                     output[[plotname]] <- plotly::renderPlotly(localPlot)
                     # output[[plottitle]] <- renderText({paste("1:", my_i, ".  n is ", 4, sep = "")})

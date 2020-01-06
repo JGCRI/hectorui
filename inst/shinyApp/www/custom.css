@@ -3,13 +3,14 @@
 
 body
 {
-  font-size: 13px;
+	font-size: 13px;
+	background-color:#222222;
 }
 
 fas,fab
 {
-  vertical-align: middle;
-  border: #A23739 thick;
+	vertical-align: middle;
+	border: #A23739 thick;
 }
 
 figcaption
@@ -19,76 +20,98 @@ figcaption
 
 h2
 {
-  font-size: 28px;
+	font-size: 28px;
+	/*font-weight: bold;*/
+	/*color:#FAF7F2;*/
 }
 
 h3
 {
-	font-size: 20px;
+	font-size: 20px; /*font-weight: bold;*/
+	/*color:#FAF7F2;*/
 }
 
 h4
 {
-  font-size: 18px;
+	font-size: 18px;font-weight: bold;
+	/*color:#FAF7F2;*/
 }
 
 h5
 {
-	font-size: 16px;
+	font-size: 16px; font-weight:bold;
 	margin-bottom: 9px;
+	/*color:#FAF7F2;*/
 }
 
 h6
 {
-	font-size:15px;
+	font-size:15px; 
 	font-weight: bold;
 	margin-top: 5px;
 	margin-bottom: 10px;
+	/*color:#FAF7F2;*/
 }
 
 hr
 {
-  color: #375a7f;
-  border-top: 2px solid #375a7f;
+	color: #375a7f;
+	border-top: 2px solid #375a7f;
 }
 
 iframe
 {
-  border: none;
+	border: none;
 }
 
 img
 {
-  padding: 10px;
+	padding: 10px;
 }
 
 input
 {
-  padding:5px 10px;
+	padding:5px 10px;
 }
 
 label
 {
-  font-weight: normal;
-  margin-bottom: 3px;
+	font-weight: normal;
+	margin-bottom: 3px;
 }
 
 li
 {
 	padding-left: 2px;
-
+	list-style-position: outside;
 }
 
 ol
 {
-	padding-left: 20px;
+	
+	list-style-position: outside;
+	/*counter-reset: my-awesome-counter;*/
+	padding-left: 10px;
+}
+/*
+ol li
+{
+	counter-increment: my-awesome-counter;
 }
 
+ol li::before 
+{
+	content: counter(my-awesome-counter) ". ";
+	color: #FAF7F2;
+	font-weight: bold;
+	font-size: 16px;
+	
+}
+*/
 table a:not(.btn), .table a:not(.btn)
 {
 	text-decoration: none;
 }
-
 
 table a:not(.btn):hover, .table a:not(.btn):hover
 {
@@ -97,12 +120,13 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 
 .btn
 {
-  padding: 4px 10px;
-  font-size: 13px;
-  border: 1px #AC7023 solid;
-  border-radius: 1px;
-  margin-right: 2px;
-  margin-left: 2px;
+	padding: 4px 10px;
+	font-size: 13px;
+	border: 1px #AC7023 solid;
+	border-radius: 1px;
+	margin-right: 2px;
+	margin-left: 2px;
+	margin-bottom: 2px;
 }
 
 .changedParamsTrue
@@ -153,18 +177,30 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 
 .col-sm-3
 {
-  padding-right: 10px;
-  padding-left: 5px;
+	padding-right: 10px;
+	padding-left: 5px;
+}
+
+.col-sm-9
+{
+	padding-left: 9px;
 }
 
 .container
 {
-  width: 1600px;
+	width: 1600px;
+	background-color: black;
+	height: 100vh;
+}
+
+.container-fluid
+{
+	padding-left: 10px;
 }
 
 .customPlot
 {
-  display:inline-block;
+	display:inline-block;
 }
 
 .fa-check
@@ -190,29 +226,29 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 
 .form-control
 {
-  height: 27px;
-  font-size: 12px;
-  padding-right: 12px;
-  padding-left: 12px;
+	height: 27px;
+	font-size: 12px;
+	padding-right: 12px;
+	padding-left: 12px;
 
 }
 
 .form-control-small
 {
-  display: inline;
-  vertical-align:top;
+	display: inline;
+	vertical-align:top;
 
 }
 
 .form-dropDownDiv
 {
-  display:inline;
-  padding-right:15px;
+	display:inline;
+	padding-right:15px;
 }
 
 .form-group
 {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .gtitle, .g-title, .g-gtitle
@@ -222,50 +258,62 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 
 .group-output
 {
-  display:inline-block;
-  padding: 5px;
+	display:inline-block;
+	padding: 5px;
 }
 
 .hrNav
 {
-  margin-top: -5px;
-  margin-bottom: 10px;
+	margin-top: -5px;
+	margin-bottom: 10px;
 
+}
+
+.js-plotly-plot .plotly .modebar 
+{
+ 	padding-top: 4%;
+  	position: absolute;
+	left:34px!important;
+}
+
+.main-container
+{
+	padding-bottom: 10px;
 }
 
 .nav-tabs>li>a
 {
-  border: 1px solid #464545;
+	border: 1px solid #464545;
 }
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
 {
-  color: #FFFFFF;
-  background-color: #375a7f;
+	color: #FFFFFF;
+	background-color: #375a7f;
 }
 
 .navbar
 {
-  min-height: 50px;
-  margin-bottom: 15px;
+	min-height: 50px;
+	margin-bottom: 15px;
 }
 
 .paramDivs
 {
-  display:inline-block;
+	display:inline-block;
 }
 
 .paramDivsTopItem
 {
-  width: 205px;
-  display:inline-block;
-  vertical-align:middle;
+	width: 205px;
+	display:inline-block;
+	vertical-align:middle;
 }
 
 .popover
 {
-  border: solid 2px;
-  border-color: #AC7023;
+	border: solid 2px;
+	border-color: #AC7023;
 }
 
 .pretty input:checked~.state.p-primary label:after
@@ -290,7 +338,14 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 
 .progress
 {
-  margin-bottom: 15px;
+	margin-bottom: 10px;
+}
+
+.selectize-input
+{
+	padding-top: 4px;
+	padding-bottom: 3px;
+	min-height: 30px;
 }
 
 .tdPushTop
@@ -323,24 +378,30 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 
 .well
 {
-  padding: 12px;
-  padding-top: 8px;
-  margin-bottom: 0;
+	padding: 12px;
+	padding-top: 8px;
+	margin-bottom: 0;
+}
+
+.zenodo
+{
+	padding-top: 0px!important;
+	padding-bottom: 0px!important;
 }
 
 
 #shiny-notification-panel
 {
-  top: 50% !important;
-  left: 50% !important;
-  margin-top: -100px !important;
-  margin-left: -250px !important;
-  /*color: blue;
-  border: solid 2px;
-  border-color: #AC7023;;*/
-  font-size: 20px;
-  font-style: italic;
-  height: auto;
-  width: 250px;
+	top: 50% !important;
+	left: 50% !important;
+	margin-top: -100px !important;
+	margin-left: -250px !important;
+	/*color: blue;
+	border: solid 2px;
+	border-color: #AC7023;;*/
+	font-size: 20px;
+	font-style: italic;
+	height: auto;
+	width: 250px;
 }
 

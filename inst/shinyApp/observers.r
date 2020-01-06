@@ -109,22 +109,23 @@ loadCustomScenario <- function()
 {
   print("in load custom")
   #browser()
-  if (is.null(input$input_custom_scenario_file) | (is.na(input$input_custom_scenarioName) | is.null(input$input_custom_scenarioName) | (input$input_custom_scenarioName == "")))
+  if (is.null(input$input_custom_scenario_ini) | is.null(input$input_custom_scenario_csv) | (is.na(input$input_custom_scenarioName) | is.null(input$input_custom_scenarioName) | (input$input_custom_scenarioName == "")))
   {
-    shinyalert::shinyalert("Missing Information", "Please name the scenario and load an emissions file before attempting to load the scenario.", type = "warning")
+    shinyalert::shinyalert("Missing Information", "Please name the scenario and load an emissions/ini file before attempting to load the scenario.", type = "warning")
     return(NULL)
   }
   scenarioName <- input$input_custom_scenarioName
   tryCatch(
     {
       withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
-       {
-         inifile <-  Sys.glob(input$input_custom_scenario_file$datapath)
-         hcores[[scenarioName]] <<- hector::newcore(inifile, suppresslogging=TRUE, name="custom")
-         hector::run( hcores[[scenarioName]], globalVars[['endDate']])
-         incProgress(1/1, detail = paste("Load complete."))
-         Sys.sleep(0.2)
-       })
+      {
+        inifile <-  Sys.glob(input$input_custom_scenario_ini$datapath)
+        csvfile <- Sys.glob(input$input_custom_scenario_csv$datapath)
+        hcores[[scenarioName]] <<- hector::newcore(inifile, suppresslogging=TRUE, name="custom")
+        hector::run( hcores[[scenarioName]], globalVars[['endDate']])
+        incProgress(1/1, detail = paste("Load complete."))
+        Sys.sleep(0.2)
+      })
 
       # If this is the initial application load, then we need to assign the on screen input field values to hector's default params
       if(firstLoad)
@@ -174,20 +175,20 @@ loadCustomEmissions <- function()
   scenarioName <- input$input_custom_scenarioName
   tryCatch(
     {
-     # browser()
+      browser()
       inifile <- system.file(globalScenarios[input$input_custom_RCP], package='hector', mustWork=TRUE)
       emissions_file <- input$input_custom_emissions_file$datapath
       iniPath <- dirname(inifile)
-      file.create("/tmp/temp.ini")
+      file.create("temp.ini")
       withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
       {
         initext <- readLines(inifile)
         newtext <- gsub(pattern="emissions/RCP45_emissions.csv", replacement = emissions_file, x = initext)
-       # browser()
-        fileConn <- file("/tmp/temp.ini")
+        browser()
+        fileConn <- file("temp.ini")
         writeLines(newtext, con = fileConn)
         close(fileConn)
-        newIniFile <- system.file("/tmp/temp.ini")
+        newIniFile <- system.file("temp.ini")
 
         showModal(modalDialog(
           title = "Warning",
@@ -217,7 +218,8 @@ loadCustomEmissions <- function()
     {
       showModal(modalDialog(
         title = "Warning",
-        paste("Details:  ",war, "e = ", emissions_file, "i = ", newIniFile)
+        paste("Details:  ",war
+               )
       ))
     },
     error = function(err)
@@ -244,6 +246,21 @@ setCustomEmissions <- function()
     # Verify things:
     # 1. Needs to be Hector cores already instantiated first in order to set emissions
     # 2. Years need to be validated (validated to be a year and start > end if used that way)
+    #browser()
+    validate(
+      need(as.double(input$input_custom_start) >= 1700 && as.double(input$input_custom_start) <= 2300, "Please use a valid 4 digit year for start year")
+    )
+    validate(
+      need(as.double(input$input_custom_end) >= 1700 && as.double(input$input_custom_end) <= 2300, "Please use a valid 4 digit year for end year")
+    )
+    validate(
+      need(length(input$input_custom_emissions) >= 0, "Please enter a value for emissions")
+    )
+    # if(!input$input_custom_start | !input$input_custom_end | !input$input_custom_emissions)
+    # {
+    #   shinyalert::shinyalert("Missing Information", "Please fill in all values before setting emissions", type = "warning")
+    #   return(NULL)
+    # }
     if(length(hcores) > 0)
     {
       x <- seq(1, 10, 2)

@@ -52,16 +52,15 @@ server <- function(input, output, session)
     plot_output_list <- lapply(1:4, function(i)
     {
       plotname <- paste("plot", i, sep="")
-      plottitle <- paste("plottitle",attr(globalScenarios[[i]], "name"), sep="")
-      tablename <- paste("tablename", attr(globalScenarios[[i]], "name"), sep="")
+      # plottitle <- paste("plottitle",attr(globalScenarios[[i]], "name"), sep="")
+      # tablename <- paste("tablename", attr(globalScenarios[[i]], "name"), sep="")
       plot <-  plotly::plotlyOutput(plotname, height = 270, width = 550) #%>%
                # layout(dragmode = "select") %>%
                # event_register("plotly_selecting")
 
       tags$div(class = "group-output",
                # textOutput(plottitle, container = h3),
-               plotly::plotlyOutput(plotname, height = 270, width = 550) ,
-               tableOutput(tablename)
+               plotly::plotlyOutput(plotname, height = 270, width = 550)
       )
     })
 
