@@ -45,7 +45,7 @@ server <- function(input, output, session)
 
 #----- End set up local vars
 
-#----- Setup plots
+#----- Set up plots and maps
 
   output$plots <- renderUI(
   {
@@ -68,13 +68,41 @@ server <- function(input, output, session)
     do.call(tagList, plot_output_list)
   })
 
+  output$maps <- renderUI(
+  {
+    map_output_list <- lapply(1:1, function(i)
+    {
+      mapname <- paste("map", i, sep="")
+      # maptitle <- paste("maptitle",attr(globalScenarios[[i]], "name"), sep="")
+      # tablename <- paste("tablename", attr(globalScenarios[[i]], "name"), sep="")
+      map <-  plotly::plotlyOutput(mapname, height = 550, width = 1100) #%>%
+      # layout(dragmode = "select") %>%
+      # event_register("plotly_selecting")
+
+      tags$div(class = "group-output",
+               # textOutput(title, container = h3),
+               plotly::plotlyOutput(mapname, height = 550, width = 1100)
+      )
+    })
+
+    # Convert the list to a tagList - this is necessary for the list of items to display properly.
+    do.call(tagList, map_output_list)
+  })
+
   #set initial plotting variables
   for(i in 1:4)
   {
     plotname <- paste("plot", i, sep="")
     shinyjs::hide(plotname)
   }
-#----- End Setup plots
+
+  #set initial mapping variables
+  for(i in 1:1)
+  {
+    mapname <- paste("map", i, sep="")
+    shinyjs::hide(mapname)
+  }
+#----- End set up plots and maps
 
 #----- Set up observer functions to catch user interaction on the input fields
 
@@ -95,6 +123,7 @@ server <- function(input, output, session)
   observeEvent(input$input_set_custom_emissions, setCustomEmissions(), ignoreInit = TRUE)
   observeEvent(input$input_reset_custom_emissions, resetCustomEmissions(), ignoreInit = TRUE)
   observeEvent(input$test, changeTheme(), ignoreInit = TRUE)
+  observeEvent(input$loadMaps, loadMap(), ignoreInit = TRUE)
 
   # This is a group Observer block for all of the params fields because they all respond the same way
   observe({

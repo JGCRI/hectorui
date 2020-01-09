@@ -33,7 +33,9 @@ Imports:
     shinythemes,
     shinyWidgets,
     ggthemr,
-    stringr
+    stringr, 
+    rnaturalearth,
+    rnaturalearthdata
 Depends:
 RoxygenNote: 6.1.1
 

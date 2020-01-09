@@ -138,6 +138,70 @@ loadGraph <- function()
   }
 }
 
+loadMap <- function()
+{
+  tryCatch(
+  {#browser()
+    local(
+      {
+        for(i in 1:length(hcores))
+        {
+          results <- hector::fetchvars(hcores[[i]], 2000:2100)
+          #results <- hector::fetchvars(core = hcores[[j]], dates = globalVars[['startDate']]:globalVars[['endDate']], vars = outputVariables[i], "\n")
+          tgav_hector <- filter(results, variable == "Tgav")
+        }
+
+        pattern <- readRDS("www/maps/tas_Amon_MIROC-ESM_esmrcp85_r1i1p1_200601-210012_pattern.rds")
+        coordinates <- pattern$coordinate_map
+
+        # Get the annual TAS in each grid cell as predicted by the annual pattern for the Hector tgav
+        for(i in 1:length(hcores))
+        {
+          mapname <- paste("map", i, sep="")
+          hector_annual_gridded <- pscl_apply(pattern$annual_pattern, as.vector(tgav_hector$value+15))
+          hector_annual_gridded_t <- t(hector_annual_gridded)
+          #browser()
+          temp <- hector_annual_gridded_t
+          combined_data <- mutate(coordinates, value = temp[, as.numeric(input$mapYear)-1999])
+
+          world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf")
+          ggplotMap <- ggplot(data=world) + geom_sf() +
+
+            geom_raster(data = combined_data, aes(x=lon, y = lat, fill=value)) +
+            coord_fixed(ratio = 1) +
+            scale_fill_viridis(direction = -1) +
+            theme_bw() +  coord_map("ortho", orientation = c(41, -74, 0))
+
+          localPlot <- plotly::ggplotly(p = ggplotMap)
+          # plotly::layout(p=localPlot, xaxis = a, yaxis = a, legend = list(orientation = 'h'))
+
+          output[[mapname]] <- plotly::renderPlotly(localPlot)
+
+        }
+      }
+    )
+  },
+  # warning = function(war)
+  # {
+  #   # warning handler picks up where error was generated
+  #   showModal(modalDialog(
+  #     title = "Important message",
+  #     paste("MY_WARNING:  ",war)
+  #   ))
+  #
+  # },
+  error = function(err)
+  {
+    # error handler picks up where error was generated
+    shinyalert::shinyalert("Error Detected:",print(paste('There was an error when attempting to load the graph:',err)), type = "error")
+  })
+
+  # coordinates <- coordinates %>% mutate(value = hector_annual_gridded_t[,101])
+
+
+
+}
+
 
 # Download handler for downloading the raw data output from a Hector run. This is activated upon button click.
 output$downloadData <- downloadHandler(

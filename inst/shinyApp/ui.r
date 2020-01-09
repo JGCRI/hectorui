@@ -130,7 +130,9 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
               tags$ul(class="ul-None", tags$li(icon("info"),"License and copyright notice"),tags$li(icon("info"),"State changes"),
                                        tags$li(icon("info"),"Disclose source"),tags$li(icon("info"),"Same license"))
             ),
-            h5("How to Cite Hector"), tags$hr(class="hrNav")
+            h5("How to Cite Hector"), tags$hr(class="hrNav"),
+            h6("Hector DOI:"),
+            tags$a(tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3603216.svg", alt="DOI"),href="https://doi.org/10.5281/zenodo.3603216")
 
           ),
 
@@ -350,6 +352,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
       ( width = 9,
         tabsetPanel
         (
+          # Graphs sub panel
           tabPanel
           ( fixed = TRUE,
             p(icon("chart-line","fa-2x"), "Scenario Output", value="outputTab"),
@@ -395,10 +398,14 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
             uiOutput("plots", class = "customPlot")
           ), # end tabpanel
 
+          # Maps Subpanel
           tabPanel
           ( fixed = TRUE,
             p(icon("globe-americas","fa-2x"), "Downscaled Maps", value="outputTab"),
-            h5("Scenario Results"), tags$hr(class="hrNav")
+            h5("Scenario Results"), tags$hr(class="hrNav"),
+            selectInput(inputId = "mapYear", label = "Choose Year", selected = 2100, choices = c(2000:2100), multiple = F, width = 120),
+            actionButton(inputId="loadMaps", label="Load Map", width = 200),
+            uiOutput("maps", class = "customPlot")
           ) # End tab panel
         ) # End tabset panel
       ) # End mainpanel
