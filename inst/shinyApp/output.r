@@ -92,8 +92,8 @@ loadGraph <- function()
                     plotly::layout(p=localPlot, xaxis = a, yaxis = a, legend = list(orientation = 'h'))
 
                     output[[plotname]] <- plotly::renderPlotly(localPlot)
-                    # output[[plottitle]] <- renderText({paste("1:", my_i, ".  n is ", 4, sep = "")})
-                    # output[[tablename]] <- renderTable({table(x = 1:my_i, y = 1:my_i)})
+
+
                 })
                 incProgress(1/length(hcores), detail = paste(attr(outputVariables[[i]], 'longName'), " loaded."))
                 Sys.sleep(0.25)
@@ -141,43 +141,60 @@ loadGraph <- function()
 loadMap <- function()
 {
   tryCatch(
-  {#browser()
+  {
     local(
       {
-        for(i in 1:length(hcores))
+        withProgress(message = 'Generating Map Data...\n', value = 0,
         {
-          results <- hector::fetchvars(hcores[[i]], 2000:2100)
-          #results <- hector::fetchvars(core = hcores[[j]], dates = globalVars[['startDate']]:globalVars[['endDate']], vars = outputVariables[i], "\n")
-          tgav_hector <- filter(results, variable == "Tgav")
-        }
+          for(i in 1:length(hcores))
+          {
+            results <- hector::fetchvars(hcores[[i]], 2000:2100)
+            #results <- hector::fetchvars(core = hcores[[j]], dates = globalVars[['startDate']]:globalVars[['endDate']], vars = outputVariables[i], "\n")
+            tgav_hector <- dplyr::filter(results, variable == "Tgav")
+          }
 
-        pattern <- readRDS("www/maps/tas_Amon_MIROC-ESM_esmrcp85_r1i1p1_200601-210012_pattern.rds")
-        coordinates <- pattern$coordinate_map
+          pattern <- readRDS(input$mapPattern)
+          coordinates <- pattern$coordinate_map
+          incProgress(1/length(hcores), detail = paste("Loading pattern, downscaling"))
+          Sys.sleep(0.15)
+          for(i in 1:length(coordinates$lon))
+          {
+            #browser()
+            if(coordinates$lon[i] > 180)
+            coordinates$lon[i] <- coordinates$lon[i] - 360
+          }
 
-        # Get the annual TAS in each grid cell as predicted by the annual pattern for the Hector tgav
-        for(i in 1:length(hcores))
-        {
-          mapname <- paste("map", i, sep="")
-          hector_annual_gridded <- pscl_apply(pattern$annual_pattern, as.vector(tgav_hector$value+15))
-          hector_annual_gridded_t <- t(hector_annual_gridded)
-          #browser()
-          temp <- hector_annual_gridded_t
-          combined_data <- mutate(coordinates, value = temp[, as.numeric(input$mapYear)-1999])
 
-          world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf")
-          ggplotMap <- ggplot(data=world) + geom_sf() +
+          # Get the annual TAS in each grid cell as predicted by the annual pattern for the Hector tgav
+          for(i in 1:length(hcores))
+          {
+            mapname <- paste("map", i, sep="")
+            hector_annual_gridded <- fldgen::pscl_apply(pattern$annual_pattern, as.vector(tgav_hector$value+15))
+            hector_annual_gridded_t <- t(hector_annual_gridded)
+            #browser()
+            temp <- hector_annual_gridded_t
+            combined_data <- dplyr::mutate(coordinates, value = temp[, as.numeric(input$mapYear)-1999])
 
-            geom_raster(data = combined_data, aes(x=lon, y = lat, fill=value)) +
-            coord_fixed(ratio = 1) +
-            scale_fill_viridis(direction = -1) +
-            theme_bw() +  coord_map("ortho", orientation = c(41, -74, 0))
+            # world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf")
+            coast_shapefile <- "E:/Repos/github/hector-ui/inst/shinyApp/www/maps/ne_50m_coastline.shp"
+            layer <- rgdal::ogrListLayers(coast_shapefile)
+            coast_lines <- rgdal::readOGR(coast_shapefile, layer=layer)
 
-          localPlot <- plotly::ggplotly(p = ggplotMap)
-          # plotly::layout(p=localPlot, xaxis = a, yaxis = a, legend = list(orientation = 'h'))
+            ggplotMap <- ggplot2::ggplot() +
 
-          output[[mapname]] <- plotly::renderPlotly(localPlot)
+              ggplot2::geom_raster(data = combined_data, ggplot2::aes(x=lon, y = lat, fill=value)) +
+              ggplot2::coord_fixed(ratio = 1) +
+              viridis::scale_fill_viridis(direction = -1) +
+              ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = "Plot Title", fill = "Local Temp \u00B0C") +
+              plot(coast_lines, col = "black")
 
-        }
+            localPlot <- plotly::ggplotly(p = ggplotMap)
+            # plotly::layout(p=localPlot, xaxis = a, yaxis = a, legend = list(orientation = 'h'))
+
+            output[[mapname]] <- plotly::renderPlotly(localPlot)
+
+          }
+        })
       }
     )
   },
@@ -195,11 +212,6 @@ loadMap <- function()
     # error handler picks up where error was generated
     shinyalert::shinyalert("Error Detected:",print(paste('There was an error when attempting to load the graph:',err)), type = "error")
   })
-
-  # coordinates <- coordinates %>% mutate(value = hector_annual_gridded_t[,101])
-
-
-
 }
 
 

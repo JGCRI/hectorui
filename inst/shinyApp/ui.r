@@ -131,9 +131,14 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                                        tags$li(icon("info"),"Disclose source"),tags$li(icon("info"),"Same license"))
             ),
             h5("How to Cite Hector"), tags$hr(class="hrNav"),
-            h6("Hector DOI:"),
-            tags$a(tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3603216.svg", alt="DOI"),href="https://doi.org/10.5281/zenodo.3603216")
-
+            p("When using graphs, figures, or other output from this applicaton please cite both the Hector Core", br(), "application as well as
+              the Hector User Interface (this application). The DOI for both is provided below:"),
+            tags$ul(
+              tags$li(
+               h5(tags$a("Hector User Interface DOI",href="https://doi.org/10.5281/zenodo.3603216", target = "blank"), tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3603216.svg", alt="DOI", class = "imgNoPadding"))),
+              tags$li(
+                tags$a(h5("Hector Core DOI", tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", alt="DOI", class = "imgNoPadding")),href="https://doi.org/10.5281/zenodo.3515153", target = "blank"))
+            )
           ),
 
           # Feedback Tab Panel
@@ -142,6 +147,11 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
             p(icon("comment", "fa-2x"), "Feedback/Bug Report", value="feedbackTab"),
             h5("Submit Feedback"), tags$hr(class="hrNav"),
             p("Please use the form below to contact the Hector team regarding any questions, concerns, suggestions, or problems you may encounter."),
+            # h3("Feedback Form"),
+            # textInput("feedbackEmail", "Email Address:", width = 250),
+            # selectInput("feedbackType", "Type of Feedback:", choices = c("Bug Report", "Comment", "Feature Request", "Question"), width = 180),
+            # textAreaInput("feedbackInfo", "Feedback:", width = 300 ),
+            # actionButton("input_submit_feedback","Submit Feedback")
             htmlOutput("feedbackFrame")
           )
         )
@@ -364,7 +374,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                 tags$td
                 (
                   selectInput
-                  ("capabilities",  "Choose capability identifiers (up to 4):",
+                  ("capabilities",  "Choose Output Variables (up to 4):",
                     list('Carbon Cycle' = list("Atmospheric CO2"="cc_co2", "Atmospheric Carbon Pool"="cc_acp", "FFI Emissions"="cc_ffi", "LUC Emissions"="cc_luc"),
                          'Concentrations' = list("Amospheric N2O"='c_an20'),
                          'Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'),
@@ -386,7 +396,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     multiple = T, width=310, selected = "t_gmt")
                 ),
                 tags$td(style="padding-left: 5px;",
-                  selectInput(inputId = "test", width=150, label="Graph Theme:", choices = c("Camoflauge", "Chalk", "Copper", "Dust", "Earth",  "Flat", "Flat Dark", "Fresh", "Grape",  "Grass", "Greyscale",
+                  selectInput(inputId = "set_theme", width=150, label="Graph Theme:", choices = c("Camoflauge", "Chalk", "Copper", "Dust", "Earth",  "Flat", "Flat Dark", "Fresh", "Grape",  "Grass", "Greyscale",
                                                                                              "Light", "Lilac", "Pale", "Sea", "Sky", "Solarized"), selected = "Dust")
                 )
               )
@@ -403,7 +413,21 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           ( fixed = TRUE,
             p(icon("globe-americas","fa-2x"), "Downscaled Maps", value="outputTab"),
             h5("Scenario Results"), tags$hr(class="hrNav"),
-            selectInput(inputId = "mapYear", label = "Choose Year", selected = 2100, choices = c(2000:2100), multiple = F, width = 120),
+            tags$table(
+              tags$tr(
+                tags$td(width = 200,
+                  selectInput(inputId = "mapPattern", label = "Choose Model:", width = 180,
+                              choices = c("CanESM2" = "www/maps/tas_Amon_CanESM2_esmrcp85_r1i1p1_200601-210012_pattern.rds",
+                                          "CESM1-BGC" = "www/maps/tas_Amon_CESM1-BGC_rcp85_r1i1p1_200601-210012_pattern.rds",
+                                          "MIROC-ESM" = "www/maps/tas_Amon_MIROC-ESM_esmrcp85_r1i1p1_200601-210012_pattern.rds",
+                                          "MPI-ESM-LR" = "www/maps/tas_Amon_MPI-ESM-LR_esmrcp85_r1i1p1_200601-210012_pattern.rds",
+                                          "MRI-ESM1" = "www/maps/tas_Amon_MRI-ESM1_esmrcp85_r1i1p1_200601-210012_pattern.rds")),
+                ),
+                tags$td(
+                  selectInput(inputId = "mapYear", label = "Choose Year:", selected = 2100, choices = c(2000:2100), multiple = F, width = 120)
+                )
+              )
+            ),
             actionButton(inputId="loadMaps", label="Load Map", width = 200),
             uiOutput("maps", class = "customPlot")
           ) # End tab panel

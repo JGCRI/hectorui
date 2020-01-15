@@ -336,6 +336,11 @@ openPage <- function(url) {
 
 changeTheme <- function()
 {
-  ggthemr::ggthemr(stringr::str_to_lower(input$test), type = "outer")
+  ggthemr::ggthemr(stringr::str_to_lower(input$set_theme), type = "outer")
   loadGraph()
+}
+
+sendFeedback <- function()
+{
+
 }

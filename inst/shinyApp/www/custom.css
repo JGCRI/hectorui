@@ -16,6 +16,7 @@ fas,fab
 figcaption
 {
 	font-style: italic;
+	padding-bottom: 5px;
 }
 
 h2
@@ -127,6 +128,7 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 	margin-right: 2px;
 	margin-left: 2px;
 	margin-bottom: 2px;
+	/*background-color: #375a7f;*/
 }
 
 .changedParamsTrue
@@ -269,11 +271,16 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 
 }
 
+.imgNoPadding
+{
+	padding: 3px;
+}
+
 .js-plotly-plot .plotly .modebar 
 {
- 	padding-top: 4%;
+ 	padding-top: 24px;
   	position: absolute;
-	left:34px!important;
+	left:36px!important;
 }
 
 .main-container

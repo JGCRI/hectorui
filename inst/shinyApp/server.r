@@ -122,8 +122,9 @@ server <- function(input, output, session)
   observeEvent(input$input_enableCustom, toggleCustom(), suspended = TRUE)
   observeEvent(input$input_set_custom_emissions, setCustomEmissions(), ignoreInit = TRUE)
   observeEvent(input$input_reset_custom_emissions, resetCustomEmissions(), ignoreInit = TRUE)
-  observeEvent(input$test, changeTheme(), ignoreInit = TRUE)
+  observeEvent(input$set_theme, changeTheme(), ignoreInit = TRUE)
   observeEvent(input$loadMaps, loadMap(), ignoreInit = TRUE)
+  observeEvent(input$input_submit_feedback, sendFeedback(), ignoreInit = TRUE)
 
   # This is a group Observer block for all of the params fields because they all respond the same way
   observe({

@@ -34,8 +34,8 @@ Imports:
     shinyWidgets,
     ggthemr,
     stringr, 
-    rnaturalearth,
-    rnaturalearthdata
+    fldgen,
+    rgdal
 Depends:
 RoxygenNote: 6.1.1
 
