@@ -27,16 +27,6 @@ cleanPlots <- function()
   }
 }
 
-#' Load graph by proxy
-#'
-#' @return
-#' @export
-#'
-#' @examples
-loadGraphProxy <- function()
-{
-  loadGraph()
-}
 
 #' Main output function that generates the graphs
 #'
@@ -76,7 +66,7 @@ loadGraph <- function()
                         seriesname <- input$input_ScenarioName
                       else
                         seriesname <- paste("RCP", names(hcores[j]))
-                      hdata <- dplyr::mutate(hdata, Scenario = seriesname, Year = year)
+                      hdata <- dplyr::mutate(hdata, Scenario = seriesname, Year = year, value = round(value, 2))
                       df_total <- rbind(df_total,hdata)
 
                     }
@@ -173,23 +163,21 @@ loadMap <- function()
             hector_annual_gridded_t <- t(hector_annual_gridded)
             #browser()
             temp <- hector_annual_gridded_t
-            combined_data <- dplyr::mutate(coordinates, value = temp[, as.numeric(input$mapYear)-1999])
-
-            # world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf")
-            coast_shapefile <- "E:/Repos/github/hector-ui/inst/shinyApp/www/maps/ne_50m_coastline.shp"
-            layer <- rgdal::ogrListLayers(coast_shapefile)
-            coast_lines <- rgdal::readOGR(coast_shapefile, layer=layer)
+            combined_data <- dplyr::mutate(coordinates, Temp = round(temp[, as.numeric(input$mapYear)-1999], 2), Lon=round(lon, 2), Lat=round(lat,2))
+           # combined_data <- dplyr::mutate(combined_data, "Temp \u00B0C" = round(value, 2), lat = round(lat, 2), lon = round(lon, 2) )
+            mapWorld <- borders("world",  ylim=c(-90, 90), xlim=c(-180, 180),exact=TRUE) #  colour="black", col="white",, fill="gray100"
 
             ggplotMap <- ggplot2::ggplot() +
-
-              ggplot2::geom_raster(data = combined_data, ggplot2::aes(x=lon, y = lat, fill=value)) +
+              mapWorld +
+              ggplot2::geom_tile(data = combined_data, ggplot2::aes(x=Lon, y = Lat, fill=Temp)) +
               ggplot2::coord_fixed(ratio = 1) +
               viridis::scale_fill_viridis(direction = -1) +
               ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = "Plot Title", fill = "Local Temp \u00B0C") +
-              plot(coast_lines, col = "black")
+              ggplot2::scale_y_continuous(limits=c(-93, 93), expand = c(0, 0), breaks=seq(-90,90,30))+
+              ggplot2::scale_x_continuous(limits=c(-183, 180), expand = c(0, 0), breaks=seq(-180,180,30))
 
             localPlot <- plotly::ggplotly(p = ggplotMap)
-            # plotly::layout(p=localPlot, xaxis = a, yaxis = a, legend = list(orientation = 'h'))
+            plotly::layout(p=localPlot, yaxis = list(tickformat = "\u00B0C", dtick = 10))
 
             output[[mapname]] <- plotly::renderPlotly(localPlot)
 

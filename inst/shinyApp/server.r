@@ -107,7 +107,7 @@ server <- function(input, output, session)
 #----- Set up observer functions to catch user interaction on the input fields
 
   observeEvent(input$capabilities, setCapabilities(), ignoreInit = FALSE)
-  observeEvent(input$loadGraphs, loadGraphProxy(), ignoreInit = TRUE)
+  observeEvent(input$loadGraphs, loadGraph(), ignoreInit = TRUE)
   observeEvent(input$set_Params, setParameters(), ignoreInit = TRUE)
   observeEvent(input$input_ScenarioFile, loadScenario(), ignoreInit = TRUE)
   observeEvent(input$reset_Params, resetParams(), ignoreInit = TRUE)

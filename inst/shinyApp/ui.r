@@ -366,7 +366,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           tabPanel
           ( fixed = TRUE,
             p(icon("chart-line","fa-2x"), "Scenario Output", value="outputTab"),
-            h5("Scenario Results"), tags$hr(class="hrNav"),
+            h5("Graphs"), tags$hr(class="hrNav"),
             tags$table
             (
               tags$tr
@@ -412,7 +412,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           tabPanel
           ( fixed = TRUE,
             p(icon("globe-americas","fa-2x"), "Downscaled Maps", value="outputTab"),
-            h5("Scenario Results"), tags$hr(class="hrNav"),
+            h5("Maps"), tags$hr(class="hrNav"),
             tags$table(
               tags$tr(
                 tags$td(width = 200,
