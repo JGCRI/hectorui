@@ -5,9 +5,9 @@ library(HectorShiny)
 #'
 #' The server function is the main function that processes inputs and handles data i/o. This is required for Shiny apps.
 #'
-#' @param input
-#' @param output
-#' @param session
+#' @param input - Creates the Shiny input object
+#' @param output - Creates the Shiny output object
+#' @param session - Creates the Shiny session object
 #'
 #' @return no return value
 #' @export
@@ -26,7 +26,7 @@ server <- function(input, output, session)
 #----- Set up non global variables in top level application scope
 
   # Keeps track of if this is the actual first load/run of this instance
-  firstLoad <- TRUE
+  # firstLoad <- TRUE
   outputVariables <- list()
   inifile <- system.file('input/hector_rcp45.ini', package='hector', mustWork=TRUE)
   hcores <- list()
@@ -41,7 +41,6 @@ server <- function(input, output, session)
   paramsList <- globalParamsDefault
 
   assignParameters()
-  paramsChanged <- FALSE
 
 #----- End set up local vars
 
@@ -52,8 +51,6 @@ server <- function(input, output, session)
     plot_output_list <- lapply(1:4, function(i)
     {
       plotname <- paste("plot", i, sep="")
-      # plottitle <- paste("plottitle",attr(globalScenarios[[i]], "name"), sep="")
-      # tablename <- paste("tablename", attr(globalScenarios[[i]], "name"), sep="")
       plot <-  plotly::plotlyOutput(plotname, height = 270, width = 550) #%>%
                # layout(dragmode = "select") %>%
                # event_register("plotly_selecting")
@@ -73,11 +70,7 @@ server <- function(input, output, session)
     map_output_list <- lapply(1:1, function(i)
     {
       mapname <- paste("map", i, sep="")
-      # maptitle <- paste("maptitle",attr(globalScenarios[[i]], "name"), sep="")
-      # tablename <- paste("tablename", attr(globalScenarios[[i]], "name"), sep="")
-      map <-  plotly::plotlyOutput(mapname, height = 550, width = 1100) #%>%
-      # layout(dragmode = "select") %>%
-      # event_register("plotly_selecting")
+      map <-  plotly::plotlyOutput(mapname, height = 550, width = 1100)
 
       tags$div(class = "group-output",
                # textOutput(title, container = h3),
@@ -135,7 +128,6 @@ server <- function(input, output, session)
     input$input_beta
     input$input_diff
     input$input_ecs
-    #setParamsChanged(TRUE)
   })
 
 #----- End observer function setup

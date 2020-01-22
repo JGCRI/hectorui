@@ -136,6 +136,7 @@
   # "Fossil Fuel and Industrial Emissions"
   globalCapabilities[['cc_ffi']] <- hector::FFI_EMISSIONS()
   attr(globalCapabilities[['cc_ffi']], 'longName') <- "FFI Emissions"
+  attr(globalCapabilities[['cc_ffi']], 'unit') <- "GtC/yr"
   # "Land Use Change Emissions"
   globalCapabilities[['cc_luc']] <- hector::LUC_EMISSIONS()
   attr(globalCapabilities[['cc_luc']], 'longName') <- "LUC Emissions"

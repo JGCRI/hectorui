@@ -241,7 +241,7 @@ setParamsChanged <- function(toggle)
   print("in set Params Changed")
   # Check input validation here
 
-  if(toggle == TRUE & !firstLoad)
+  if(toggle == TRUE)
   {
     paramsChanged <<- TRUE
   }

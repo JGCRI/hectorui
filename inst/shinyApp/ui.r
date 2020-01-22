@@ -73,9 +73,6 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
               tags$li(a(h5("Hector User Interface package download/source link "), href="https://github.com/JGCRI/Hector-ui", target="blank")),
               tags$li(a(h5("Hector R / Hector C++ package download/source link"), href="https://github.com/JGCRI/Hector", target="blank")),
               tags$li(a(h5("Code and data for Hector calibration papers", tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", class="zenodo", alt="DOI")), href="https://zenodo.org/record/3515153#.Xg9iGuhKiUl", target="blank"))
-                # tags$ul(
-                #   tags$li(a(tags$img(src="images/hectorcal-doi.svg", class="zenodo")))
-                # )
             ),
             # br(),
             h5("Tools and software that work with Hector"), tags$hr(class="hrNav"),
@@ -406,7 +403,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
             downloadButton("downloadData", label="Download Raw Data"),
            # plotly::plotlyOutput("plotly", width = "100%", height = "350"),
             uiOutput("plots", class = "customPlot")
-          ), # end tabpanel
+          ), # end Graphs tabpanel
 
           # Maps Subpanel
           tabPanel
@@ -430,7 +427,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
             ),
             actionButton(inputId="loadMaps", label="Load Map", width = 200),
             uiOutput("maps", class = "customPlot")
-          ) # End tab panel
+          ) # End Maps tab panel
         ) # End tabset panel
       ) # End mainpanel
     ) # End tabpanel

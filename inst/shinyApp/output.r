@@ -55,23 +55,23 @@ loadGraph <- function()
               {
                 # Need local so that each item gets its own number. Without it, the value of i in the renderPlot() will be the same across all instances.
                 local(
-                {
+                {#browser()
                     my_i <- i
                     plotname <- paste("plot", i, sep="")
                     seriesname <- ""
                     for(j in 1:length(hcores))
                     {
                       hdata <- hector::fetchvars(core = hcores[[j]], dates = globalVars[['startDate']]:globalVars[['endDate']], vars = outputVariables[i], "\n")
-                      if(names(hcores[j])=="Custom")
-                        seriesname <- input$input_ScenarioName
+                      if(hcores[[j]]$name=="custom")
+                        seriesname <- input$input_custom_scenarioName
                       else
                         seriesname <- paste("RCP", names(hcores[j]))
-                      hdata <- dplyr::mutate(hdata, Scenario = seriesname, Year = year, value = round(value, 2))
+                      hdata <- dplyr::mutate(hdata, Scenario = seriesname, Year = year, Value = round(value, 2))
                       df_total <- rbind(df_total,hdata)
 
                     }
                     x <- dplyr::distinct(hdata, units)
-                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=Year, y=value, group=variable, color=Scenario)) + ggplot2::geom_line() +
+                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=Year, y=Value, group=variable, color=Scenario)) + ggplot2::geom_line() +
                        ggplot2::labs(y=Hmisc::capitalize(x[[1]]), title =  attr(outputVariables[[i]], 'longName')) #+  ggplot2::scale_color_manual(values = globalColorScales)
 
                     #+ ggplot2::scale_color_manual(values=globalScenarioColors) + ggplot2::geom_ribbon(alpha=0.5)
@@ -128,6 +128,13 @@ loadGraph <- function()
   }
 }
 
+#' Main output function that generates the downscaled maps
+#'
+#' Observer function designed to handle the loading/creation of downscaled world maps from the Hector model output.
+#' @return no return value
+#' @export
+#'
+#' @examples
 loadMap <- function()
 {
   tryCatch(
@@ -164,7 +171,7 @@ loadMap <- function()
             #browser()
             temp <- hector_annual_gridded_t
             combined_data <- dplyr::mutate(coordinates, Temp = round(temp[, as.numeric(input$mapYear)-1999], 2), Lon=round(lon, 2), Lat=round(lat,2))
-           # combined_data <- dplyr::mutate(combined_data, "Temp \u00B0C" = round(value, 2), lat = round(lat, 2), lon = round(lon, 2) )
+            combined_data <- dplyr::select(combined_data, -c(lat, lon, colnum))
             mapWorld <- borders("world",  ylim=c(-90, 90), xlim=c(-180, 180),exact=TRUE) #  colour="black", col="white",, fill="gray100"
 
             ggplotMap <- ggplot2::ggplot() +

@@ -1,5 +1,5 @@
-
 # This file contains miscellaneous observers (all EXCEPT for those from the parameters which are in the parameters.r file)
+
 
 #' Keeps a list of the selected output variables for graphs
 #'
@@ -128,10 +128,10 @@ loadCustomScenario <- function()
       })
 
       # If this is the initial application load, then we need to assign the on screen input field values to hector's default params
-      if(firstLoad)
-      {
+      # if(firstLoad)
+      # {
         loadParameters()
-      }
+      # }
       # If its not first load but the parameters have changed via user input, then need to restore those values after restarting core
       # else if(paramsChanged)
       # {
@@ -174,45 +174,65 @@ loadCustomEmissions <- function()
   }
   scenarioName <- input$input_custom_scenarioName
   tryCatch(
+  {
+    #browser()
+    inifile <- system.file(globalScenarios[input$input_custom_RCP], package='hector', mustWork=TRUE)
+    emissions_file <- input$input_custom_emissions_file$datapath
+    emissions_data <- read.csv(file=emissions_file, header=TRUE, sep=",", skip = 3)
+    emissions_headers <- read.csv(file=emissions_file, header=FALSE, sep=",", skip = 2)
+    hcores[[scenarioName]] <<- hector::newcore(inifile = inifile, suppresslogging=TRUE, name="custom")
+    hector::run( hcores[[scenarioName]], globalVars[['endDate']])
+    dates_col <- emissions_data$Date
+    for(i in 2:ncol(emissions_data))
     {
-      browser()
-      inifile <- system.file(globalScenarios[input$input_custom_RCP], package='hector', mustWork=TRUE)
-      emissions_file <- input$input_custom_emissions_file$datapath
-      iniPath <- dirname(inifile)
-      file.create("temp.ini")
-      withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
-      {
-        initext <- readLines(inifile)
-        newtext <- gsub(pattern="emissions/RCP45_emissions.csv", replacement = emissions_file, x = initext)
-        browser()
-        fileConn <- file("temp.ini")
-        writeLines(newtext, con = fileConn)
-        close(fileConn)
-        newIniFile <- system.file("temp.ini")
+      hector::setvar(core = hcores[[scenarioName]], dates = emissions_data[, 1],var = colnames(emissions_data)[i], values = emissions_data[, i], unit = as.character(emissions_headers[[paste0("V",i)]][[1]]))
+    }
+    withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
+     {
+       hcores[[scenarioName]] <<- hector::newcore(inifile, suppresslogging=TRUE, name="custom")
+         hector::run( hcores[[scenarioName]], globalVars[['endDate']])
+         incProgress(1/1, detail = paste("Load complete."))
+         Sys.sleep(0.2)
+     })
 
-        showModal(modalDialog(
-          title = "Warning",
-          paste("Details:  ", "e = ", emissions_file, "i = ", newIniFile)
-        ))
-
-        hcores[[scenarioName]] <<- hector::newcore(newIniFile, suppresslogging=TRUE, name="custom")
-        hector::run( hcores[[scenarioName]], globalVars[['endDate']])
-        incProgress(1/1, detail = paste("Load complete."))
-        Sys.sleep(0.2)
-      })
+    hector::reset(hcores[[scenarioName]])
+    hector::run(hcores[[scenarioName]], globalVars[['endDate']])
+    loadGraph()
+    # iniPath <- dirname(inifile)
+    # file.create("temp.ini")
+    # withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
+    # {
+    #   initext <- readLines(inifile)
+    #   newtext <- gsub(pattern="emissions/RCP45_emissions.csv", replacement = emissions_file, x = initext)
+    #   browser()
+    #   fileConn <- file("temp.ini")
+    #   writeLines(newtext, con = fileConn)
+    #   close(fileConn)
+    #   newIniFile <- system.file("temp.ini")
+    #
+    #   showModal(modalDialog(
+    #     title = "Warning",
+    #     paste("Details:  ", "e = ", emissions_file, "i = ", newIniFile)
+    #   ))
+    #
+    #   hcores[[scenarioName]] <<- hector::newcore(newIniFile, suppresslogging=TRUE, name="custom")
+    #   hector::run( hcores[[scenarioName]], globalVars[['endDate']])
+    #   incProgress(1/1, detail = paste("Load complete."))
+    #   Sys.sleep(0.2)
+    # })
 
       # If this is the initial application load, then we need to assign the on screen input field values to hector's default params
-      if(firstLoad)
-      {
-        loadParameters()
-      }
+      # if(firstLoad)
+      # {
+     #   loadParameters()
+      # }
       # If its not first load but the parameters have changed via user input, then need to restore those values after restarting core
       # else if(paramsChanged)
       # {
       #   restoreParameters()
       # }
-      customLoaded <<- TRUE
-      loadGraph()
+      # customLoaded <<- TRUE
+      # loadGraph()
     },
     warning = function(war)
     {
@@ -248,10 +268,10 @@ setCustomEmissions <- function()
     # 2. Years need to be validated (validated to be a year and start > end if used that way)
     #browser()
     validate(
-      need(as.double(input$input_custom_start) >= 1700 && as.double(input$input_custom_start) <= 2300, "Please use a valid 4 digit year for start year")
+      need(as.double(input$input_custom_start) >= globalVars[['startDate']] && as.double(input$input_custom_start) <= globalVars[['endDate']], "Please use a valid 4 digit year for start year")
     )
     validate(
-      need(as.double(input$input_custom_end) >= 1700 && as.double(input$input_custom_end) <= 2300, "Please use a valid 4 digit year for end year")
+      need(as.double(input$input_custom_end) >= globalVars[['startDate']] && as.double(input$input_custom_end) <= globalVars[['endDate']], "Please use a valid 4 digit year for end year")
     )
     validate(
       need(length(input$input_custom_emissions) >= 0, "Please enter a value for emissions")
