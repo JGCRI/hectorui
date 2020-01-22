@@ -172,7 +172,7 @@ loadMap <- function()
             temp <- hector_annual_gridded_t
             combined_data <- dplyr::mutate(coordinates, Temp = round(temp[, as.numeric(input$mapYear)-1999], 2), Lon=round(lon, 2), Lat=round(lat,2))
             combined_data <- dplyr::select(combined_data, -c(lat, lon, colnum))
-            mapWorld <- borders("world",  ylim=c(-90, 90), xlim=c(-180, 180),exact=TRUE) #  colour="black", col="white",, fill="gray100"
+            mapWorld <- ggplot2::borders("world",  ylim=c(-90, 90), xlim=c(-180, 180),exact=TRUE) #  colour="black", col="white",, fill="gray100"
 
             ggplotMap <- ggplot2::ggplot() +
               mapWorld +
