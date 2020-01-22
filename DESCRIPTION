@@ -35,7 +35,8 @@ Imports:
     ggthemr,
     stringr, 
     fldgen,
-    rgdal
+    rgdal,
+    maps
 Depends:
 RoxygenNote: 6.1.1
 
