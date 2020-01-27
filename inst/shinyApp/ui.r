@@ -24,7 +24,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
   navbarPage
   (
     "Navigation:",
-    # Main navigation - currently only used for one item, run scenario. Expandable
+    # Main navigation - divides app into 2 sections: informational and interactive
     tabPanel
     (
       "System Information",
@@ -141,7 +141,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           # Feedback Tab Panel
           tabPanel
           (
-            p(icon("comment", "fa-2x"), "Feedback/Bug Report", value="feedbackTab"),
+            p(icon("comment", "fa-2x"), "Support", value="feedbackTab"),
             h5("Submit Feedback"), tags$hr(class="hrNav"),
             p("Please use the form below to contact the Hector team regarding any questions, concerns, suggestions, or problems you may encounter."),
             # h3("Feedback Form"),
@@ -154,17 +154,18 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
         )
       )
     ),
+    # Main panel for the interactive section of the application
     tabPanel
     (
       "Run Scenario",
-      # The sidebar panel splist the page into a left hand nav and right side content
+      # The sidebar panel splits the page into a left hand nav and right side content
       sidebarPanel
       (
         width=3,
         # A tabsetPanel creates a group of tabs within the left hand nav
         tabsetPanel
         (
-          # Information Tab Panel
+          # Standard Scenarios (RCP) Panel
           tabPanel
           ( p( "Standard Scenarios", value="infoTab"),
             div(h5("RCP Scenarios"),#, icon("info-circle", "fa-1x")),
@@ -278,77 +279,66 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
             p(icon("edit", "fa-1x"), "Custom Scenarios - BETA", value="infoTab"),
             div
             (
-              h5("Getting Started"),
+              h5("Custom Emissions Pathway"),
               tags$hr(class="hrNav"),
-              p("There are two ways to run a custom scenario:"),
+              p("Steps to run your own scenario with custom emissions:"),
               tags$ol(
-                tags$li("Start with a baseline RCP scenario and then upload a set of custom emissions to use with that scenario"),
-                tags$li("Directly customize the scenario itself (requires a file download and upload) which allows you to customize all of the Hector variables as
-                      well as set custom emissions.")
+                tags$li("Choose a baseline RCP scenario as your starting point"),
+                tags$li("Give your new custom scenario a name"),
+                tags$li("Download the emissions file template for that scenario and enter your own emissions"),
+                tags$li("Upload the new customized emissions file")
               ),
-              # p(tags$strong("Do not edit any field names, add additional fields, or modify the .INI or .CSV files in any way other than to change data."))
-            # ),
-            # div(h5("Starting Scenarios"),
-                # tags$hr(class="hrNav"),
+              p(tags$strong("Do not edit any field names or change the CSV file in any way other than changing the data")),
               tags$table(
                 tags$tr(width = "100%",
                   tags$td(width = "145", "Baseline Scenario:"),
-                  tags$td(width = "155", selectInput("input_custom_RCP", label = NULL, list("RCP 2.6" = "RCP 2.6","RCP 4.5"="RCP 4.5", "RCP 6"="RCP 6.0", "RCP 8.5" = "RCP 8.5", "Custom" = "custom"), width=150, selected = "RCP 4.5"))
+                  tags$td(width = "155", selectInput("input_custom_RCP", label = NULL, list("RCP 2.6" = "RCP 2.6","RCP 4.5"="RCP 4.5", "RCP 6"="RCP 6.0", "RCP 8.5" = "RCP 8.5"), width=150, selected = "RCP 4.5"))
                 ),
                 tags$tr(width = "100%",
                   tags$td(width = "145", "Custom Scenario Name:"),
                   tags$td(width = "200",  textInput("input_custom_scenarioName", label = NULL, width=195, value = ""))
                 )
               ),
-              conditionalPanel(
-                condition = "input.input_custom_RCP != 'custom'",
-                div(h5("Custom Emissions Pathway"),
-                tags$hr(class="hrNav"),
 
-                p("To create a custom emissions pathway:"),
-                tags$ol(
-                  tags$li("Choose your baseline scenario above (not custom) and then download the template below"),
-                  tags$li("Edit/customize emissions in the template file and then upload the new file using the file selector below")
-                ),
-
+              div(
                 conditionalPanel(
                   condition = "input.input_custom_RCP == 'RCP 2.6'",
-                  a(h6("Download RCP 2.6 Emissions File Template"), href="input/emissions/RCP26_emissions.csv")
+                  a(h6("Download RCP 2.6 Emissions File Template"), href="input/emissions/RCP26_custom_template.csv")
                 ),
                 conditionalPanel(
                   condition = "input.input_custom_RCP == 'RCP 4.5'",
-                  a(h6("Download RCP 4.5 Emissions File Template"), href="input/emissions/RCP45_emissions.csv")
+                  a(h6("Download RCP 4.5 Emissions File Template"), href="input/emissions/RCP45_custom_template.csv")
                 ),
                 conditionalPanel(
                   condition = "input.input_custom_RCP == 'RCP 6.0'",
-                  a(h6("Download RCP 6.0 Emissions File Template"), href="input/emissions/RCP6_emissions.csv")
+                  a(h6("Download RCP 6.0 Emissions File Template"), href="input/emissions/RCP6_custom_template.csv")
                 ),
                 conditionalPanel(
                   condition = "input.input_custom_RCP == 'RCP 8.5'",
-                  a(h6("Download RCP 8.5 Emissions File Template"), href="input/emissions/RCP85_emissions.csv")
+                  a(h6("Download RCP 8.5 Emissions File Template"), href="input/emissions/RCP85_custom_template.csv")
                 ),
 
                 fileInput("input_custom_emissions_file", "Upload Custom Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
-                div(class="paramDivs", actionButton(inputId="input_load_emissions", label="Create Scenario"))
-                )
-              ), # End conditional Panel
+                div(
+                  class="paramDivs", actionButton(inputId="input_load_emissions", label="Create Scenario"))
+              )
 
-              conditionalPanel(
-                condition = "input.input_custom_RCP == 'custom'",
-                h5("Custom Scenario (Advanced Users)"),
-                tags$hr(class="hrNav"),
-                p("To customize a scenario, first download the file package below, extract the files and follow these steps:"),
-                tags$ol(
-                  tags$li("Customize the .INI file that corresponds closest to your desired starting point (i.e. Hector_RCP26.ini)"),
-                  tags$li("Replace every emissions file path in the .INI file with a fully qualified local path (i.e. c:\\files\\emissions.csv)"),
-                  tags$li("(Optional) Change emissions data in emissions file(s)"),
-                  tags$li("Upload the .INI file below to create a custom scenario")
-                ),
-                a(h6("Download Custom Scenario File Package"), href="input/HectorCustomFiles.zip"),
-                fileInput("input_custom_scenario_ini", "Upload Custom Scenario File (.INI):", width=275, buttonLabel = "Choose File", accept = c(".ini")),
-                fileInput("input_custom_scenario_csv", "Upload Custom Emissions File (.CSV):", width=275, buttonLabel = "Choose File", accept = c(".ini")),
-                  div(class="paramDivs", actionButton(inputId="input_load_custom", label="Create Scenario"))
-              ) # End conditional Panel
+              # conditionalPanel(
+              #   condition = "input.input_custom_RCP == 'custom'",
+              #   h5("Custom Scenario (Advanced Users)"),
+              #   tags$hr(class="hrNav"),
+              #   p("To customize a scenario, first download the file package below, extract the files and follow these steps:"),
+              #   tags$ol(
+              #     tags$li("Customize the .INI file that corresponds closest to your desired starting point (i.e. Hector_RCP26.ini)"),
+              #     tags$li("Replace every emissions file path in the .INI file with a fully qualified local path (i.e. c:\\files\\emissions.csv)"),
+              #     tags$li("(Optional) Change emissions data in emissions file(s)"),
+              #     tags$li("Upload the .INI file below to create a custom scenario")
+              #   ),
+              #   a(h6("Download Custom Scenario File Package"), href="input/HectorCustomFiles.zip"),
+              #   fileInput("input_custom_scenario_ini", "Upload Custom Scenario File (.INI):", width=275, buttonLabel = "Choose File", accept = c(".ini")),
+              #   fileInput("input_custom_scenario_csv", "Upload Custom Emissions File (.CSV):", width=275, buttonLabel = "Choose File", accept = c(".ini")),
+              #     div(class="paramDivs", actionButton(inputId="input_load_custom", label="Create Scenario"))
+              # ) # End conditional Panel
             ) # End Div
           ) # End Custom Scenarios Tab Panel
         ) # End Tabset
@@ -401,7 +391,6 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
 
             actionButton(inputId="loadGraphs", label="Load Graphs", width = 200),
             downloadButton("downloadData", label="Download Raw Data"),
-           # plotly::plotlyOutput("plotly", width = "100%", height = "350"),
             uiOutput("plots", class = "customPlot")
           ), # end Graphs tabpanel
 
@@ -410,12 +399,14 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           ( fixed = TRUE,
             p(icon("globe-americas","fa-2x"), "Downscaled Maps", value="outputTab"),
             h5("Maps"), tags$hr(class="hrNav"),
+            p("Please note that some map model patterns are rather large and can take several seconds to load. Maps also need to be refreshed manually after any changes."),
             tags$table(
               tags$tr(
                 tags$td(width = 200,
                   selectInput(inputId = "mapPattern", label = "Choose Model:", width = 180,
                               choices = c("CanESM2" = "www/maps/tas_Amon_CanESM2_esmrcp85_r1i1p1_200601-210012_pattern.rds",
                                           "CESM1-BGC" = "www/maps/tas_Amon_CESM1-BGC_rcp85_r1i1p1_200601-210012_pattern.rds",
+                                          "GFDL-ESM2G" = "w ww/maps/tas_Amon_GFDL-ESM2G_rcp85_r1i1p1_200601-210012_pattern.rds",
                                           "MIROC-ESM" = "www/maps/tas_Amon_MIROC-ESM_esmrcp85_r1i1p1_200601-210012_pattern.rds",
                                           "MPI-ESM-LR" = "www/maps/tas_Amon_MPI-ESM-LR_esmrcp85_r1i1p1_200601-210012_pattern.rds",
                                           "MRI-ESM1" = "www/maps/tas_Amon_MRI-ESM1_esmrcp85_r1i1p1_200601-210012_pattern.rds")),

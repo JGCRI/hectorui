@@ -76,3 +76,5 @@ vignettes/rsconnect
 
 # Rstudio connect files
 rsconnect
+inst/shinyApp/temp.ini
+inst/shinyApp/test.ini

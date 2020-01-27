@@ -143,16 +143,16 @@ loadMap <- function()
       {
         withProgress(message = 'Generating Map Data...\n', value = 0,
         {
-          for(i in 1:length(hcores))
-          {
-            results <- hector::fetchvars(hcores[[i]], 2000:2100)
+          # for(i in 1:length(hcores))
+          # {
+            results <- hector::fetchvars(hcores[[1]], 2000:2100)
             #results <- hector::fetchvars(core = hcores[[j]], dates = globalVars[['startDate']]:globalVars[['endDate']], vars = outputVariables[i], "\n")
             tgav_hector <- dplyr::filter(results, variable == "Tgav")
-          }
+          # }
 
           pattern <- readRDS(input$mapPattern)
           coordinates <- pattern$coordinate_map
-          incProgress(1/length(hcores), detail = paste("Loading pattern, downscaling"))
+          incProgress(1/2, detail = paste("Loading pattern, downscaling"))
           Sys.sleep(0.15)
           for(i in 1:length(coordinates$lon))
           {
@@ -163,23 +163,23 @@ loadMap <- function()
 
 
           # Get the annual TAS in each grid cell as predicted by the annual pattern for the Hector tgav
-          for(i in 1:length(hcores))
-          {
-            mapname <- paste("map", i, sep="")
+          # for(i in 1:length(hcores))
+          # {
+            mapname <- paste("map", 1, sep="")
             hector_annual_gridded <- fldgen::pscl_apply(pattern$annual_pattern, as.vector(tgav_hector$value+15))
             hector_annual_gridded_t <- t(hector_annual_gridded)
             #browser()
             temp <- hector_annual_gridded_t
             combined_data <- dplyr::mutate(coordinates, Temp = round(temp[, as.numeric(input$mapYear)-1999], 2), Lon=round(lon, 2), Lat=round(lat,2))
             combined_data <- dplyr::select(combined_data, -c(lat, lon, colnum))
-            mapWorld <- ggplot2::borders("world",  ylim=c(-90, 90), xlim=c(-180, 180),exact=TRUE) #  colour="black", col="white",, fill="gray100"
+            mapWorld <- ggplot2::borders("world",  ylim=c(-90, 90), xlim=c(-180, 180)) #  colour="black", col="white",, fill="gray100"
 
             ggplotMap <- ggplot2::ggplot() +
               mapWorld +
               ggplot2::geom_tile(data = combined_data, ggplot2::aes(x=Lon, y = Lat, fill=Temp)) +
               ggplot2::coord_fixed(ratio = 1) +
               viridis::scale_fill_viridis(direction = -1) +
-              ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = "Plot Title", fill = "Local Temp \u00B0C") +
+              ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0("Hector Global Downscaling", " - ", input$mapYear), fill = "Local Temp \u00B0C") +
               ggplot2::scale_y_continuous(limits=c(-93, 93), expand = c(0, 0), breaks=seq(-90,90,30))+
               ggplot2::scale_x_continuous(limits=c(-183, 180), expand = c(0, 0), breaks=seq(-180,180,30))
 
@@ -188,20 +188,20 @@ loadMap <- function()
 
             output[[mapname]] <- plotly::renderPlotly(localPlot)
 
-          }
+          # }
         })
       }
     )
   },
-  # warning = function(war)
-  # {
-  #   # warning handler picks up where error was generated
-  #   showModal(modalDialog(
-  #     title = "Important message",
-  #     paste("MY_WARNING:  ",war)
-  #   ))
-  #
-  # },
+  warning = function(war)
+  {
+    # warning handler picks up where error was generated
+    showModal(modalDialog(
+      title = "Important message",
+      paste("Warning:  ",war)
+    ))
+
+  },
   error = function(err)
   {
     # error handler picks up where error was generated
