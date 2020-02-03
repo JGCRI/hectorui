@@ -29,8 +29,7 @@ server <- function(input, output, session)
   # firstLoad <- TRUE
   outputVariables <- list()
   inifile <- system.file('input/hector_rcp45.ini', package='hector', mustWork=TRUE)
-  hcores <- reactiveValues()
-  browser()
+  hcores <- list()
   totalActivePlots <- 0
   customLoaded <- FALSE
   scale_colors <- vector()

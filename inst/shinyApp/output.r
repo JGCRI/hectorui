@@ -7,7 +7,7 @@
 cleanPlots <- function()
 {
   print("in clean plots")
-  if(length(reactiveValuesToList(hcores)) < 1)
+  if(length(hcores) < 1)
   {
     output[["plot1"]] <<- NULL
     output[["plot2"]] <<- NULL
@@ -59,10 +59,10 @@ loadGraph <- function()
                     my_i <- i
                     plotname <- paste("plot", i, sep="")
                     seriesname <- ""
-                    for(j in 1:length(reactiveValuesToList(hcores)))
+                    for(j in 1:length(hcores))
                     {
                       scenarioName <- names(hcores)[j]
-                      hdata <- hector::fetchvars(core = reactiveValuesToList(hcores)[[j]], dates = globalVars[['startDate']]:globalVars[['endDate']], vars = outputVariables[i], "\n")
+                      hdata <- hector::fetchvars(core = hcores[[j]], dates = globalVars[['startDate']]:globalVars[['endDate']], vars = outputVariables[i], "\n")
                       if(substr(scenarioName, 1, 8) =="Standard")
                         seriesname <- paste0("RCP", substr(scenarioName, nchar(scenarioName)-3, nchar(scenarioName)))
                       else
@@ -177,7 +177,7 @@ loadMap <- function()
             ggplot2::geom_tile(data = combined_data, ggplot2::aes(x=Lon, y = Lat, fill=Temp)) +
             ggplot2::coord_fixed(ratio = 1) +
             viridis::scale_fill_viridis(direction = -1) +
-            ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0("Hector Global Downscaling", " - ", input$mapYear), fill = "Local Temp \u00B0C") +
+            ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = "Local Temp \u00B0C") +
             ggplot2::scale_y_continuous(limits=c(-93, 93), expand = c(0, 0), breaks=seq(-90,90,30))+
             ggplot2::scale_x_continuous(limits=c(-183, 180), expand = c(0, 0), breaks=seq(-180,180,30))
 

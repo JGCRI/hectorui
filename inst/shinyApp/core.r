@@ -36,10 +36,10 @@ loadScenario <- function(scenario)
 resetCore <- function()
 {
   print("in reset core")
-  for(i in 1:length(reactiveValuesToList(hcores)))
+  for(i in 1:length(hcores))
   {
-    hector::reset(reactiveValuesToList(hcores)[[i]])
-    hector::run(reactiveValuesToList(hcores)[[i]], globalVars[['endDate']])
+    hector::reset(hcores[[i]])
+    hector::run(hcores[[i]], globalVars[['endDate']])
   }
 
   #loadGraph()
@@ -57,21 +57,21 @@ restartCore <- function()
   print("in restart core")
   tryCatch(
   {
-    if(length(reactiveValuesToList(hcores)) > 0)
+    if(length(hcores) > 0)
     {
       withProgress(message = 'Restarting Hector Cores...\n', value = 0,
       {
-        for(i in 1:length(reactiveValuesToList(hcores)))
+        for(i in 1:length(hcores))
         {
           scenarioName <- names(hcores)[i]
           if(substr(scenarioName, 1, 8) =="Standard")
           {
-            core <- reactiveValuesToList(hcores)[[i]]
+            core <- hcores[[i]]
             inifile <- system.file(core$name, package='hector', mustWork=TRUE)
-            hector::shutdown(core = reactiveValuesToList(hcores)[[i]])
+            hector::shutdown(core = hcores[[i]])
             hcores[[scenarioName]] <<- loadScenario(substr(scenarioName, nchar(scenarioName)-2, nchar(scenarioName))) #  hector::newcore(inifile, suppresslogging=TRUE, name=paste(globalScenarios[paste("RCP",  scenario)]))
-            hector::run(reactiveValuesToList(hcores)[[i]], globalVars[['endDate']])
-            incProgress(1/length(reactiveValuesToList(hcores)), detail = paste0("Core ", names(hcores)[i], " Restart Successful."))
+            hector::run(hcores[[i]], globalVars[['endDate']])
+            incProgress(1/length(hcores), detail = paste0("Core ", names(hcores)[i], " Restart Successful."))
             Sys.sleep(0.1)
           }
         }

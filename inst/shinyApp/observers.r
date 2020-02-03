@@ -44,7 +44,7 @@ setCapabilities <- function()
 #'
 #' @examples
 setRCP <- function(scenarioName)
-{ browser()
+{ #browser()
   print("in set RCP")
   coreName <- paste0("Standard-", scenarioName)
   tryCatch(
@@ -63,8 +63,11 @@ setRCP <- function(scenarioName)
     {
      hcores[[coreName]] <<- NULL
     }
-    if(length(reactiveValuesToList(hcores)) > 0)
+    if(length(hcores) > 0)
+    {
+      updateSelectInput(session, inputId = "mapCore", choices = names(hcores))
       loadGraph()
+    }
     else
       cleanPlots()
   },
@@ -100,7 +103,7 @@ loadCustomScenario <- function()
         inifile <-  Sys.glob(input$input_custom_scenario_ini$datapath)
         csvfile <- Sys.glob(input$input_custom_scenario_csv$datapath)
         hcores[[scenarioName]] <<- hector::newcore(inifile, suppresslogging=TRUE, name="custom")
-        hector::run( reactiveValuesToList(hcores)[[scenarioName]], globalVars[['endDate']])
+        hector::run( hcores[[scenarioName]], globalVars[['endDate']])
         incProgress(1/1, detail = paste("Load complete."))
         Sys.sleep(0.2)
       })
@@ -163,18 +166,19 @@ loadCustomEmissions <- function()
     withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
      {
         hcores[[scenarioName]] <<- hector::newcore(inifile, suppresslogging=TRUE, name=scenarioName)
-        hector::run( reactiveValuesToList(hcores)[[scenarioName]], globalVars[['endDate']])
+        hector::run( hcores[[scenarioName]], globalVars[['endDate']])
         incProgress(1/1, detail = paste("Load complete."))
         Sys.sleep(0.2)
      })
 
     for(i in 2:ncol(emissions_data))
     {
-      hector::setvar(core = reactiveValuesToList(hcores)[[scenarioName]], dates = emissions_data[, 1],var = colnames(emissions_data)[i], values = emissions_data[, i], unit = as.character(emissions_headers[[paste0("V",i)]][[1]]))
+      hector::setvar(core = hcores[[scenarioName]], dates = emissions_data[, 1],var = colnames(emissions_data)[i], values = emissions_data[, i], unit = as.character(emissions_headers[[paste0("V",i)]][[1]]))
     }
 
-    hector::reset(reactiveValuesToList(hcores)[[scenarioName]])
-    hector::run(reactiveValuesToList(hcores)[[scenarioName]], globalVars[['endDate']])
+    hector::reset(hcores[[scenarioName]])
+    hector::run(hcores[[scenarioName]], globalVars[['endDate']])
+    updateSelectInput(session, inputId = "mapCore", choices = names(hcores))
     loadGraph()
     },
     warning = function(war)
@@ -224,7 +228,7 @@ setCustomEmissions <- function()
     #   shinyalert::shinyalert("Missing Information", "Please fill in all values before setting emissions", type = "warning")
     #   return(NULL)
     # }
-    if(length(reactiveValuesToList(hcores)) > 0)
+    if(length(hcores) > 0)
     {
       x <- seq(1, 10, 2)
       y <- x * 3
@@ -238,12 +242,12 @@ setCustomEmissions <- function()
 
       if(input$input_slope_emissions)
       {
-        for(i in 1:length(reactiveValuesToList(hcores)))
+        for(i in 1:length(hcores))
         {
           scenarioName <- names(hcores)[i]
           if(substr(scenarioName, 1, 8) =="Standard")
           {
-            startEmission <- hector::fetchvars(core = reactiveValuesToList(hcores)[[i]], dates = startDate, vars = hector_var, "\n")
+            startEmission <- hector::fetchvars(core = hcores[[i]], dates = startDate, vars = hector_var, "\n")
             x <- c(startDate, endDate)
             y <- c(startEmission["value"], as.double(input$input_emissions_value))
             z <- seq(as.integer(startDate), as.integer(endDate), 1)
@@ -252,15 +256,15 @@ setCustomEmissions <- function()
             values <- unlist(seq_out["y"])
             values1 <- as.vector(values)
             #browser()
-            hector::setvar(core = reactiveValuesToList(hcores)[[i]], dates = dates, var = hector_var, values = values1, unit = hector_unit)
+            hector::setvar(core = hcores[[i]], dates = dates, var = hector_var, values = values1, unit = hector_unit)
           }
         }
       }
       else
       {
-        for(i in 1:length(reactiveValuesToList(hcores)))
+        for(i in 1:length(hcores))
         {
-          hector::setvar(core = reactiveValuesToList(hcores)[[i]], dates = startDate:endDate, var = hector_var, values = as.double(input$input_emissions_value), unit = hector_unit)
+          hector::setvar(core = hcores[[i]], dates = startDate:endDate, var = hector_var, values = as.double(input$input_emissions_value), unit = hector_unit)
         }
       }
       resetCore()
