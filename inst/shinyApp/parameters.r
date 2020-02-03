@@ -1,6 +1,6 @@
 # Contains parameter related functions and observers
 
-#' Assign Parameters
+#' Assign Parameters from numeric components to core
 #'
 #' @return no return value
 #' @export
@@ -8,16 +8,23 @@
 #' @examples
 setCoreParameters <- function(hcore)
 {
-  hector::setvar(hcore, dates = NA, var = globalParameters['aero'], values = c(as.double(paramsList[['alpha']])), unit = "unitless")
-  hector::setvar(hcore, dates = NA, var = globalParameters['beta'], values = c(as.double(paramsList[['beta']])), unit = "unitless")
-  hector::setvar(hcore, dates = NA, var = globalParameters['diff'], values = c(as.double(paramsList[['diff']])), unit = "cm2/s")
-  hector::setvar(hcore, dates = NA, var = globalParameters['ecs'],  values = c(as.double(paramsList[['S']])), unit = "degC")
-  hector::setvar(hcore, dates = NA, var = globalParameters['pco2'], values = c(as.double(paramsList[['C']])), unit = "ppmv CO2")
-  hector::setvar(hcore, dates = NA, var = globalParameters['q10'],  values = c(as.double(paramsList[['q10_rh']])), unit = "unitless")
-  hector::setvar(hcore, dates = NA, var = globalParameters['volc'], values = c(as.double(paramsList[['volscl']])), unit = "unitless")
+  # if(length(reactiveValuesToList(hcores)) > 0)
+  # {
+    hector::setvar(hcore, dates = NA, var = globalParameters['aero'], values = c(as.double(paramsList[['alpha']])), unit = "unitless")
+    hector::setvar(hcore, dates = NA, var = globalParameters['beta'], values = c(as.double(paramsList[['beta']])), unit = "unitless")
+    hector::setvar(hcore, dates = NA, var = globalParameters['diff'], values = c(as.double(paramsList[['diff']])), unit = "cm2/s")
+    hector::setvar(hcore, dates = NA, var = globalParameters['ecs'],  values = c(as.double(paramsList[['S']])), unit = "degC")
+    hector::setvar(hcore, dates = NA, var = globalParameters['pco2'], values = c(as.double(paramsList[['C']])), unit = "ppmv CO2")
+    hector::setvar(hcore, dates = NA, var = globalParameters['q10'],  values = c(as.double(paramsList[['q10_rh']])), unit = "unitless")
+    hector::setvar(hcore, dates = NA, var = globalParameters['volc'], values = c(as.double(paramsList[['volscl']])), unit = "unitless")
+  # }
+  # else
+  # {
+  #   shinyalert::shinyalert("No active Hector cores", "Please set at least one of the RCP scenarios to active or upload a custom emissions scenario before downloading.", type = "warning")
+  # }
 }
 
-#' Assign Parameters to numeric input components
+#' Assign Parameters from parameter model values into numeric input components
 #'
 #' @return no return value
 #' @export
@@ -80,18 +87,18 @@ loadModelParameters <- function()
 
   assignParameters()
 
-  if(length(hcores) > 0)
+  if(length(reactiveValuesToList(hcores)) > 0)
   {
-    for(i in 1:length(hcores))
+    for(i in 1:length(reactiveValuesToList(hcores)))
     {
-      setCoreParameters(hcores[[i]])
+      setCoreParameters(reactiveValuesToList(hcores)[[i]])
     }
 
     resetCore()
   }
   # if(!firstLoad)
   #   setParamsChanged(toggle = TRUE)
-  if(length(hcores) > 0)
+  if(length(reactiveValuesToList(hcores)) > 0)
     loadGraph()
 }
 
@@ -123,9 +130,9 @@ loadParameters <- function()
   print("in load params")
 
   # Fetch hector parameters from core
-  for(i in 1:length(hcores))
+  for(i in 1:length(reactiveValuesToList(hcores)))
   {
-    hdata <- hector::fetchvars(core = hcores[[i]], dates = NA, vars = globalParameters, "\n")
+    hdata <- hector::fetchvars(core = reactiveValuesToList(hcores)[[i]], dates = NA, vars = globalParameters, "\n")
   }
 
   # Update the on screen input components for parameters with the associated values stored in hector core
@@ -159,53 +166,53 @@ loadParameters <- function()
 setParameters <- function()
 {
   print("in set parameters")
-  if(length(hcores) >= 1)
+  if(length(reactiveValuesToList(hcores)) > 0)
   {
     newVals <- vector()
     # Run through variables and make sure none are left empty and update the top level scope paramsList variable
     # and the hector core with any changed values
     tryCatch(
       {
-        for(i in 1:length(hcores))
+        for(i in 1:length(reactiveValuesToList(hcores)))
         {
           if(!is.na(input$input_aero))
           {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['aero'], values = c(as.double(input$input_aero)), unit = "unitless")
+            hector::setvar(reactiveValuesToList(hcores)[[i]], dates = NA, var = globalParameters['aero'], values = c(as.double(input$input_aero)), unit = "unitless")
             paramsList['alpha'] <<- as.double(input$input_aero)
           }
           if(!is.na(input$input_beta))
           {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['beta'], values = c(as.double(input$input_beta)), unit = "unitless")
+            hector::setvar(reactiveValuesToList(hcores)[[i]], dates = NA, var = globalParameters['beta'], values = c(as.double(input$input_beta)), unit = "unitless")
             paramsList['beta'] <<- as.double(input$input_aero)
           }
           if(!is.na(input$input_diff))
           {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['diff'], values = c(as.double(input$input_diff)), unit = "cm2/s")
+            hector::setvar(reactiveValuesToList(hcores)[[i]], dates = NA, var = globalParameters['diff'], values = c(as.double(input$input_diff)), unit = "cm2/s")
             paramsList['diff'] <<- as.double(input$input_aero)
           }
           if(!is.na(input$input_ecs))
           {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['ecs'],  values = c(as.double(input$input_ecs)), unit = "degC")
+            hector::setvar(reactiveValuesToList(hcores)[[i]], dates = NA, var = globalParameters['ecs'],  values = c(as.double(input$input_ecs)), unit = "degC")
             paramsList['S'] <<- as.double(input$input_aero)
           }
           if(!is.na(input$input_pco2))
           {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['pco2'], values = c(as.double(input$input_pco2)), unit = "ppmv CO2")
+            hector::setvar(reactiveValuesToList(hcores)[[i]], dates = NA, var = globalParameters['pco2'], values = c(as.double(input$input_pco2)), unit = "ppmv CO2")
             paramsList['C'] <<- as.double(input$input_aero)
           }
           if(!is.na(input$input_q10))
           {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['q10'],  values = c(as.double(input$input_q10)), unit = "unitless")
+            hector::setvar(reactiveValuesToList(hcores)[[i]], dates = NA, var = globalParameters['q10'],  values = c(as.double(input$input_q10)), unit = "unitless")
             paramsList['q10_rh'] <<- as.double(input$input_aero)
           }
           if(!is.na(input$input_volc))
           {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['volc'], values = c(as.double(input$input_volc)), unit = "unitless")
+            hector::setvar(reactiveValuesToList(hcores)[[i]], dates = NA, var = globalParameters['volc'], values = c(as.double(input$input_volc)), unit = "unitless")
             paramsList['volscl'] <<- as.double(input$input_aero)
           }
         }
         resetCore()
-        if(length(hcores) > 0)
+        if(length(reactiveValuesToList(hcores)) > 0)
           loadGraph()
       },
       warning = function(war)
@@ -223,6 +230,10 @@ setParameters <- function()
         shinyalert::shinyalert("Oops!",print(paste('Error:',err)), type = "error")
 
       })
+  }
+  else
+  {
+    shinyalert::shinyalert("No active Hector cores", "Please set at least one of the RCP scenarios to active or upload a custom emissions scenario before setting parameters.", type = "warning")
   }
 }
 

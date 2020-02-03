@@ -240,6 +240,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                 # Divider that holds the custom emissions options/controls
                 div(h5("Custom Emissions"),
                     tags$hr(class="hrNav"),
+                    p("Note: Custom emissions are only applicable to standard scenarios (not custom created scenarios)"),
                     tags$table(
                       tags$tr(width = "100%",
                               tags$td(width="25%", "Emissions:"),
@@ -267,7 +268,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     div(
                         actionButton(inputId="input_set_custom_emissions", label="Set Emissions"),
                         actionButton(inputId="input_reset_custom_emissions", label="Reset All Emissions"),
-                        popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
+                        popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Standard Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
                     )
                 )
               )
@@ -399,10 +400,10 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           ( fixed = TRUE,
             p(icon("globe-americas","fa-2x"), "Downscaled Maps", value="outputTab"),
             h5("Maps"), tags$hr(class="hrNav"),
-            p("Please note that some map model patterns are rather large and can take several seconds to load. Maps also need to be refreshed manually after any changes."),
+            p("Please note that some map model patterns are rather large and can take several seconds to load. Due to this, maps will need to be refreshed manually after any changes."),
             tags$table(
               tags$tr(
-                tags$td(width = 200,
+                tags$td(
                   selectInput(inputId = "mapPattern", label = "Choose Model:", width = 180,
                               choices = c("CanESM2" = "www/maps/tas_Amon_CanESM2_esmrcp85_r1i1p1_200601-210012_pattern.rds",
                                           "CESM1-BGC" = "www/maps/tas_Amon_CESM1-BGC_rcp85_r1i1p1_200601-210012_pattern.rds",
@@ -411,8 +412,11 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                                           "MPI-ESM-LR" = "www/maps/tas_Amon_MPI-ESM-LR_esmrcp85_r1i1p1_200601-210012_pattern.rds",
                                           "MRI-ESM1" = "www/maps/tas_Amon_MRI-ESM1_esmrcp85_r1i1p1_200601-210012_pattern.rds")),
                 ),
-                tags$td(
+                tags$td(style="padding-left: 5px;",
                   selectInput(inputId = "mapYear", label = "Choose Year:", selected = 2100, choices = c(2000:2100), multiple = F, width = 120)
+                ),
+                tags$td(style="padding-left: 5px;",
+                  uiOutput("coreMapping")
                 )
               )
             ),

@@ -29,7 +29,8 @@ server <- function(input, output, session)
   # firstLoad <- TRUE
   outputVariables <- list()
   inifile <- system.file('input/hector_rcp45.ini', package='hector', mustWork=TRUE)
-  hcores <- list()
+  hcores <- reactiveValues()
+  browser()
   totalActivePlots <- 0
   customLoaded <- FALSE
   scale_colors <- vector()
@@ -39,9 +40,15 @@ server <- function(input, output, session)
   # then the custom params set by user will persist beyond core restarts
   paramsList <- list()
   paramsList <- globalParamsDefault
-
   assignParameters()
 
+  coresReactive <- reactive({
+    return(names(hcores))
+  })
+
+  output$coreMapping <- renderUI({
+    selectInput(inputId = "mapCore", width = 180, label = ("Available Cores:"), choices =  coresReactive())
+  })
 #----- End set up local vars
 
 #----- Set up plots and maps

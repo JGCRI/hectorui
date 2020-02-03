@@ -44,58 +44,36 @@ setCapabilities <- function()
 #'
 #' @examples
 setRCP <- function(scenarioName)
-{
+{ browser()
   print("in set RCP")
+  coreName <- paste0("Standard-", scenarioName)
   tryCatch(
+  {
+    # If scenario is checked then load it, otherwise unload it
+    if(input[[paste("input_RCP",scenarioName, sep = "")]])
     {
-      if(scenarioName == "Custom")
+      withProgress(message = paste('Loading Scenario RCP ', scenarioName, "...\n"), value = 1/2,
       {
-        if(customLoaded == TRUE)
-        {
-          print("CUSTOM")
-        }
-        else
-        {
-          shinyalert::shinyalert("Information:",print(paste('Please load a custom scenario first!')), type = "warning")
-        }
-      }
-      # If scenario is checked then load it, otherwise unload it
-      else if(input[[paste("input_RCP",scenarioName, sep = "")]])
-      {
-        withProgress(message = paste('Loading Scenario RCP ', scenarioName, "...\n"), value = 1/2,
-        {
-          hcores[[scenarioName]] <<- loadScenario(scenario = scenarioName)
-          incProgress(1/1, detail = paste("Load complete."))
-          Sys.sleep(0.2)
-        })
-        # If this is the initial application load, then we need to assign the on screen input field values to hector's default params
-        # if(firstLoad)
-        # {
-        #   loadParameters()
-        #   firstLoad <<- FALSE
-        # }
-        # # If its not first load but the parameters have changed via user input, then need to restore those values after restarting core
-        # else if(paramsChanged)
-        # {
-        #   # Commenting out, appears unneccesary
-        #   #restoreParameters()
-        # }
-      }
-      else
-      {
-        hcores[[scenarioName]] <<- NULL
-      }
-      if(length(hcores) > 0)
-        loadGraph()
-      else
-        cleanPlots()
-    },
-    error = function(err)
+        hcores[[coreName]] <<- loadScenario(scenario = scenarioName)
+        incProgress(1/1, detail = paste("Load complete."))
+        Sys.sleep(0.2)
+      })
+    }
+    else
     {
-      # error handler picks up where error was generated
-      shinyalert::shinyalert("Error!",print(paste('Output Error: ',err)), type = "error")
+     hcores[[coreName]] <<- NULL
+    }
+    if(length(reactiveValuesToList(hcores)) > 0)
+      loadGraph()
+    else
+      cleanPlots()
+  },
+  error = function(err)
+  {
+    # error handler picks up where error was generated
+    shinyalert::shinyalert("Error!",print(paste('Output Error: ',err)), type = "error")
 
-    })
+  })
 }
 
 #' Load custom scenario
@@ -122,7 +100,7 @@ loadCustomScenario <- function()
         inifile <-  Sys.glob(input$input_custom_scenario_ini$datapath)
         csvfile <- Sys.glob(input$input_custom_scenario_csv$datapath)
         hcores[[scenarioName]] <<- hector::newcore(inifile, suppresslogging=TRUE, name="custom")
-        hector::run( hcores[[scenarioName]], globalVars[['endDate']])
+        hector::run( reactiveValuesToList(hcores)[[scenarioName]], globalVars[['endDate']])
         incProgress(1/1, detail = paste("Load complete."))
         Sys.sleep(0.2)
       })
@@ -180,59 +158,24 @@ loadCustomEmissions <- function()
     emissions_file <- input$input_custom_emissions_file$datapath
     emissions_data <- read.csv(file=emissions_file, header=TRUE, sep=",", skip = 3)
     emissions_headers <- read.csv(file=emissions_file, header=FALSE, sep=",", skip = 2)
-    hcores[[scenarioName]] <<- hector::newcore(inifile = inifile, suppresslogging=TRUE, name="custom")
-    hector::run( hcores[[scenarioName]], globalVars[['endDate']])
     dates_col <- emissions_data$Date
-    for(i in 2:ncol(emissions_data))
-    {
-      hector::setvar(core = hcores[[scenarioName]], dates = emissions_data[, 1],var = colnames(emissions_data)[i], values = emissions_data[, i], unit = as.character(emissions_headers[[paste0("V",i)]][[1]]))
-    }
+
     withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
      {
-       hcores[[scenarioName]] <<- hector::newcore(inifile, suppresslogging=TRUE, name="custom")
-         hector::run( hcores[[scenarioName]], globalVars[['endDate']])
-         incProgress(1/1, detail = paste("Load complete."))
-         Sys.sleep(0.2)
+        hcores[[scenarioName]] <<- hector::newcore(inifile, suppresslogging=TRUE, name=scenarioName)
+        hector::run( reactiveValuesToList(hcores)[[scenarioName]], globalVars[['endDate']])
+        incProgress(1/1, detail = paste("Load complete."))
+        Sys.sleep(0.2)
      })
 
-    hector::reset(hcores[[scenarioName]])
-    hector::run(hcores[[scenarioName]], globalVars[['endDate']])
-    loadGraph()
-    # iniPath <- dirname(inifile)
-    # file.create("temp.ini")
-    # withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
-    # {
-    #   initext <- readLines(inifile)
-    #   newtext <- gsub(pattern="emissions/RCP45_emissions.csv", replacement = emissions_file, x = initext)
-    #   browser()
-    #   fileConn <- file("temp.ini")
-    #   writeLines(newtext, con = fileConn)
-    #   close(fileConn)
-    #   newIniFile <- system.file("temp.ini")
-    #
-    #   showModal(modalDialog(
-    #     title = "Warning",
-    #     paste("Details:  ", "e = ", emissions_file, "i = ", newIniFile)
-    #   ))
-    #
-    #   hcores[[scenarioName]] <<- hector::newcore(newIniFile, suppresslogging=TRUE, name="custom")
-    #   hector::run( hcores[[scenarioName]], globalVars[['endDate']])
-    #   incProgress(1/1, detail = paste("Load complete."))
-    #   Sys.sleep(0.2)
-    # })
+    for(i in 2:ncol(emissions_data))
+    {
+      hector::setvar(core = reactiveValuesToList(hcores)[[scenarioName]], dates = emissions_data[, 1],var = colnames(emissions_data)[i], values = emissions_data[, i], unit = as.character(emissions_headers[[paste0("V",i)]][[1]]))
+    }
 
-      # If this is the initial application load, then we need to assign the on screen input field values to hector's default params
-      # if(firstLoad)
-      # {
-     #   loadParameters()
-      # }
-      # If its not first load but the parameters have changed via user input, then need to restore those values after restarting core
-      # else if(paramsChanged)
-      # {
-      #   restoreParameters()
-      # }
-      # customLoaded <<- TRUE
-      # loadGraph()
+    hector::reset(reactiveValuesToList(hcores)[[scenarioName]])
+    hector::run(reactiveValuesToList(hcores)[[scenarioName]], globalVars[['endDate']])
+    loadGraph()
     },
     warning = function(war)
     {
@@ -281,7 +224,7 @@ setCustomEmissions <- function()
     #   shinyalert::shinyalert("Missing Information", "Please fill in all values before setting emissions", type = "warning")
     #   return(NULL)
     # }
-    if(length(hcores) > 0)
+    if(length(reactiveValuesToList(hcores)) > 0)
     {
       x <- seq(1, 10, 2)
       y <- x * 3
@@ -295,29 +238,37 @@ setCustomEmissions <- function()
 
       if(input$input_slope_emissions)
       {
-        for(i in 1:length(hcores))
+        for(i in 1:length(reactiveValuesToList(hcores)))
         {
-          startEmission <- hector::fetchvars(core = hcores[[i]], dates = startDate, vars = hector_var, "\n")
-          x <- c(startDate, endDate)
-          y <- c(startEmission["value"], as.double(input$input_emissions_value))
-          z <- seq(as.integer(startDate), as.integer(endDate), 1)
-          dates <- c(startDate:endDate)
-          seq_out <- spline(x, y, xout = z)
-          values <- unlist(seq_out["y"])
-          values1 <- as.vector(values)
-          #browser()
-          hector::setvar(core = hcores[[i]], dates = dates, var = hector_var, values = values1, unit = hector_unit)
+          scenarioName <- names(hcores)[i]
+          if(substr(scenarioName, 1, 8) =="Standard")
+          {
+            startEmission <- hector::fetchvars(core = reactiveValuesToList(hcores)[[i]], dates = startDate, vars = hector_var, "\n")
+            x <- c(startDate, endDate)
+            y <- c(startEmission["value"], as.double(input$input_emissions_value))
+            z <- seq(as.integer(startDate), as.integer(endDate), 1)
+            dates <- c(startDate:endDate)
+            seq_out <- spline(x, y, xout = z)
+            values <- unlist(seq_out["y"])
+            values1 <- as.vector(values)
+            #browser()
+            hector::setvar(core = reactiveValuesToList(hcores)[[i]], dates = dates, var = hector_var, values = values1, unit = hector_unit)
+          }
         }
       }
       else
       {
-        for(i in 1:length(hcores))
+        for(i in 1:length(reactiveValuesToList(hcores)))
         {
-          hector::setvar(core = hcores[[i]], dates = startDate:endDate, var = hector_var, values = as.double(input$input_emissions_value), unit = hector_unit)
+          hector::setvar(core = reactiveValuesToList(hcores)[[i]], dates = startDate:endDate, var = hector_var, values = as.double(input$input_emissions_value), unit = hector_unit)
         }
       }
       resetCore()
       loadGraph()
+    }
+    else
+    {
+      shinyalert::shinyalert("No active Hector cores", "Please set at least one of the RCP scenarios to active or upload a custom emissions scenario before downloading.", type = "warning")
     }
   },
   error = function(err)
