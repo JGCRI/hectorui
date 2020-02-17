@@ -1,9 +1,9 @@
 #
-# This is a Shiny web application UI document. It describes the on screen components that define the application.
+# This is a Shiny web application UI document. It describes the on screen components that define the visual application.
 
 library(shinyBS)
 
-# Using Shiny FluidPage layout -  A fluid page layout consists of rows and columns in a structured format
+# Using Shiny Fixed layout
 fixedPage(theme = shinythemes::shinytheme("darkly"),
   # shinythemes::themeSelector(),
   shinyalert::useShinyalert(),
@@ -31,8 +31,6 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
       # Main Panel that holds the tabs for the Information section
       mainPanel
       ( width = 9,
-
-
         tabsetPanel
         (
           # Information Tab Panel
@@ -55,11 +53,11 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                 tags$td(tags$figure(
                   tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results"),
                                     img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',  height="330", class="zenodo")
-
                                     ), style="text-align: center"
                 )
               )
             ),
+            br(),
             h5("Documentation/Downloads"), tags$hr(class="hrNav"),
             p("The primary link to the Hector model documentation is the ", a("online manual",href="https://jgcri.github.io/hector/articles/manual", target="blank"),",
                 which is included in the vignettes/manual directory. The code is also documented with ", a("Doxygen-style", href="http://doxygen.org", target="blank"),
@@ -70,11 +68,11 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
               "). In addition, we have developed two package vignettes demonstrating the ", a("basics of the Hector R interface",href="http://jgcri.github.io/hector/articles/intro-to-hector.html", target="blank"),
               ", and an example application of ", a("solving for an emissions pathway", href="http://jgcri.github.io/hector/articles/hector_apply.html", target="blank"), "."),
             tags$ul(
-              tags$li(a(h5("Hector User Interface package download/source link "), href="https://github.com/JGCRI/Hector-ui", target="blank")),
-              tags$li(a(h5("Hector R / Hector C++ package download/source link"), href="https://github.com/JGCRI/Hector", target="blank")),
-              tags$li(a(h5("Code and data for Hector calibration papers", tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", class="zenodo", alt="DOI")), href="https://zenodo.org/record/3515153#.Xg9iGuhKiUl", target="blank"))
+              tags$li(h5(a("Hector User Interface package download/source link "), href="https://github.com/JGCRI/Hector-ui", target="blank")),
+              tags$li(h5(a("Hector R / Hector C++ package download/source link"), href="https://github.com/JGCRI/Hector", target="blank")),
+              tags$li(h5(a("Code and data for Hector calibration papers", tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", class="zenodo", alt="DOI")), href="https://zenodo.org/record/3515153#.Xg9iGuhKiUl", target="blank"))
             ),
-            # br(),
+            br(),
             h5("Tools and software that work with Hector"), tags$hr(class="hrNav"),
             tags$ul(
               tags$li(a("GCAM", href="https://github.com/JGCRI/gcam-core", target="blank"),": Hector can be used as
@@ -134,7 +132,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
               tags$li(
                h5(tags$a("Hector User Interface DOI",href="https://doi.org/10.5281/zenodo.3603216", target = "blank"), tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3603216.svg", alt="DOI", class = "imgNoPadding"))),
               tags$li(
-                tags$a(h5("Hector Core DOI", tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", alt="DOI", class = "imgNoPadding")),href="https://doi.org/10.5281/zenodo.3515153", target = "blank"))
+                tags$h5(a("Hector Core DOI", tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", alt="DOI", class = "imgNoPadding")),href="https://doi.org/10.5281/zenodo.3515153", target = "blank"))
             )
           ),
 
@@ -190,7 +188,6 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                               tags$td(width = "58%", class="tdPushBottom",  selectInput("input_paramToggle", label = NULL,
                                                                   choices =  list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
                                                                        "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 190))
-
                       )
                     ),
                     tags$table(
@@ -250,11 +247,11 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                       ),
                     tags$table(
                       tags$tr(width = "100%",
-                              tags$td(align = "left", shiny::textInput(inputId = "input_custom_start", label = "Start Year:", width = 60, placeholder = 1900)),
+                              tags$td(align = "left", shiny::textInput(inputId = "input_custom_start", label = "Start Year:", width = 65, placeholder = 1900)),
                               tags$td(width = 15),
-                              tags$td(align = "left", shiny::textInput(inputId = "input_custom_end", label = "End Year:",  width = 60, placeholder = 2100)),
+                              tags$td(align = "left", shiny::textInput(inputId = "input_custom_end", label = "End Year:",  width = 65, placeholder = 2100)),
                               tags$td(width = 15),
-                              tags$td(align = "left", shiny::textInput(inputId = "input_emissions_value", label = "Value:", width = 60)),
+                              tags$td(align = "left", shiny::textInput(inputId = "input_emissions_value", label = "Value:", width = 65)),
                               tags$td()
                       )
                     ),
@@ -323,7 +320,6 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                 div(
                   class="paramDivs", actionButton(inputId="input_load_emissions", label="Create Scenario"))
               )
-
               # conditionalPanel(
               #   condition = "input.input_custom_RCP == 'custom'",
               #   h5("Custom Scenario (Advanced Users)"),
@@ -340,6 +336,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
               #   fileInput("input_custom_scenario_csv", "Upload Custom Emissions File (.CSV):", width=275, buttonLabel = "Choose File", accept = c(".ini")),
               #     div(class="paramDivs", actionButton(inputId="input_load_custom", label="Create Scenario"))
               # ) # End conditional Panel
+
             ) # End Div
           ) # End Custom Scenarios Tab Panel
         ) # End Tabset
@@ -350,7 +347,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
       ( width = 9,
         tabsetPanel
         (
-          # Graphs sub panel
+          # Graphs Tab
           tabPanel
           ( fixed = TRUE,
             p(icon("chart-line","fa-2x"), "Scenario Output", value="outputTab"),
@@ -381,10 +378,10 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                          #                "Carbonate Concentration - High Lat"='o_hl_cc', "Carbonate Concentration - Low Lat"='o_ll_cc'),
                          'SO2' = list( "Anthropogenic SO2"='so2_a', "Natural CH4 Emissions"='so2_n_ch4', "Volcanic SO2"='so2_v'),
                          'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Land Temp Anomaly"="t_lta", "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')),
-                    multiple = T, width=310, selected = "t_gmt")
+                    multiple = T, width=320, selected = "t_gmt")
                 ),
                 tags$td(style="padding-left: 5px;",
-                  selectInput(inputId = "set_theme", width=150, label="Graph Theme:", choices = c("Camoflauge", "Chalk", "Copper", "Dust", "Earth",  "Flat", "Flat Dark", "Fresh", "Grape",  "Grass", "Greyscale",
+                  selectInput(inputId = "set_theme", width=150, label="Output Theme:", choices = c("Camoflauge", "Chalk", "Copper", "Dust", "Earth",  "Flat", "Flat Dark", "Fresh", "Grape",  "Grass", "Greyscale",
                                                                                              "Light", "Lilac", "Pale", "Sea", "Sky", "Solarized"), selected = "Dust")
                 )
               )
@@ -393,9 +390,9 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
             actionButton(inputId="loadGraphs", label="Load Graphs", width = 200),
             downloadButton("downloadData", label="Download Raw Data"),
             uiOutput("plots", class = "customPlot")
-          ), # end Graphs tabpanel
+          ), # end Graphs Tab
 
-          # Maps Subpanel
+          # Maps Tab
           tabPanel
           ( fixed = TRUE,
             p(icon("globe-americas","fa-2x"), "Downscaled Maps", value="outputTab"),
@@ -422,7 +419,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
             ),
             actionButton(inputId="loadMaps", label="Load Map", width = 200),
             uiOutput("maps", class = "customPlot")
-          ) # End Maps tab panel
+          ) # End Maps Tab
         ) # End tabset panel
       ) # End mainpanel
     ) # End tabpanel

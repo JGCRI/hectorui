@@ -10,7 +10,7 @@
 #'
 #' @examples
 loadScenario <- function(scenario)
-{#browser()
+{
   print("in load scenario")
   tryCatch(
     {
@@ -47,13 +47,13 @@ resetCore <- function()
 
 #' Restart the active Hector cores
 #'
-#' Function to shutdown and restart active Hector cores. A core restart is called when the scenario has changed/been loaded or emissions changes
+#' Function to shutdown and restart active Hector cores. A core restart is required when the scenario has changed/been loaded or emissions changes.
 #' @return
 #' @export
 #'
 #' @examples
 restartCore <- function()
-{#browser()
+{
   print("in restart core")
   tryCatch(
   {

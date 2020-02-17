@@ -27,7 +27,6 @@ cleanPlots <- function()
   }
 }
 
-
 #' Main output function that generates the graphs
 #'
 #' Observer function designed to handle the loading/creation of the output graphs from the Hector model.
@@ -145,12 +144,13 @@ loadMap <- function()
       shinyalert::shinyalert("No active Hector cores", "Please set at least one of the RCP scenarios to active or upload a custom emissions scenario before mapping.", type = "warning")
     }
     else
-    {
+    {#browser()
+
       local(
       {
         withProgress(message = 'Generating Map Data...\n', value = 0,
         {
-          #browser()
+         # browser()
           results <- hector::fetchvars(hcores[[input$mapCore]], 2000:2100)
           tgav_hector <- dplyr::filter(results, variable == "Tgav")
           pattern <- readRDS(input$mapPattern)
@@ -167,8 +167,8 @@ loadMap <- function()
           hector_annual_gridded <- fldgen::pscl_apply(pattern$annual_pattern, as.vector(tgav_hector$value+15))
           hector_annual_gridded_t <- t(hector_annual_gridded)
           #browser()
-          temp <- hector_annual_gridded_t
-          combined_data <- dplyr::mutate(coordinates, Temp = round(temp[, as.numeric(input$mapYear)-1999], 2), Lon=round(lon, 2), Lat=round(lat,2))
+          #temp <- hector_annual_gridded_t
+          combined_data <- dplyr::mutate(coordinates, Temp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1999], 2), Lon=round(lon, 2), Lat=round(lat,2))
           combined_data <- dplyr::select(combined_data, -c(lat, lon, colnum))
           mapWorld <- ggplot2::borders("world",  ylim=c(-90, 90), xlim=c(-180, 180)) #  colour="black", col="white",, fill="gray100"
 
@@ -185,8 +185,10 @@ loadMap <- function()
           plotly::layout(p=localPlot, yaxis = list(tickformat = "\u00B0C", dtick = 10))
 
           output[[mapname]] <- plotly::renderPlotly(localPlot)
-          incProgress(1/length(hcores), detail = "Map loaded.")
+          incProgress(1/1, detail = "Map loaded.")
           Sys.sleep(0.25)
+          shinyjs::show(id = 'map-div')
+
         })
       })
     }
@@ -206,7 +208,6 @@ loadMap <- function()
     shinyalert::shinyalert("Error Detected:",print(paste('There was an error when attempting to load the graph:',err)), type = "error")
   })
 }
-
 
 # Download handler for downloading the raw data output from a Hector run. This is activated upon button click.
 output$downloadData <- downloadHandler(

@@ -52,6 +52,7 @@ server <- function(input, output, session)
 
 #----- Set up plots and maps
 
+  # This UI output variable is responsible for generating the 4 graphs in the output section.
   output$plots <- renderUI(
   {
     plot_output_list <- lapply(1:4, function(i)
@@ -71,6 +72,7 @@ server <- function(input, output, session)
     do.call(tagList, plot_output_list)
   })
 
+  # This UI output variable is responsible for rendering the downscaled maps. It is initiated as 'hidden' using shinyjs until the user first loads a map.
   output$maps <- renderUI(
   {
     map_output_list <- lapply(1:1, function(i)
@@ -78,14 +80,15 @@ server <- function(input, output, session)
       mapname <- paste("map", i, sep="")
       map <-  plotly::plotlyOutput(mapname, height = 550, width = 1100)
 
-      tags$div(class = "group-output",
+      shinyjs::hidden(tags$div(class = "group-output", id = "map-div",
                # textOutput(title, container = h3),
-               plotly::plotlyOutput(mapname, height = 550, width = 1100)
+               withLoader(plotly::plotlyOutput(mapname, height = 550, width = 1100), type="text", loader = list(marquee("Please Wait... Finalizing Raster Output", style="font-size:30px; color:white; text-align:center", scrollamount = 0))))
       )
     })
 
     # Convert the list to a tagList - this is necessary for the list of items to display properly.
     do.call(tagList, map_output_list)
+    #shinyjs::hidden(id = 'maps')
   })
 
   #set initial plotting variables

@@ -4,7 +4,7 @@
 body
 {
 	font-size: 13px;
-	background-color:#222222;
+	background-color:#000000;
 }
 
 fas,fab
@@ -191,7 +191,7 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 .container
 {
 	width: 1600px;
-	background-color: black;
+	background-color:#222222;
 	height: 100vh;
 }
 
@@ -291,18 +291,25 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 .nav-tabs>li>a
 {
 	border: 1px solid #464545;
+	padding: 10px 10px 5px 10px;
 }
 
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus
 {
 	color: #FFFFFF;
 	background-color: #375a7f;
+	
 }
 
 .navbar
 {
 	min-height: 50px;
 	margin-bottom: 15px;
+}
+
+.navbar-brand:hover
+{
+	color: #FFFFFF!important;
 }
 
 .paramDivs
@@ -388,6 +395,7 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 	padding: 12px;
 	padding-top: 8px;
 	margin-bottom: 0;
+	background-color: #3e3e3e;
 }
 
 .zenodo
