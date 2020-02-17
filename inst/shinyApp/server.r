@@ -82,7 +82,7 @@ server <- function(input, output, session)
 
       shinyjs::hidden(tags$div(class = "group-output", id = "map-div",
                # textOutput(title, container = h3),
-               withLoader(plotly::plotlyOutput(mapname, height = 550, width = 1100), type="text", loader = list(marquee("Please Wait... Finalizing Raster Output", style="font-size:30px; color:white; text-align:center", scrollamount = 0))))
+               shinycustomloader::withLoader(plotly::plotlyOutput(mapname, height = 550, width = 1100), type="text", loader = list(shinycustomloader::marquee("Please Wait... Finalizing Raster Output", style="font-size:30px; color:white; text-align:center", scrollamount = 0))))
       )
     })
 
