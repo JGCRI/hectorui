@@ -68,9 +68,12 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
               "). In addition, we have developed two package vignettes demonstrating the ", a("basics of the Hector R interface",href="http://jgcri.github.io/hector/articles/intro-to-hector.html", target="blank"),
               ", and an example application of ", a("solving for an emissions pathway", href="http://jgcri.github.io/hector/articles/hector_apply.html", target="blank"), "."),
             tags$ul(
-              tags$li(h5(a("Hector User Interface package download/source link "), href="https://github.com/JGCRI/Hector-ui", target="blank")),
-              tags$li(h5(a("Hector R / Hector C++ package download/source link"), href="https://github.com/JGCRI/Hector", target="blank")),
-              tags$li(h5(a("Code and data for Hector calibration papers", tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", class="zenodo", alt="DOI")), href="https://zenodo.org/record/3515153#.Xg9iGuhKiUl", target="blank"))
+              tags$li(
+                h5(tags$a("Hector User Interface package download/source link ", href="https://github.com/JGCRI/Hector-ui", target="blank"))),
+              tags$li(
+                h5(tags$a("Hector R / Hector C++ package download/source link", href="https://github.com/JGCRI/Hector", target="blank"))),
+              tags$li(
+                h5(tags$a("Code and data for Hector calibration papers", href="https://zenodo.org/record/3515153#.Xg9iGuhKiUl", target="blank"), tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", class="zenodo", alt="DOI")))
             ),
             br(),
             h5("Tools and software that work with Hector"), tags$hr(class="hrNav"),
@@ -132,7 +135,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
               tags$li(
                h5(tags$a("Hector User Interface DOI",href="https://doi.org/10.5281/zenodo.3603216", target = "blank"), tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3603216.svg", alt="DOI", class = "imgNoPadding"))),
               tags$li(
-                tags$h5(a("Hector Core DOI", tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", alt="DOI", class = "imgNoPadding")),href="https://doi.org/10.5281/zenodo.3515153", target = "blank"))
+               h5(tags$a("Hector Core DOI",href="https://doi.org/10.5281/zenodo.3515153", target = "blank"), tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", alt="DOI", class = "imgNoPadding")))
             )
           ),
 
