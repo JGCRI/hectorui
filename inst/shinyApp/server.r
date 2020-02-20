@@ -46,7 +46,7 @@ server <- function(input, output, session)
   })
 
   output$coreMapping <- renderUI({
-    selectInput(inputId = "mapCore", width = 180, label = ("Available Cores:"), choices =  coresReactive())
+    selectInput(inputId = "mapCore", width = 180, label = ("Available Scenarios:"), choices =  coresReactive())
   })
 #----- End set up local vars
 

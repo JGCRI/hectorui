@@ -138,27 +138,30 @@ loadGraph <- function()
 loadMap <- function()
 {
   tryCatch(
-  {#browser()
+  {
     if(length(hcores) < 1)
     {
       shinyalert::shinyalert("No active Hector cores", "Please set at least one of the RCP scenarios to active or upload a custom emissions scenario before mapping.", type = "warning")
     }
     else
-    {#browser()
+    {
 
       local(
       {
         withProgress(message = 'Generating Map Data...\n', value = 0,
         {
-         # browser()
-          results <- hector::fetchvars(hcores[[input$mapCore]], 2000:2100)
+          #browser()
+          if(input$mapVar == "tas")
+            patternFile <- globalTempPatterns[[input$mapPattern]]
+          else
+            patternFile <- globalPrecipPatterns[[input$mapPattern]]
+          results <- hector::fetchvars(hcores[[input$mapCore]], 1900:2100)
           tgav_hector <- dplyr::filter(results, variable == "Tgav")
-          pattern <- readRDS(input$mapPattern)
+          pattern <- readRDS(patternFile)
           coordinates <- pattern$coordinate_map
           incProgress(1/2, detail = paste("Loading pattern, downscaling"))
           for(i in 1:length(coordinates$lon))
           {
-            #browser()
             if(coordinates$lon[i] > 180)
             coordinates$lon[i] <- coordinates$lon[i] - 360
           }
@@ -166,20 +169,77 @@ loadMap <- function()
           mapname <- paste("map", 1, sep="")
           hector_annual_gridded <- fldgen::pscl_apply(pattern$annual_pattern, as.vector(tgav_hector$value+15))
           hector_annual_gridded_t <- t(hector_annual_gridded)
-          #browser()
-          #temp <- hector_annual_gridded_t
-          combined_data <- dplyr::mutate(coordinates, Temp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1999], 2), Lon=round(lon, 2), Lat=round(lat,2))
+
+          if(input$mapVar == "tas")
+          {
+            if(input$input_map_compare)
+              mapFill <- "\u0394 Temperature \u00B0C"
+            else
+              mapFill <- "Temperature \u00B0C"
+            mapPalette <- "RdYlBu"
+            mapDirection <- -1
+            mapVar <- "Temp"
+            if(input$input_map_compare)
+              combined_data <- dplyr::mutate(coordinates, Temp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1], 2), Lon=round(lon, 2), Lat=round(lat,2))
+            else
+              combined_data <- dplyr::mutate(coordinates, Temp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 2), Lon=round(lon, 2), Lat=round(lat,2))
+          }
+          else
+          {
+            if(input$input_map_compare)
+              mapFill <- "\u0394 Precip. - g/m2/s"
+            else
+              mapFill <- "Precip. - g/m2/s"
+            mapDirection <- 1
+            mapPalette <- "Purples"
+            mapVar <- "Precip"
+            if(input$input_map_compare)
+              combined_data <- dplyr::mutate(coordinates, Precip = round(1000*(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1]), 4), Lon=round(lon, 2), Lat=round(lat,2))
+            else
+              combined_data <- dplyr::mutate(coordinates, Precip = round(1000*hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 4), Lon=round(lon, 2), Lat=round(lat,2))
+          }
+
           combined_data <- dplyr::select(combined_data, -c(lat, lon, colnum))
-          mapWorld <- ggplot2::borders("world",  ylim=c(-90, 90), xlim=c(-180, 180)) #  colour="black", col="white",, fill="gray100"
+
+          lat_min <- -90
+          lat_max <- 90
+          lon_min <- -180
+          lon_max <- 180
+
+          if(input$input_map_filter)
+          {
+            validate(
+              need(as.numeric(input$input_lat_min) >= -90 && (as.numeric(input$input_lat_min)) <= 90 && (as.numeric(input$input_lat_min)) < (as.numeric(input$input_lat_max)), "Please enter a valid lat min")
+            )
+            validate(
+              need(as.numeric(input$input_lat_max) >= -90 && (as.numeric(input$input_lat_max)) <= 90 && (as.numeric(input$input_lat_max)) > (as.numeric(input$input_lat_min)), "Please enter a valid lat max")
+            )
+            validate(
+              need(as.numeric(input$input_lon_min) >= -180 && (as.numeric(input$input_lon_min)) <= 180 && (as.numeric(input$input_lon_min)) < (as.numeric(input$input_lon_max)), "Please enter a valid lon min")
+            )
+            validate(
+              need(as.numeric(input$input_lon_max) >= -180 && (as.numeric(input$input_lon_max)) <= 180 && (as.numeric(input$input_lon_max)) > (as.numeric(input$input_lon_min)), "Please enter a valid lon max")
+            )
+
+            lat_min <- as.numeric(input$input_lat_min)
+            lat_max <- as.numeric(input$input_lat_max)
+            lon_min <- as.numeric(input$input_lon_min)
+            lon_max <- as.numeric(input$input_lon_max)
+
+            combined_data <- dplyr::filter(combined_data, Lat >= lat_min, Lat <= lat_max, Lon >= lon_min, Lon <= lon_max)
+
+          }
+          mapWorld <- ggplot2::borders("world",  ylim=c(lat_min, lat_max), xlim=c(lon_min, lon_max)) #  colour="black", col="white",, fill="gray100"
 
           ggplotMap <- ggplot2::ggplot() +
             mapWorld +
-            ggplot2::geom_tile(data = combined_data, ggplot2::aes(x=Lon, y = Lat, fill=Temp)) +
+            ggplot2::geom_tile(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar)) +
             ggplot2::coord_fixed(ratio = 1) +
-            viridis::scale_fill_viridis(direction = -1) +
-            ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = "Local Temp \u00B0C") +
-            ggplot2::scale_y_continuous(limits=c(-93, 93), expand = c(0, 0), breaks=seq(-90,90,30))+
-            ggplot2::scale_x_continuous(limits=c(-183, 180), expand = c(0, 0), breaks=seq(-180,180,30))
+            ggplot2::scale_fill_distiller(palette = mapPalette,type = "div", direction = mapDirection, na.value = "Gray", ) +
+            #viridis::scale_fill_viridis(direction = 1, option = "E" ) +
+            ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = mapFill) +
+            ggplot2::scale_y_continuous(limits=c(lat_min, lat_max), expand = c(0, 0), breaks=seq(-90,90,30))+
+            ggplot2::scale_x_continuous(limits=c(lon_min, lon_max), expand = c(0, 0), breaks=seq(-180,180,30))
 
           localPlot <- plotly::ggplotly(p = ggplotMap)
           plotly::layout(p=localPlot, yaxis = list(tickformat = "\u00B0C", dtick = 10))

@@ -384,8 +384,8 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     multiple = T, width=320, selected = "t_gmt")
                 ),
                 tags$td(style="padding-left: 5px;",
-                  selectInput(inputId = "set_theme", width=150, label="Output Theme:", choices = c("Camoflauge", "Chalk", "Copper", "Dust", "Earth",  "Flat", "Flat Dark", "Fresh", "Grape",  "Grass", "Greyscale",
-                                                                                             "Light", "Lilac", "Pale", "Sea", "Sky", "Solarized"), selected = "Dust")
+                  selectInput(inputId = "set_theme", width=150, label="Output Theme:", choices = c("Chalk", "Dust", "Earth",  "Flat", "Flat Dark", "Fresh", "Grape", "Greyscale",
+                                                                                             "Light", "Pale",  "Sky", "Solarized"), selected = "Dust")
                 )
               )
             ),
@@ -405,12 +405,21 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
               tags$tr(
                 tags$td(
                   selectInput(inputId = "mapPattern", label = "Choose Model:", width = 180,
-                              choices = c("CanESM2" = "www/maps/tas_Amon_CanESM2_esmrcp85_r1i1p1_200601-210012_pattern.rds",
-                                          "CESM1-BGC" = "www/maps/tas_Amon_CESM1-BGC_rcp85_r1i1p1_200601-210012_pattern.rds",
-                                          "GFDL-ESM2G" = "www/maps/tas_Amon_GFDL-ESM2G_rcp85_r1i1p1_200601-210012_pattern.rds",
-                                          "MIROC-ESM" = "www/maps/tas_Amon_MIROC-ESM_esmrcp85_r1i1p1_200601-210012_pattern.rds",
-                                          "MPI-ESM-LR" = "www/maps/tas_Amon_MPI-ESM-LR_esmrcp85_r1i1p1_200601-210012_pattern.rds",
-                                          "MRI-ESM1" = "www/maps/tas_Amon_MRI-ESM1_esmrcp85_r1i1p1_200601-210012_pattern.rds")),
+                              choices = c("CanESM2" = "CanESM2",
+                                          "CESM1-BGC" = "CESM1-BGC",
+                                          "GFDL-ESM2G" = "GFDL-ESM2G",
+                                          "MIROC-ESM" = "MIROC-ESM",
+                                          "MPI-ESM-LR" = "MPI-ESM-LR",
+                                          "MRI-ESM1" = "MRI-ESM1"))
+                              # choices = c("CanESM2" = "www/maps/pr_Amon_CanESM2_rcp85_r1i1p1_200601-210012_pattern.rds",
+                              #             "CESM1-BGC" = "www/maps/pr_Amon_CESM1-BGC_rcp85_r1i1p1_200601-210012_pattern.rds",
+                              #             "GFDL-ESM2G" = "www/maps/pr_Amon_GFDL-ESM2G_rcp85_r1i1p1_200601-210012_pattern.rds",
+                              #             "MIROC-ESM" = "www/maps/pr_Amon_MIROC-ESM_rcp85_r1i1p1_200601-210012_pattern.rds",
+                              #             "MPI-ESM-LR" = "www/maps/pr_Amon_MPI-ESM-LR_rcp85_r1i1p1_200601-210012_pattern.rds",
+                              #             "MRI-ESM1" = "www/maps/pr_Amon_MRI-ESM1_rcp85_r1i1p1_200601-210012_pattern.rds"))
+                ),
+                tags$td(style="padding-left: 5px;",
+                        selectInput(inputId = "mapVar", label = "Choose Variable:", selected = "tas", choices = c("Temperature" = "tas", "Precipitation" = "pr"), multiple = F, width = 120)
                 ),
                 tags$td(style="padding-left: 5px;",
                   selectInput(inputId = "mapYear", label = "Choose Year:", selected = 2100, choices = c(2000:2100), multiple = F, width = 120)
@@ -419,6 +428,41 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                   uiOutput("coreMapping")
                 )
               )
+            ),
+            tags$table(
+              tags$tr(width = "100%",
+                tags$td(width = "20", align="left", class="tdPushTop",
+popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Enable Comparative Differences",
+                                                                               content = "This will change the temperature output on the map to show the difference between the computed temperature of the selected year and the temperature from the year 1900.", placement = "top")),
+#popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Parameters", content = "This will reset any/all parameters for each active Hector core, overwriting any custom parameter changes. Custom emissions will remain.", placement = "top" )
+
+                tags$td(shinyWidgets::prettyCheckbox(inputId = "input_map_compare", label = "Show as comparison to year 1900", value = FALSE,  inline = FALSE, icon = icon("check")))
+
+              )
+            ),
+            tags$table(
+              tags$tr(width = "100%",
+                      tags$td(width = "20", align="left", class="tdPushTop",
+                              popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Filter by Lat/Lon",
+                                     content = "Choosing this option will allow you to zoom in to a specific lat/lon region and have the map rescale to the regional data.", placement = "top")),
+                      tags$td(shinyWidgets::prettyCheckbox(inputId = "input_map_filter", label = "Filter by Lat/Lon", value = FALSE,  inline = TRUE, icon = icon("check"))
+                              )
+                      ),
+
+                ),
+            conditionalPanel(condition = "input.input_map_filter == true",
+                             tags$table(
+                               tags$tr(width = "100%",
+                                       tags$td(align = "left", shiny::textInput(inputId = "input_lat_min", label = "Lat Min:", width = 65, value = 13)),
+                                       tags$td(width = 15),
+                                       tags$td(align = "left", shiny::textInput(inputId = "input_lat_max", label = "Lat Max:",  width = 65, value = 57)),
+                                       tags$td(width = 15),
+                                       tags$td(align = "left", shiny::textInput(inputId = "input_lon_min", label = "Lon Min:", width = 65, value = -135)),
+                                       tags$td(width = 15),
+                                       tags$td(align = "left", shiny::textInput(inputId = "input_lon_max", label = "Lon Max:", width = 65, value = -55)),
+                                       tags$td()
+                               )
+                             ),
             ),
             actionButton(inputId="loadMaps", label="Load Map", width = 200),
             uiOutput("maps", class = "customPlot")
