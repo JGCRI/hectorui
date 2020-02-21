@@ -173,16 +173,26 @@ loadMap <- function()
           if(input$mapVar == "tas")
           {
             if(input$input_map_compare)
+            {
               mapFill <- "\u0394 Temperature \u00B0C"
+              mapVar <- "deltaTemp"
+            }
             else
+            {
               mapFill <- "Temperature \u00B0C"
+              mapVar <- "Temp"
+            }
             mapPalette <- "RdYlBu"
             mapDirection <- -1
-            mapVar <- "Temp"
-            if(input$input_map_compare)
-              combined_data <- dplyr::mutate(coordinates, Temp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1], 2), Lon=round(lon, 2), Lat=round(lat,2))
-            else
-              combined_data <- dplyr::mutate(coordinates, Temp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 2), Lon=round(lon, 2), Lat=round(lat,2))
+           # mapVar <- "Temp"
+           # if(input$input_map_compare)
+              combined_data <- dplyr::mutate(coordinates, Temp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 2),
+                                             deltaTemp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1], 2), Lon=round(lon, 2), Lat=round(lat,2),
+                                             Neg = ifelse(Temp < 0, TRUE, FALSE))
+           # else
+            #  combined_data <- dplyr::mutate(combined_data, deltaTemp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 2), Lon=round(lon, 2), Lat=round(lat,2))
+           # combined_data$Neg <- ifelse(combined_data$Temp < 0, TRUE, FALSE)
+           # browser()
           }
           else
           {
@@ -197,6 +207,7 @@ loadMap <- function()
               combined_data <- dplyr::mutate(coordinates, Precip = round(1000*(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1]), 4), Lon=round(lon, 2), Lat=round(lat,2))
             else
               combined_data <- dplyr::mutate(coordinates, Precip = round(1000*hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 4), Lon=round(lon, 2), Lat=round(lat,2))
+            combined_data$Neg <- ifelse(combined_data$Precip < 0, FALSE, TRUE)
           }
 
           combined_data <- dplyr::select(combined_data, -c(lat, lon, colnum))
@@ -208,18 +219,14 @@ loadMap <- function()
 
           if(input$input_map_filter)
           {
-            validate(
-              need(as.numeric(input$input_lat_min) >= -90 && (as.numeric(input$input_lat_min)) <= 90 && (as.numeric(input$input_lat_min)) < (as.numeric(input$input_lat_max)), "Please enter a valid lat min")
-            )
-            validate(
-              need(as.numeric(input$input_lat_max) >= -90 && (as.numeric(input$input_lat_max)) <= 90 && (as.numeric(input$input_lat_max)) > (as.numeric(input$input_lat_min)), "Please enter a valid lat max")
-            )
-            validate(
-              need(as.numeric(input$input_lon_min) >= -180 && (as.numeric(input$input_lon_min)) <= 180 && (as.numeric(input$input_lon_min)) < (as.numeric(input$input_lon_max)), "Please enter a valid lon min")
-            )
-            validate(
-              need(as.numeric(input$input_lon_max) >= -180 && (as.numeric(input$input_lon_max)) <= 180 && (as.numeric(input$input_lon_max)) > (as.numeric(input$input_lon_min)), "Please enter a valid lon max")
-            )
+            validate(need(as.numeric(input$input_lat_min) >= -90 && (as.numeric(input$input_lat_min)) <= 90 &&
+                            (as.numeric(input$input_lat_min)) < (as.numeric(input$input_lat_max)), "Please enter a valid lat min"))
+            validate(need(as.numeric(input$input_lat_max) >= -90 && (as.numeric(input$input_lat_max)) <= 90 &&
+                            (as.numeric(input$input_lat_max)) > (as.numeric(input$input_lat_min)), "Please enter a valid lat max"))
+            validate(need(as.numeric(input$input_lon_min) >= -180 && (as.numeric(input$input_lon_min)) <= 180 &&
+                            (as.numeric(input$input_lon_min)) < (as.numeric(input$input_lon_max)), "Please enter a valid lon min"))
+            validate(need(as.numeric(input$input_lon_max) >= -180 && (as.numeric(input$input_lon_max)) <= 180 &&
+                            (as.numeric(input$input_lon_max)) > (as.numeric(input$input_lon_min)), "Please enter a valid lon max"))
 
             lat_min <- as.numeric(input$input_lat_min)
             lat_max <- as.numeric(input$input_lat_max)
@@ -233,9 +240,10 @@ loadMap <- function()
 
           ggplotMap <- ggplot2::ggplot() +
             mapWorld +
-            ggplot2::geom_tile(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar)) +
+            ggplot2::geom_tile(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar, group = "Neg")) +
+            # ggplot2::geom_point(data = combined_data, ggplot2::aes(x = Lon, y = Lat, color = Neg, alpha = 0.5)) +
             ggplot2::coord_fixed(ratio = 1) +
-            ggplot2::scale_fill_distiller(palette = mapPalette,type = "div", direction = mapDirection, na.value = "Gray", ) +
+            ggplot2::scale_fill_distiller(palette = mapPalette,type = "div", direction = mapDirection, na.value = "Gray" ) +
             #viridis::scale_fill_viridis(direction = 1, option = "E" ) +
             ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = mapFill) +
             ggplot2::scale_y_continuous(limits=c(lat_min, lat_max), expand = c(0, 0), breaks=seq(-90,90,30))+

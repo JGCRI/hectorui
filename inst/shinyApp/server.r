@@ -34,6 +34,7 @@ server <- function(input, output, session)
   customLoaded <- FALSE
   scale_colors <- vector()
   ggthemr::ggthemr('dust', type = "outer")
+  selectedIndex <<- 1
 
   # These variables are for storing the current parameter values so that if a change is made (like loading new scenario)
   # then the custom params set by user will persist beyond core restarts
@@ -46,7 +47,7 @@ server <- function(input, output, session)
   })
 
   output$coreMapping <- renderUI({
-    selectInput(inputId = "mapCore", width = 180, label = ("Available Scenarios:"), choices =  coresReactive())
+    selectInput(inputId = "mapCore", width = 180, label = ("Available Scenarios:"), choices =  coresReactive(), selected = selectedIndex)
   })
 #----- End set up local vars
 
@@ -127,6 +128,7 @@ server <- function(input, output, session)
   observeEvent(input$set_theme, changeTheme(), ignoreInit = TRUE)
   observeEvent(input$loadMaps, loadMap(), ignoreInit = TRUE)
   observeEvent(input$input_submit_feedback, sendFeedback(), ignoreInit = TRUE)
+  observeEvent(input$mapCore, updateIndex(), ignoreInit = TRUE)
 
   # This is a group Observer block for all of the params fields because they all respond the same way
   observe({

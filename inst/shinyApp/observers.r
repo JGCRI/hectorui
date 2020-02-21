@@ -319,3 +319,9 @@ sendFeedback <- function()
 {
 
 }
+
+updateIndex <- function()
+{
+  selectedIndex <<- input$mapCore
+}
+
