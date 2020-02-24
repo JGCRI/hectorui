@@ -250,9 +250,9 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                       ),
                     tags$table(
                       tags$tr(width = "100%",
-                              tags$td(align = "left", shiny::textInput(inputId = "input_custom_start", label = "Start Year:", width = 65, placeholder = 1900)),
+                              tags$td(align = "left", shiny::textInput(inputId = "input_custom_start", label = "Start Year:", width = 65)),
                               tags$td(width = 15),
-                              tags$td(align = "left", shiny::textInput(inputId = "input_custom_end", label = "End Year:",  width = 65, placeholder = 2100)),
+                              tags$td(align = "left", shiny::textInput(inputId = "input_custom_end", label = "End Year:",  width = 65)),
                               tags$td(width = 15),
                               tags$td(align = "left", shiny::textInput(inputId = "input_emissions_value", label = "Value:", width = 65)),
                               tags$td()

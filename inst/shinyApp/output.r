@@ -188,7 +188,7 @@ loadMap <- function()
            # if(input$input_map_compare)
               combined_data <- dplyr::mutate(coordinates, Temp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 2),
                                              deltaTemp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1], 2), Lon=round(lon, 2), Lat=round(lat,2),
-                                             Neg = ifelse(Temp < 0, TRUE, FALSE))
+                                             Neg = ifelse(deltaTemp < 0, TRUE, FALSE))
            # else
             #  combined_data <- dplyr::mutate(combined_data, deltaTemp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 2), Lon=round(lon, 2), Lat=round(lat,2))
            # combined_data$Neg <- ifelse(combined_data$Temp < 0, TRUE, FALSE)
@@ -197,17 +197,25 @@ loadMap <- function()
           else
           {
             if(input$input_map_compare)
+            {
               mapFill <- "\u0394 Precip. - g/m2/s"
+              mapVar <- "deltaPrecip"
+            }
             else
+            {
               mapFill <- "Precip. - g/m2/s"
+              mapVar <- "Precip"
+            }
             mapDirection <- 1
             mapPalette <- "Purples"
-            mapVar <- "Precip"
-            if(input$input_map_compare)
-              combined_data <- dplyr::mutate(coordinates, Precip = round(1000*(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1]), 4), Lon=round(lon, 2), Lat=round(lat,2))
-            else
-              combined_data <- dplyr::mutate(coordinates, Precip = round(1000*hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 4), Lon=round(lon, 2), Lat=round(lat,2))
-            combined_data$Neg <- ifelse(combined_data$Precip < 0, FALSE, TRUE)
+           # mapVar <- "Precip"
+           # if(input$input_map_compare)
+              combined_data <- dplyr::mutate(coordinates, Precip = round(1000*hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 4),
+                                             deltaPrecip = round(1000*(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1]), 4),
+                                             Lon=round(lon, 2), Lat=round(lat,2), Neg = ifelse(deltaPrecip < 0, TRUE, FALSE))
+          #  else
+            #  combined_data <- dplyr::mutate(coordinates, Precip = round(1000*hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 4), Lon=round(lon, 2), Lat=round(lat,2))
+           # combined_data$Neg <- ifelse(combined_data$Precip < 0, FALSE, TRUE)
           }
 
           combined_data <- dplyr::select(combined_data, -c(lat, lon, colnum))
@@ -240,7 +248,7 @@ loadMap <- function()
 
           ggplotMap <- ggplot2::ggplot() +
             mapWorld +
-            ggplot2::geom_tile(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar, group = "Neg")) +
+            ggplot2::geom_tile(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar)) +
             # ggplot2::geom_point(data = combined_data, ggplot2::aes(x = Lon, y = Lat, color = Neg, alpha = 0.5)) +
             ggplot2::coord_fixed(ratio = 1) +
             ggplot2::scale_fill_distiller(palette = mapPalette,type = "div", direction = mapDirection, na.value = "Gray" ) +
