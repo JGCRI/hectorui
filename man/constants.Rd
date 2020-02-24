@@ -6,6 +6,8 @@
 \alias{globalVars}
 \alias{globalColorScales}
 \alias{globalScenarios}
+\alias{globalTempPatterns}
+\alias{globalPrecipPatterns}
 \alias{globalParameters}
 \alias{globalParamsDefault}
 \alias{globalParamsCanESM2}
@@ -23,6 +25,10 @@ globalVars
 globalColorScales
 
 globalScenarios
+
+globalTempPatterns
+
+globalPrecipPatterns
 
 globalParameters
 
@@ -51,6 +57,10 @@ Global constants for the Hector-Shiny UI
 \code{globalColorScales}: Scale colors
 
 \code{globalScenarios} Scenario input file names and paths
+
+\code{globalTempPatterns} Create global temp patterns list
+
+\code{globalPrecipPatterns} Create global precipitation patterns list
 
 \code{globalParameters}: Capability strings (internal name lookup/mapping) for Hector parameters - (should match UI component ids)
 
