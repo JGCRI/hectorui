@@ -1,4 +1,4 @@
-# This file contains miscellaneous observers (all EXCEPT for those from the parameters which are in the parameters.r file)
+# This file contains miscellaneous observers (all EXCEPT for those from the parameters which are in the parameters.r file and those that produce output, in output.r)
 
 
 #' Keeps a list of the selected output variables for graphs
@@ -50,11 +50,11 @@ setRCP <- function(scenarioName)
   tryCatch(
   {
     # If scenario is checked then load it, otherwise unload it
-    if(input[[paste("input_RCP",scenarioName, sep = "")]])
+    if(input[[paste("input_",stringr::str_replace(scenarioName,"-", "_"), sep = "")]])
     {
       withProgress(message = paste('Loading Scenario RCP ', scenarioName, "...\n"), value = 1/2,
       {
-        hcores[[coreName]] <<- loadScenario(scenario = scenarioName)
+        hcores[[coreName]] <<- loadScenario(scenario =  substr(scenarioName, nchar(scenarioName)-2, nchar(scenarioName)))
         incProgress(1/1, detail = paste("Load complete."))
         Sys.sleep(0.2)
       })

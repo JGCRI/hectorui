@@ -246,9 +246,9 @@ loadMap <- function()
           }
           mapWorld <- ggplot2::borders("world",  ylim=c(lat_min, lat_max), xlim=c(lon_min, lon_max)) #  colour="black", col="white",, fill="gray100"
 
-          ggplotMap <- ggplot2::ggplot() +
+          ggplotMap <<- ggplot2::ggplot() +
+            ggplot2::geom_raster(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar),interpolate = TRUE ) +
             mapWorld +
-            ggplot2::geom_tile(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar)) +
             # ggplot2::geom_point(data = combined_data, ggplot2::aes(x = Lon, y = Lat, color = Neg, alpha = 0.5)) +
             ggplot2::coord_fixed(ratio = 1) +
             ggplot2::scale_fill_distiller(palette = mapPalette,type = "div", direction = mapDirection, na.value = "Gray" ) +
@@ -269,15 +269,15 @@ loadMap <- function()
       })
     }
   },
-  warning = function(war)
-  {
-    # warning handler picks up where error was generated
-    showModal(modalDialog(
-      title = "Important message",
-      paste("Warning:  ",war)
-    ))
-
-  },
+  # warning = function(war)
+  # {
+  #   # warning handler picks up where error was generated
+  #   showModal(modalDialog(
+  #     title = "Important message",
+  #     paste("Warning:  ",war)
+  #   ))
+  #
+  # },
   error = function(err)
   {
     # error handler picks up where error was generated
@@ -331,3 +331,16 @@ output$downloadData <- downloadHandler(
     }
   }
 )
+
+# Download handler for higher resolution maps then the default plotly save
+ output$downloadMap <- downloadHandler(
+   filename = function()
+     {
+        paste("HectorMap",'.bmp',sep='')
+     },
+   content = function(file)
+     {
+        #browser()
+        ggplot2::ggsave(filename = file, plot = ggplotMap, device = "bmp", dpi = 150, limitsize = TRUE, width = 15, height = 10)
+    }
+ )

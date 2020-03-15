@@ -3,7 +3,7 @@
 #'
 #' Main function that loads/starts the Hector Core and runs the specified scenario
 #'
-#' @param scenario
+#' @param scenario RCP Scenario name to load into new Hector core
 #'
 #' @return The Hector core object created from the scenario
 #' @export
@@ -41,8 +41,6 @@ resetCore <- function()
     hector::reset(hcores[[i]])
     hector::run(hcores[[i]], globalVars[['endDate']])
   }
-
-  #loadGraph()
 }
 
 #' Restart the active Hector cores

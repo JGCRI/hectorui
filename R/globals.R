@@ -29,10 +29,10 @@
   #' @export
   globalScenarios <- list()
   rcps <- c(26,45,60,85)
-  globalScenarios[['RCP 2.6']] <-  file.path('input',paste0('hector_rcp',rcps[1],'.ini'))
-  globalScenarios[['RCP 4.5']] <-  file.path('input',paste0('hector_rcp',rcps[2],'.ini'))
-  globalScenarios[['RCP 6.0']] <-  file.path('input',paste0('hector_rcp',rcps[3],'.ini'))
-  globalScenarios[['RCP 8.5']] <-  file.path('input',paste0('hector_rcp',rcps[4],'.ini'))
+  globalScenarios[['RCP-2.6']] <-  file.path('input',paste0('hector_rcp',rcps[1],'.ini'))
+  globalScenarios[['RCP-4.5']] <-  file.path('input',paste0('hector_rcp',rcps[2],'.ini'))
+  globalScenarios[['RCP-6.0']] <-  file.path('input',paste0('hector_rcp',rcps[3],'.ini'))
+  globalScenarios[['RCP-8.5']] <-  file.path('input',paste0('hector_rcp',rcps[4],'.ini'))
   globalScenarioColors <- c("RCP 2.6" = "#99cc33", "RCP 4.5" = "#FFFF00", "RCP 6.0" = "#ff9900", "RCP 8.5" = "#ff3333")
 
   # Create global temp patterns list
@@ -75,6 +75,7 @@
   globalParameters['aero'] <- hector::AERO_SCALE() #1.0
   globalParameters['volc'] <- hector::VOLCANIC_SCALE() #1.0
   globalParameters['diff'] <- hector::DIFFUSIVITY() #2.3
+
   # UNUSED Parameters as of now
   # globalParameters['fnppv'] <- hector::F_NPPV()
   # globalParameters['fnppd'] <- hector::F_NPPD()
@@ -94,7 +95,6 @@
   #' @rdname constants
   #' @export
   globalParamsCanESM2 <- list()
-  #globalParamsCanESM2 <- c(1.87, 0.08, 0.98, 3.88, 282.35, 1.75, 1.81)
   globalParamsCanESM2 <- c('alpha' = 1.87, 'beta' = 0.08, 'diff' = 0.98, 'S' = 3.88, 'C' = 282.35, 'q10_rh' = 1.75, 'volscl' = 1.81)
 
   # CESM1-BGC Parameter Sets
@@ -102,7 +102,6 @@
   #' @rdname constants
   #' @export
   globalParamsCESM1BGC <- list()
-  #globalParamsCESM1BGC <- c(-0.43, 0.01, 8, 2.4, 280.31, 1.78, 3.94)
   globalParamsCESM1BGC <- c('alpha' = -0.43, 'beta' = 0.0, 'diff' = 8, 'S' = 2.4, 'C' = 280.31, 'q10_rh' = 1.78, 'volscl' = 3.94)
 
   # GFDL-ESM2G Parameter Sets
@@ -110,7 +109,6 @@
   #' @rdname constants
   #' @export
   globalParamsGFDLESM2G <- list()
-  #globalParamsGFDLESM2G <- c(0.46, 0.07, 12.01, 2.03, 289.24, 1.76, 2.12)
   globalParamsGFDLESM2G <- c('alpha' = 0.46, 'beta' = 0.07, 'diff' = 12.01, 'S' = 2.03, 'C' = 289.24, 'q10_rh' = 1.76, 'volscl' = 2.12)
 
   # MIROC-ESM Parameter Sets
@@ -118,7 +116,6 @@
   #' @rdname constants
   #' @export
   globalParamsMIROCESM <- list()
-  #globalParamsMIROCESM <- c(1.05, 0.02, 6.39, 5.83, 283.31, 1.77, 2.02)
   globalParamsMIROCESM <- c('alpha' = 1.05, 'beta' = 0.02, 'diff' = 6.39, 'S' = 5.83, 'C' = 283.31, 'q10_rh' = 1.77, 'volscl' = 2.02)
 
   # MPI-ESM-LR Parameter Sets
@@ -126,7 +123,6 @@
   #' @rdname constants
   #' @export
   globalParamsMPIESMLR <- list()
-  #globalParamsMPIESMLR <- c(1.22, 0.28, 2.93, 3.66, 289.13, 1.75, 0.70)
   globalParamsMPIESMLR <- c('alpha' = 1.22, 'beta' = 0.28, 'diff' = 2.93, 'S' = 3.66, 'C' = 289.13, 'q10_rh' = 1.75, 'volscl' = 0.70)
 
   # MRI-ESM1 Parameter Sets
@@ -134,7 +130,6 @@
   #' @rdname constants
   #' @export
   globalParamsMRIESM1 <- list()
-  #globalParamsMRIESM1 <- c(1.42, 0.66, 4.21, 2.04, 289.49, 1.76, 0.27)
   globalParamsMRIESM1 <- c('alpha' = 1.42, 'beta' = 0.66, 'diff' = 4.21, 'S' = 2.04, 'C' = 289.49, 'q10_rh' = 1.76, 'volscl' = 0.27)
 
 #----- End Parameter Variables

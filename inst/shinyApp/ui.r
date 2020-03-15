@@ -173,10 +173,10 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                 tags$hr(class="hrNav"),
                 div(class="checkboxDiv", "Choose 1 or more Scenarios:",
                     p(
-                    shinyWidgets::prettyCheckbox(inputId = "input_RCP2.6", label = "2.6", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "primary"),
-                    shinyWidgets::prettyCheckbox(inputId = "input_RCP4.5", label = "4.5", value = TRUE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "success"),
-                    shinyWidgets::prettyCheckbox(inputId = "input_RCP6.0", label = "6.0", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "warning"),
-                    shinyWidgets::prettyCheckbox(inputId = "input_RCP8.5", label = "8.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "danger")
+                    shinyWidgets::prettyCheckbox(inputId = "input_RCP_2.6", label = "2.6", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "primary"),
+                    shinyWidgets::prettyCheckbox(inputId = "input_RCP_4.5", label = "4.5", value = TRUE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "success"),
+                    shinyWidgets::prettyCheckbox(inputId = "input_RCP_6.0", label = "6.0", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "warning"),
+                    shinyWidgets::prettyCheckbox(inputId = "input_RCP_8.5", label = "8.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "danger")
                     )
                 ), # radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
 
@@ -411,12 +411,6 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                                           "MIROC-ESM" = "MIROC-ESM",
                                           "MPI-ESM-LR" = "MPI-ESM-LR",
                                           "MRI-ESM1" = "MRI-ESM1"))
-                              # choices = c("CanESM2" = "www/maps/pr_Amon_CanESM2_rcp85_r1i1p1_200601-210012_pattern.rds",
-                              #             "CESM1-BGC" = "www/maps/pr_Amon_CESM1-BGC_rcp85_r1i1p1_200601-210012_pattern.rds",
-                              #             "GFDL-ESM2G" = "www/maps/pr_Amon_GFDL-ESM2G_rcp85_r1i1p1_200601-210012_pattern.rds",
-                              #             "MIROC-ESM" = "www/maps/pr_Amon_MIROC-ESM_rcp85_r1i1p1_200601-210012_pattern.rds",
-                              #             "MPI-ESM-LR" = "www/maps/pr_Amon_MPI-ESM-LR_rcp85_r1i1p1_200601-210012_pattern.rds",
-                              #             "MRI-ESM1" = "www/maps/pr_Amon_MRI-ESM1_rcp85_r1i1p1_200601-210012_pattern.rds"))
                 ),
                 tags$td(style="padding-left: 5px;",
                         selectInput(inputId = "mapVar", label = "Choose Variable:", selected = "tas", choices = c("Temperature" = "tas", "Precipitation" = "pr"), multiple = F, width = 120)
@@ -464,7 +458,9 @@ popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Enable Com
                                )
                              ),
             ),
-            actionButton(inputId="loadMaps", label="Load Map", width = 200),
+            actionButton(inputId="loadMaps", label="Load Map", width = 150),
+            downloadButton("downloadMap", label="Save Hi-Res Map", width = 150),
+            # actionButton(inputId="saveMap", label="Save Hi-Res Map", width=150),
             uiOutput("maps", class = "customPlot")
           ) # End Maps Tab
         ) # End tabset panel

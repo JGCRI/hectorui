@@ -8,8 +8,6 @@ library(HectorShiny)
 #' @param input - Creates the Shiny input object
 #' @param output - Creates the Shiny output object
 #' @param session - Creates the Shiny session object
-#'
-#' @return no return value
 #' @export
 #'
 #' @examples
@@ -35,6 +33,7 @@ server <- function(input, output, session)
   scale_colors <- vector()
   ggthemr::ggthemr('dust', type = "outer")
   selectedIndex <<- 1
+  ggplotMap <<- ggplot2::ggplot()
 
   # These variables are for storing the current parameter values so that if a change is made (like loading new scenario)
   # then the custom params set by user will persist beyond core restarts
@@ -82,14 +81,13 @@ server <- function(input, output, session)
       map <-  plotly::plotlyOutput(mapname, height = 550, width = 1100)
 
       shinyjs::hidden(tags$div(class = "group-output", id = "map-div",
-               # textOutput(title, container = h3),
-               shinycustomloader::withLoader(plotly::plotlyOutput(mapname, height = 550, width = 1100), type="text", loader = list(shinycustomloader::marquee("Please Wait... Finalizing Raster Output", style="font-size:30px; color:white; text-align:center", scrollamount = 0))))
+               shinycustomloader::withLoader(plotly::plotlyOutput(mapname, height = 550, width = 1100), type="text",
+                                             loader = list(shinycustomloader::marquee("Please Wait... Finalizing Raster Output", style="font-size:30px; color:white; text-align:center", scrollamount = 0))))
       )
     })
 
     # Convert the list to a tagList - this is necessary for the list of items to display properly.
     do.call(tagList, map_output_list)
-    #shinyjs::hidden(id = 'maps')
   })
 
   #set initial plotting variables
@@ -114,10 +112,10 @@ server <- function(input, output, session)
   observeEvent(input$set_Params, setParameters(), ignoreInit = TRUE)
   observeEvent(input$input_ScenarioFile, loadScenario(), ignoreInit = TRUE)
   observeEvent(input$reset_Params, resetParams(), ignoreInit = TRUE)
-  observeEvent(input$input_RCP2.6, setRCP("2.6"), ignoreInit = TRUE)
-  observeEvent(input$input_RCP4.5, setRCP("4.5"), ignoreInit = FALSE)
-  observeEvent(input$input_RCP6.0, setRCP("6.0"), ignoreInit = TRUE)
-  observeEvent(input$input_RCP8.5, setRCP("8.5"), ignoreInit = TRUE)
+  observeEvent(input$input_RCP_2.6, setRCP("RCP-2.6"), ignoreInit = TRUE)
+  observeEvent(input$input_RCP_4.5, setRCP("RCP-4.5"), ignoreInit = FALSE)
+  observeEvent(input$input_RCP_6.0, setRCP("RCP-6.0"), ignoreInit = TRUE)
+  observeEvent(input$input_RCP_8.5, setRCP("RCP-8.5"), ignoreInit = TRUE)
   observeEvent(input$input_enableCustom, setRCP("Custom"), ignoreInit = TRUE)
   observeEvent(input$input_load_custom, loadCustomScenario(), ignoreInit = TRUE)
   observeEvent(input$input_load_emissions, loadCustomEmissions(), ignoreInit = TRUE)
@@ -129,6 +127,7 @@ server <- function(input, output, session)
   observeEvent(input$loadMaps, loadMap(), ignoreInit = TRUE)
   observeEvent(input$input_submit_feedback, sendFeedback(), ignoreInit = TRUE)
   observeEvent(input$mapCore, updateIndex(), ignoreInit = TRUE)
+  observeEvent(input$saveMap, saveMap(), ignoreInit = TRUE)
 
   # This is a group Observer block for all of the params fields because they all respond the same way
   observe({
@@ -160,7 +159,6 @@ server <- function(input, output, session)
   {
     if(!is.na(input$input_beta) && (as.double(input$input_beta) < 0.01 ))
     {
-      #browser()
       updateNumericInput(session = session, inputId = "input_beta", value = 1)
     }
   }
