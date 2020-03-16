@@ -336,11 +336,11 @@ output$downloadData <- downloadHandler(
  output$downloadMap <- downloadHandler(
    filename = function()
      {
-        paste("HectorMap",'.bmp',sep='')
+        paste("HectorMap",'.png',sep='')
      },
    content = function(file)
      {
         #browser()
-        ggplot2::ggsave(filename = file, plot = ggplotMap, device = "bmp", dpi = 150, limitsize = TRUE, width = 15, height = 10)
+        ggplot2::ggsave(filename = file, plot = ggplotMap, device = "png", dpi = 50, limitsize = TRUE, width = 15, height = 10)
     }
  )
