@@ -3,7 +3,8 @@ library(HectorShiny)
 
 #' Main server/data processing function
 #'
-#' The server function is the main function that processes inputs and handles data i/o. This is required for Shiny apps.
+#' The server function is the main function that processes inputs and handles data i/o.
+#' This is required for Shiny apps using the separate UI/Server file architecture.
 #'
 #' @param input - Creates the Shiny input object
 #' @param output - Creates the Shiny output object
@@ -15,7 +16,8 @@ server <- function(input, output, session)
 {
   # Needed to interact Shiny with client side JS
   shinyjs::useShinyjs()
-  # shinyjs::disable("set_Params")
+
+  # Load other source files
   source("parameters.r", local = TRUE)
   source("core.r", local = TRUE)
   source("output.r", local = TRUE)
@@ -23,14 +25,11 @@ server <- function(input, output, session)
 
 #----- Set up non global variables in top level application scope
 
-  # Keeps track of if this is the actual first load/run of this instance
-  # firstLoad <- TRUE
   outputVariables <- list()
   inifile <- system.file('input/hector_rcp45.ini', package='hector', mustWork=TRUE)
   hcores <- list()
   totalActivePlots <- 0
   customLoaded <- FALSE
-  scale_colors <- vector()
   ggthemr::ggthemr('dust', type = "outer")
   selectedIndex <<- 1
   ggplotMap <<- ggplot2::ggplot()
@@ -41,16 +40,17 @@ server <- function(input, output, session)
   paramsList <- globalParamsDefault
   assignParameters()
 
+  # These two lines of code allows the main Hector cores object to be reactive and able to be linked with the maps scenario dropdown
   coresReactive <- reactive({
     return(names(hcores))
   })
-
   output$coreMapping <- renderUI({
     selectInput(inputId = "mapCore", width = 180, label = ("Available Scenarios:"), choices =  coresReactive(), selected = selectedIndex)
   })
+
 #----- End set up local vars
 
-#----- Set up plots and maps
+#----- Set up graphs and maps
 
   # This UI output variable is responsible for generating the 4 graphs in the output section.
   output$plots <- renderUI(
@@ -90,14 +90,14 @@ server <- function(input, output, session)
     do.call(tagList, map_output_list)
   })
 
-  #set initial plotting variables
+  # Set initial plotting variables
   for(i in 1:4)
   {
     plotname <- paste("plot", i, sep="")
     shinyjs::hide(plotname)
   }
 
-  #set initial mapping variables
+  # Set initial mapping variables and hide
   for(i in 1:1)
   {
     mapname <- paste("map", i, sep="")
@@ -144,6 +144,7 @@ server <- function(input, output, session)
 
 #----- Custom Functions
 
+  # Renders feedback form
   output$feedbackFrame <- renderUI({
     frame_link <- tags$iframe(src="https://docs.google.com/forms/d/e/1FAIpQLSf6inU3DHAE5tZo4vdgtTjtFZvw7OCuH_5xbLvnj5tdqiRVNA/viewform?embedded=true",
                               height=1100, width=700, seamless=NA)

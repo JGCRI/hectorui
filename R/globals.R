@@ -23,7 +23,7 @@
   globalColorScales <- vector()
   globalColorScales <- c("RCP 2.6"="#db735c", "RCP 4.5"="#EFA86E", "RCP 6.0"="#9A8A76", "RCP 8.5"="#7A6752")
 
-  # Create global file input vector
+  # Global file paths vector
   #' @details \code{globalScenarios} Scenario input file names and paths
   #' @rdname constants
   #' @export
@@ -35,8 +35,8 @@
   globalScenarios[['RCP-8.5']] <-  file.path('input',paste0('hector_rcp',rcps[4],'.ini'))
   globalScenarioColors <- c("RCP 2.6" = "#99cc33", "RCP 4.5" = "#FFFF00", "RCP 6.0" = "#ff9900", "RCP 8.5" = "#ff3333")
 
-  # Create global temp patterns list
-  #' @details \code{globalTempPatterns} Create global temp patterns list
+  # Global temperature patterns
+  #' @details \code{globalTempPatterns} Create global temperature patterns list
   #' @rdname constants
   #' @export
   globalTempPatterns <- list()
@@ -47,7 +47,7 @@
               "MPI-ESM-LR" = "www/maps/tas_Amon_MPI-ESM-LR_esmrcp85_r1i1p1_200601-210012_pattern.rds",
               "MRI-ESM1" = "www/maps/tas_Amon_MRI-ESM1_esmrcp85_r1i1p1_200601-210012_pattern.rds")
 
-  # Create global precipitation patterns list
+  # Global precipitation patterns list
   #' @details \code{globalPrecipPatterns} Create global precipitation patterns list
   #' @rdname constants
   #' @export
@@ -63,7 +63,7 @@
 
 #----- Parameter Variables
 
-  # Create master list of parameter lookups
+  # Create master list of parameter lookup strings
   #' @details \code{globalParameters}: Capability strings (internal name lookup/mapping) for Hector parameters - (should match UI component ids)
   #' @rdname constants
   #' @export
@@ -76,15 +76,15 @@
   globalParameters['volc'] <- hector::VOLCANIC_SCALE() #1.0
   globalParameters['diff'] <- hector::DIFFUSIVITY() #2.3
 
-  # UNUSED Parameters as of now
+  # UNIMPLEMENTED Parameters as of now
   # globalParameters['fnppv'] <- hector::F_NPPV()
   # globalParameters['fnppd'] <- hector::F_NPPD()
   # globalParameters['flitter'] <- hector::F_LITTERD()
   # globalParameters['flucv'] <- hector::F_LUCV()
   # globalParameters['flucd'] <- hector::F_LUCD()
 
-  # Default Parameter Sets
-  #' @details \code{globalParamsDefault}: Default Parameter Sets
+  # Default Hector parameters
+  #' @details \code{globalParamsDefault}: Default Parameter Set
   #' @rdname constants
   #' @export
   globalParamsDefault <- list()
@@ -97,35 +97,35 @@
   globalParamsCanESM2 <- list()
   globalParamsCanESM2 <- c('alpha' = 1.87, 'beta' = 0.08, 'diff' = 0.98, 'S' = 3.88, 'C' = 282.35, 'q10_rh' = 1.75, 'volscl' = 1.81)
 
-  # CESM1-BGC Parameter Sets
+  # CESM1-BGC Parameter Set
   #' @details \code{globalParamsCESM1BGC}: CESM1-BGC Parameters for model emulation
   #' @rdname constants
   #' @export
   globalParamsCESM1BGC <- list()
   globalParamsCESM1BGC <- c('alpha' = -0.43, 'beta' = 0.0, 'diff' = 8, 'S' = 2.4, 'C' = 280.31, 'q10_rh' = 1.78, 'volscl' = 3.94)
 
-  # GFDL-ESM2G Parameter Sets
+  # GFDL-ESM2G Parameter Set
   #' @details \code{globalParamsGFDLESM2G}: GFDL-ESM2G Parameters for model emulation
   #' @rdname constants
   #' @export
   globalParamsGFDLESM2G <- list()
   globalParamsGFDLESM2G <- c('alpha' = 0.46, 'beta' = 0.07, 'diff' = 12.01, 'S' = 2.03, 'C' = 289.24, 'q10_rh' = 1.76, 'volscl' = 2.12)
 
-  # MIROC-ESM Parameter Sets
+  # MIROC-ESM Parameter Set
   #' @details \code{globalParamsMIROCESM}: MIROC-ESM Parameters for model emulation
   #' @rdname constants
   #' @export
   globalParamsMIROCESM <- list()
   globalParamsMIROCESM <- c('alpha' = 1.05, 'beta' = 0.02, 'diff' = 6.39, 'S' = 5.83, 'C' = 283.31, 'q10_rh' = 1.77, 'volscl' = 2.02)
 
-  # MPI-ESM-LR Parameter Sets
+  # MPI-ESM-LR Parameter Set
   #' @details \code{globalParamsMPIESM-LR}: MPI-ESM-LR Parameters for model emulation
   #' @rdname constants
   #' @export
   globalParamsMPIESMLR <- list()
   globalParamsMPIESMLR <- c('alpha' = 1.22, 'beta' = 0.28, 'diff' = 2.93, 'S' = 3.66, 'C' = 289.13, 'q10_rh' = 1.75, 'volscl' = 0.70)
 
-  # MRI-ESM1 Parameter Sets
+  # MRI-ESM1 Parameter Set
   #' @details \code{globalParamsMRIESM1}: MRI-ESM1 Parameters for model emulation
   #' @rdname constants
   #' @export
@@ -137,7 +137,7 @@
 #----- Output Variables: This section maps output variables (should match drop down item ids)
 
   # Create master list of variable lookups for "capabilities" (output variables for graphing)
-  #' @details \code{globalCapabilities} Capability string (internal name lookup/mapping) for Hector output variables
+  #' @details \code{globalCapabilities} Capability string (internal name lookup/mapping) for Hector output variables, organized by group
   #' @rdname constants
   #' @export
   globalCapabilities <- list()

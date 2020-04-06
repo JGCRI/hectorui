@@ -3,9 +3,9 @@
 #'
 #' Main function that loads/starts the Hector Core and runs the specified scenario
 #'
-#' @param scenario RCP Scenario name to load into new Hector core
+#' @param scenario (Character) - RCP Scenario name to load into new Hector core
 #'
-#' @return The Hector core object created from the scenario
+#' @return (Hector Core) - The Hector core object created from the scenario
 #' @export
 #'
 #' @examples
@@ -21,14 +21,14 @@ loadScenario <- function(scenario)
     },
     error = function(err)
     {
-      shinyalert::shinyalert("Initalization Error",print(paste('Error starting Hector: ',err)), type = "error")
+      shinyalert::shinyalert("Initalization Error", print(paste('Error starting Hector: ', err)), type = "error")
     })
   return(hcore)
 }
 
-#' Reset the active Hector cores and run the spinup
+#' Reset the active Hector cores and run the Hector core spinup
 #'
-#' Function to reset (not restart via shutdown) a Hector core. A core reset should only be called when input parameters have changed.
+#' Function to reset (not restart via shutdown) all active Hector cores. A core reset should only be called when input parameters have changed.
 #' @return no return value
 #' @export
 #'
@@ -36,6 +36,7 @@ loadScenario <- function(scenario)
 resetCore <- function()
 {
   print("in reset core")
+  # Call reset on each core that the user has created
   for(i in 1:length(hcores))
   {
     hector::reset(hcores[[i]])
@@ -45,7 +46,7 @@ resetCore <- function()
 
 #' Restart the active Hector cores
 #'
-#' Function to shutdown and restart active Hector cores. A core restart is required when the scenario has changed/been loaded or emissions changes.
+#' Function to shutdown and restart active Hector cores. A core restart is required when the scenario has changed/been loaded or the user has made emissions changes.
 #' @return
 #' @export
 #'
@@ -59,6 +60,7 @@ restartCore <- function()
     {
       withProgress(message = 'Restarting Hector Cores...\n', value = 0,
       {
+        # For each core, shutdown and restart
         for(i in 1:length(hcores))
         {
           scenarioName <- names(hcores)[i]
@@ -74,8 +76,7 @@ restartCore <- function()
           }
         }
       })
-      # hcore <<- hector::shutdown(hcore)
-      # startHector()
+      # Call loadGraph to refresh output graph after data change
       loadGraph()
     }
     else

@@ -1,7 +1,6 @@
-#' Clean up visual elements on change of number of output variables or scenarios
+#' Internal function used to clean up visual elements when the number of number of output variables or scenarios changes
 #'
-#' @return
-#' @export
+#' @return Function does not return a value
 #'
 #' @examples
 cleanPlots <- function()
@@ -35,11 +34,13 @@ cleanPlots <- function()
 #'
 #' @examples
 loadGraph <- function()
-{#browser()
+{
   print("in load graph")
+  # Set up local variables for dealing with output data frames
   hdata <- data.frame()
   df_total <- data.frame()
-  scale_colors <<- vector()
+
+  # Main loop that handles graph output based on number of scenarios and number of output variables
   if(length(hcores) > 0)
   {
     if(length(outputVariables) < 5)
@@ -50,14 +51,16 @@ loadGraph <- function()
           {
             withProgress(message = 'Loading Output Graphs...\n', value = 0,
             {
+              # Create a new graph for each output variable
               for (i in 1:length(outputVariables))
               {
                 # Need local so that each item gets its own number. Without it, the value of i in the renderPlot() will be the same across all instances.
                 local(
-                {#browser()
+                {
                     my_i <- i
                     plotname <- paste("plot", i, sep="")
                     seriesname <- ""
+                    # For each hector core create an output data set and bind all to df_total
                     for(j in 1:length(hcores))
                     {
                       scenarioName <- names(hcores)[j]
@@ -70,6 +73,7 @@ loadGraph <- function()
                       df_total <- rbind(df_total,hdata)
 
                     }
+                    # Get the units for graph axis
                     x <- dplyr::distinct(hdata, units)
                     ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=Year, y=Value, group=variable, color=Scenario)) + ggplot2::geom_line() +
                        ggplot2::labs(y=Hmisc::capitalize(x[[1]]), title =  attr(outputVariables[[i]], 'longName')) #+  ggplot2::scale_color_manual(values = globalColorScales)
@@ -78,19 +82,16 @@ loadGraph <- function()
                     # +  ggplot2::guides(color = ggplot2::guide_colorbar(title  = expression(beta)))
                     # +  ggplot2::scale_color_viridis_c()
 
+                    # Construct the plots and add to the shiny output variable
                     localPlot <- plotly::ggplotly(p = ggplotGraph)
                     plotly::layout(p=localPlot, xaxis = a, yaxis = a, legend = list(orientation = 'h'))
-
                     output[[plotname]] <- plotly::renderPlotly(localPlot)
-
-
                 })
                 incProgress(1/length(hcores), detail = paste(attr(outputVariables[[i]], 'longName'), " loaded."))
                 Sys.sleep(0.25)
               }
-
-              #browser()
             })
+            # Check if any output variables have been removed and clear any extra plots
             if(length(outputVariables) < 4)
             {
               cleanPlots()
@@ -104,10 +105,10 @@ loadGraph <- function()
         },
         warning = function(war)
         {
-          # warning handler picks up where error was generated
+          # warning handler picks up where warning was generated
           showModal(modalDialog(
-            title = "Important message",
-            paste("MY_WARNING:  ",war)
+            title = "Please note:",
+            paste("Warning:  ",war)
           ))
 
         },
@@ -130,7 +131,7 @@ loadGraph <- function()
 
 #' Main output function that generates the downscaled maps
 #'
-#' Observer function designed to handle the loading/creation of downscaled world maps from the Hector model output.
+#' Observer function designed to handle the loading/creation of downscaled world maps from the Hector model output and pre-generated pattern files
 #' @return no return value
 #' @export
 #'
@@ -139,37 +140,44 @@ loadMap <- function()
 {
   tryCatch(
   {
+    # First check for existing cores
     if(length(hcores) < 1)
     {
       shinyalert::shinyalert("No active Hector cores", "Please set at least one of the RCP scenarios to active or upload a custom emissions scenario before mapping.", type = "warning")
     }
     else
     {
-
+      # Need local so that each item gets its own number. Without it, the value of i in the renderPlot() will be the same across all instances.
       local(
       {
         withProgress(message = 'Generating Map Data...\n', value = 0,
         {
-          #browser()
+          # Choose pattern file based on user choice of temperature or precipitation
           if(input$mapVar == "tas")
             patternFile <- globalTempPatterns[[input$mapPattern]]
           else
-            patternFile <- globalPrecipPatterns[[input$mapPattern]]
+            patternFile <- globalPrecipPatterns
+
+          # Fetch needed data from Hector cores
           results <- hector::fetchvars(hcores[[input$mapCore]], 1900:2100)
+          # Use temperature data for downscaling both temp and precip
           tgav_hector <- dplyr::filter(results, variable == "Tgav")
           pattern <- readRDS(patternFile)
           coordinates <- pattern$coordinate_map
           incProgress(1/2, detail = paste("Loading pattern, downscaling"))
+          # Construct coordinates based on -180 to 180 for longitude
           for(i in 1:length(coordinates$lon))
           {
             if(coordinates$lon[i] > 180)
             coordinates$lon[i] <- coordinates$lon[i] - 360
           }
 
+          # Apply patterns to temp data and transform for mapping
           mapname <- paste("map", 1, sep="")
           hector_annual_gridded <- fldgen::pscl_apply(pattern$annual_pattern, as.vector(tgav_hector$value+15))
           hector_annual_gridded_t <- t(hector_annual_gridded)
 
+          # Build aesthetics based on if the compare to 1900 was checked
           if(input$mapVar == "tas")
           {
             if(input$input_map_compare)
@@ -187,97 +195,90 @@ loadMap <- function()
            # mapVar <- "Temp"
            # if(input$input_map_compare)
               combined_data <- dplyr::mutate(coordinates, Temp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 2),
-                                             deltaTemp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1], 2), Lon=round(lon, 2), Lat=round(lat,2),
-                                             Neg = ifelse(deltaTemp < 0, TRUE, FALSE))
+                                             deltaTemp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1], 2),
+                                             Lon=round(lon, 2), Lat=round(lat,2), Neg = ifelse(deltaTemp < 0, TRUE, FALSE))
            # else
             #  combined_data <- dplyr::mutate(combined_data, deltaTemp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 2), Lon=round(lon, 2), Lat=round(lat,2))
            # combined_data$Neg <- ifelse(combined_data$Temp < 0, TRUE, FALSE)
            # browser()
+        }
+        else
+        {
+          # Build aesthetics based on if the compare to 1900 was checked
+          if(input$input_map_compare)
+          {
+            mapFill <- "\u0394 Precip. - g/m2/s"
+            mapVar <- "deltaPrecip"
           }
           else
           {
-            if(input$input_map_compare)
-            {
-              mapFill <- "\u0394 Precip. - g/m2/s"
-              mapVar <- "deltaPrecip"
-            }
-            else
-            {
-              mapFill <- "Precip. - g/m2/s"
-              mapVar <- "Precip"
-            }
-            mapDirection <- 1
-            mapPalette <- "Purples"
-           # mapVar <- "Precip"
-           # if(input$input_map_compare)
-              combined_data <- dplyr::mutate(coordinates, Precip = round(1000*hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 4),
-                                             deltaPrecip = round(1000*(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1]), 4),
-                                             Lon=round(lon, 2), Lat=round(lat,2), Neg = ifelse(deltaPrecip < 0, TRUE, FALSE))
-          #  else
-            #  combined_data <- dplyr::mutate(coordinates, Precip = round(1000*hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 4), Lon=round(lon, 2), Lat=round(lat,2))
-           # combined_data$Neg <- ifelse(combined_data$Precip < 0, FALSE, TRUE)
+            mapFill <- "Precip. - g/m2/s"
+            mapVar <- "Precip"
           }
+          mapDirection <- 1
+          mapPalette <- "Purples"
+          combined_data <- dplyr::mutate(coordinates, Precip = round(1000*hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 4),
+                                           deltaPrecip = round(1000*(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1]), 4),
+                                           Lon=round(lon, 2), Lat=round(lat,2), Neg = ifelse(deltaPrecip < 0, TRUE, FALSE))
+        }
 
-          combined_data <- dplyr::select(combined_data, -c(lat, lon, colnum))
+        combined_data <- dplyr::select(combined_data, -c(lat, lon, colnum))
 
-          lat_min <- -90
-          lat_max <- 90
-          lon_min <- -180
-          lon_max <- 180
+        lat_min <- -90
+        lat_max <- 90
+        lon_min <- -180
+        lon_max <- 180
 
-          if(input$input_map_filter)
-          {
-            validate(need(as.numeric(input$input_lat_min) >= -90 && (as.numeric(input$input_lat_min)) <= 90 &&
-                            (as.numeric(input$input_lat_min)) < (as.numeric(input$input_lat_max)), "Please enter a valid lat min"))
-            validate(need(as.numeric(input$input_lat_max) >= -90 && (as.numeric(input$input_lat_max)) <= 90 &&
-                            (as.numeric(input$input_lat_max)) > (as.numeric(input$input_lat_min)), "Please enter a valid lat max"))
-            validate(need(as.numeric(input$input_lon_min) >= -180 && (as.numeric(input$input_lon_min)) <= 180 &&
-                            (as.numeric(input$input_lon_min)) < (as.numeric(input$input_lon_max)), "Please enter a valid lon min"))
-            validate(need(as.numeric(input$input_lon_max) >= -180 && (as.numeric(input$input_lon_max)) <= 180 &&
-                            (as.numeric(input$input_lon_max)) > (as.numeric(input$input_lon_min)), "Please enter a valid lon max"))
+        # Validate lat/lon min/max input fields if the filter by lat/lon was checked
+        if(input$input_map_filter)
+        {
+          validate(need(as.numeric(input$input_lat_min) >= -90 && (as.numeric(input$input_lat_min)) <= 90 &&
+                          (as.numeric(input$input_lat_min)) < (as.numeric(input$input_lat_max)), "Please enter a valid lat min"))
+          validate(need(as.numeric(input$input_lat_max) >= -90 && (as.numeric(input$input_lat_max)) <= 90 &&
+                          (as.numeric(input$input_lat_max)) > (as.numeric(input$input_lat_min)), "Please enter a valid lat max"))
+          validate(need(as.numeric(input$input_lon_min) >= -180 && (as.numeric(input$input_lon_min)) <= 180 &&
+                          (as.numeric(input$input_lon_min)) < (as.numeric(input$input_lon_max)), "Please enter a valid lon min"))
+          validate(need(as.numeric(input$input_lon_max) >= -180 && (as.numeric(input$input_lon_max)) <= 180 &&
+                          (as.numeric(input$input_lon_max)) > (as.numeric(input$input_lon_min)), "Please enter a valid lon max"))
 
-            lat_min <- as.numeric(input$input_lat_min)
-            lat_max <- as.numeric(input$input_lat_max)
-            lon_min <- as.numeric(input$input_lon_min)
-            lon_max <- as.numeric(input$input_lon_max)
+          # Assign local variables to input fields
+          lat_min <- as.numeric(input$input_lat_min)
+          lat_max <- as.numeric(input$input_lat_max)
+          lon_min <- as.numeric(input$input_lon_min)
+          lon_max <- as.numeric(input$input_lon_max)
 
-            combined_data <- dplyr::filter(combined_data, Lat >= lat_min, Lat <= lat_max, Lon >= lon_min, Lon <= lon_max)
+          # Filter data set by lat/lon
+          combined_data <- dplyr::filter(combined_data, Lat >= lat_min, Lat <= lat_max, Lon >= lon_min, Lon <= lon_max)
 
-          }
-          mapWorld <- ggplot2::borders("world",  ylim=c(lat_min, lat_max), xlim=c(lon_min, lon_max)) #  colour="black", col="white",, fill="gray100"
+        }
 
-          ggplotMap <<- ggplot2::ggplot() +
-            ggplot2::geom_raster(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar),interpolate = TRUE ) +
-            mapWorld +
-            # ggplot2::geom_point(data = combined_data, ggplot2::aes(x = Lon, y = Lat, color = Neg, alpha = 0.5)) +
-            ggplot2::coord_fixed(ratio = 1) +
-            ggplot2::scale_fill_distiller(palette = mapPalette,type = "div", direction = mapDirection, na.value = "Gray" ) +
-            #viridis::scale_fill_viridis(direction = 1, option = "E" ) +
-            ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = mapFill) +
-            ggplot2::scale_y_continuous(limits=c(lat_min, lat_max), expand = c(0, 0), breaks=seq(-90,90,30))+
-            ggplot2::scale_x_continuous(limits=c(lon_min, lon_max), expand = c(0, 0), breaks=seq(-180,180,30))
+        # Create world map borders
+        mapWorld <- ggplot2::borders("world",  ylim=c(lat_min, lat_max), xlim=c(lon_min, lon_max)) #  colour="black", col="white",, fill="gray100"
 
-          localPlot <- plotly::ggplotly(p = ggplotMap)
-          plotly::layout(p=localPlot, yaxis = list(tickformat = "\u00B0C", dtick = 10))
+        # Construct ggplot map object
+        ggplotMap <<- ggplot2::ggplot() +
+          ggplot2::geom_raster(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar),interpolate = TRUE ) +
+          mapWorld +
+          # ggplot2::geom_point(data = combined_data, ggplot2::aes(x = Lon, y = Lat, color = Neg, alpha = 0.5)) +
+          ggplot2::coord_fixed(ratio = 1) +
+          ggplot2::scale_fill_distiller(palette = mapPalette,type = "div", direction = mapDirection, na.value = "Gray") + #, limits = c(-1,1)*max(abs(combined_data[[mapVar]]))) +
+          ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = mapFill) +
+          ggplot2::scale_y_continuous(limits=c(lat_min, lat_max), expand = c(0, 0), breaks=seq(-90,90,30))+
+          ggplot2::scale_x_continuous(limits=c(lon_min, lon_max), expand = c(0, 0), breaks=seq(-180,180,30))
 
-          output[[mapname]] <- plotly::renderPlotly(localPlot)
-          incProgress(1/1, detail = "Map loaded.")
-          Sys.sleep(0.25)
-          shinyjs::show(id = 'map-div')
+        localPlot <- plotly::ggplotly(p = ggplotMap)
+        plotly::layout(p=localPlot, yaxis = list(tickformat = "\u00B0C", dtick = 10))
+
+        output[[mapname]] <- plotly::renderPlotly(localPlot)
+        incProgress(1/1, detail = "Map loaded.")
+        Sys.sleep(0.25)
+        shinyjs::show(id = 'map-div')
 
         })
       })
     }
   },
-  # warning = function(war)
-  # {
-  #   # warning handler picks up where error was generated
-  #   showModal(modalDialog(
-  #     title = "Important message",
-  #     paste("Warning:  ",war)
-  #   ))
-  #
-  # },
+
   error = function(err)
   {
     # error handler picks up where error was generated
@@ -297,7 +298,6 @@ output$downloadData <- downloadHandler(
   {
     if(length (hcores) > 0)
     {
-      #browser()
       dataList <- list()
       df <- data.frame()
       seriesname <- ""
@@ -312,7 +312,6 @@ output$downloadData <- downloadHandler(
         hdata <- dplyr::mutate(hdata, scenario=seriesname)
         df <- data.frame(hdata)
         dataList[[i]] <- df
-        # browser()
       }
 
       header_text <- paste("File created with Hector UI - https://github.com/JGCRI/hector-ui\n" ,
@@ -323,7 +322,6 @@ output$downloadData <- downloadHandler(
 
       cat(header_text, file = file)
       lapply(dataList, function(x) write.table( data.frame(x), file  , append= T, sep=',', row.names = F,  ))
-      #write.csv(df, file, row.names = FALSE)
     }
     else
     {
@@ -341,6 +339,6 @@ output$downloadData <- downloadHandler(
    content = function(file)
      {
         #browser()
-        ggplot2::ggsave(filename = file, plot = ggplotMap, device = "png", dpi = 50, limitsize = TRUE, width = 15, height = 10)
+        ggplot2::ggsave(filename = file, plot = ggplotMap, device = "png", dpi = 150, limitsize = TRUE, width = 15, height = 10)
     }
  )
