@@ -1,4 +1,4 @@
-# This file contains miscellaneous observers (all EXCEPT for those from the parameters which are in the parameters.r file and those that produce output, in output.r)
+# This file contains miscellaneous observers (all except for those from the parameters which are in the parameters.r file and those that produce output, in output.r)
 
 
 #' Keeps a list of the selected output variables for graphs
@@ -34,17 +34,17 @@ setCapabilities <- function()
 }
 
 
-#' Load the chosen scenario and rerun Hector
+#' Load the chosen standard RCP scenario and rerun output/clean functions
 #'
-#' Observer function that is activated on a change to the RCP Scenario checkboxes. Will load the scenario into a new Hector core
-#' @param scenarioName
+#' Observer function that is activated on a change to the RCP Scenario checkboxes. Will load/unload the scenario into a new Hector core
+#' @param scenarioName (Character) - String value for the RCP scenario in the format of "RCP-2.6"
 #'
 #' @return
 #' @export
 #'
 #' @examples
 setRCP <- function(scenarioName)
-{ #browser()
+{
   print("in set RCP")
   coreName <- paste0("Standard-", scenarioName)
   tryCatch(
@@ -65,6 +65,7 @@ setRCP <- function(scenarioName)
     }
     if(length(hcores) > 0)
     {
+      # Update dropdown for available scenarios on the downscaled maps tab
       updateSelectInput(session, inputId = "mapCore", choices = names(hcores))
       loadGraph()
     }
@@ -79,6 +80,7 @@ setRCP <- function(scenarioName)
   })
 }
 
+
 #' Load custom scenario
 #'
 #' Observer function responsible for processing the custom scenario file when the user creates a custom scenario
@@ -89,13 +91,15 @@ setRCP <- function(scenarioName)
 loadCustomScenario <- function()
 {
   print("in load custom")
-  #browser()
-  if (is.null(input$input_custom_scenario_ini) | is.null(input$input_custom_scenario_csv) | (is.na(input$input_custom_scenarioName) | is.null(input$input_custom_scenarioName) | (input$input_custom_scenarioName == "")))
+
+  if (is.null(input$input_custom_scenario_csv) | (is.na(input$input_custom_scenarioName) | is.null(input$input_custom_scenarioName) | (input$input_custom_scenarioName == "")))
   {
-    shinyalert::shinyalert("Missing Information", "Please name the scenario and load an emissions/ini file before attempting to load the scenario.", type = "warning")
+    shinyalert::shinyalert("Missing Information", "Please name the scenario and load an emissions file before attempting to load the scenario.", type = "warning")
     return(NULL)
   }
+
   scenarioName <- input$input_custom_scenarioName
+
   tryCatch(
     {
       withProgress(message = paste('Creating Custom Scenario ', scenarioName, "...\n"), value = 1/2,
@@ -108,16 +112,8 @@ loadCustomScenario <- function()
         Sys.sleep(0.2)
       })
 
-      # If this is the initial application load, then we need to assign the on screen input field values to hector's default params
-      # if(firstLoad)
-      # {
-        loadParameters()
-      # }
-      # If its not first load but the parameters have changed via user input, then need to restore those values after restarting core
-      # else if(paramsChanged)
-      # {
-      #   restoreParameters()
-      # }
+      # Handle post loading operations
+      loadParameters()
       customLoaded <<- TRUE
       loadGraph()
     },
@@ -131,11 +127,9 @@ loadCustomScenario <- function()
     error = function(err)
     {
       shinyalert::shinyalert("Custom Scenario Error",print(paste('Error attempting to load custom scenario: ',err)), type = "error")
-    },
-    finally =
-      {
-      })
+    })
 }
+
 
 #' Load custom emissions
 #'
@@ -147,16 +141,18 @@ loadCustomScenario <- function()
 loadCustomEmissions <- function()
 {
    print("in load custom")
-  #browser()
+
   if (is.null(input$input_custom_emissions_file) | (is.na(input$input_custom_scenarioName) | is.null(input$input_custom_scenarioName) | (input$input_custom_scenarioName == "")))
   {
     shinyalert::shinyalert("Missing Information", "Please name the scenario and load an emissions file before attempting to load the scenario.", type = "warning")
     return(NULL)
   }
+
   scenarioName <- input$input_custom_scenarioName
+
   tryCatch(
   {
-    #browser()
+    # Load scenario and custom emissions
     inifile <- system.file(globalScenarios[input$input_custom_RCP], package='hector', mustWork=TRUE)
     emissions_file <- input$input_custom_emissions_file$datapath
     emissions_data <- read.csv(file=emissions_file, header=TRUE, sep=",", skip = 3)
@@ -171,6 +167,7 @@ loadCustomEmissions <- function()
         Sys.sleep(0.2)
      })
 
+    # Set custom emissions here
     for(i in 2:ncol(emissions_data))
     {
       hector::setvar(core = hcores[[scenarioName]], dates = emissions_data[, 1],var = colnames(emissions_data)[i], values = emissions_data[, i], unit = as.character(emissions_headers[[paste0("V",i)]][[1]]))
@@ -180,25 +177,23 @@ loadCustomEmissions <- function()
     hector::run(hcores[[scenarioName]], globalVars[['endDate']])
     updateSelectInput(session, inputId = "mapCore", choices = names(hcores))
     loadGraph()
-    },
-    warning = function(war)
-    {
-      showModal(modalDialog(
-        title = "Warning",
-        paste("Details:  ",war
-               )
-      ))
-    },
-    error = function(err)
-    {
-      shinyalert::shinyalert("Custom Scenario Error",print(paste('Error attempting to load custom scenario: ',err)), type = "error")
-    },
-    finally =
-      {
-      })
+  },
+  warning = function(war)
+  {
+    showModal(modalDialog(
+      title = "Warning",
+      paste("Details:  ",war
+             )
+    ))
+  },
+  error = function(err)
+  {
+    shinyalert::shinyalert("Custom Scenario Error",print(paste('Error attempting to load custom scenario: ',err)), type = "error")
+  })
 }
 
-#' Sets custom emissions set from the user input
+
+#' Sets custom emissions from the user input fields
 #'
 #' Observer function that handles the set custom emissions feature. Sets emissions for all active cores.
 #' @return
@@ -213,7 +208,6 @@ setCustomEmissions <- function()
     # Verify things:
     # 1. Needs to be Hector cores already instantiated first in order to set emissions
     # 2. Years need to be validated (validated to be a year and start > end if used that way)
-    #browser()
     validate(
       need(as.double(input$input_custom_start) >= globalVars[['startDate']] && as.double(input$input_custom_start) <= globalVars[['endDate']], "Please use a valid 4 digit year for start year")
     )
@@ -223,13 +217,11 @@ setCustomEmissions <- function()
     validate(
       need(length(input$input_custom_emissions) >= 0, "Please enter a value for emissions")
     )
-    # if(!input$input_custom_start | !input$input_custom_end | !input$input_custom_emissions)
-    # {
-    #   shinyalert::shinyalert("Missing Information", "Please fill in all values before setting emissions", type = "warning")
-    #   return(NULL)
-    # }
+
+    # Process custom emissions
     if(length(hcores) > 0)
     {
+      # Set up general variables and sloping if needed
       x <- seq(1, 10, 2)
       y <- x * 3
       newx <- seq(1, 10, 0.1)
@@ -240,6 +232,7 @@ setCustomEmissions <- function()
       hector_var <- globalCapabilities[[input$input_custom_emissions]][[1]]
       hector_unit <- attr(globalCapabilities[[input$input_custom_emissions]], "unit")
 
+      # Set Hector data with sloped variable data
       if(input$input_slope_emissions)
       {
         for(i in 1:length(hcores))
@@ -255,11 +248,11 @@ setCustomEmissions <- function()
             seq_out <- spline(x, y, xout = z)
             values <- unlist(seq_out["y"])
             values1 <- as.vector(values)
-            #browser()
             hector::setvar(core = hcores[[i]], dates = dates, var = hector_var, values = values1, unit = hector_unit)
           }
         }
       }
+      # Set Hector data with static variable data
       else
       {
         for(i in 1:length(hcores))
@@ -267,6 +260,7 @@ setCustomEmissions <- function()
           hector::setvar(core = hcores[[i]], dates = startDate:endDate, var = hector_var, values = as.double(input$input_emissions_value), unit = hector_unit)
         }
       }
+
       resetCore()
       loadGraph()
     }
@@ -281,6 +275,7 @@ setCustomEmissions <- function()
     shinyalert::shinyalert("Error!",print(paste('Error Setting Emissions: ',err)), type = "error")
   })
 }
+
 
 #' Reset custom emissions
 #'
@@ -298,9 +293,9 @@ resetCustomEmissions <- function()
 
 #' Open URL link
 #'
-#' @param url
+#' @param url (Character) - Should be a well formatted URL string
 #'
-#' @return
+#' @return Links to URL page
 #' @export
 #'
 #' @examples
@@ -309,17 +304,28 @@ openPage <- function(url) {
 
 }
 
+
+#' Change visual theme
+#'
+#' This function changes the RColorBrewer theme for the output components (graphs, maps) based on the input dropdown
+#'
+#' @return
+#' @export
+#'
+#' @examples
 changeTheme <- function()
 {
   ggthemr::ggthemr(stringr::str_to_lower(input$set_theme), type = "outer")
   loadGraph()
 }
 
-sendFeedback <- function()
-{
 
-}
-
+#' Update selected index of the downscaled map's available cores
+#'
+#' @return
+#' @export
+#'
+#' @examples
 updateIndex <- function()
 {
   selectedIndex <<- input$mapCore

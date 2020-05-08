@@ -58,13 +58,13 @@ Global constants for the Hector-Shiny UI
 
 \code{globalScenarios} Scenario input file names and paths
 
-\code{globalTempPatterns} Create global temp patterns list
+\code{globalTempPatterns} Create global temperature patterns list
 
 \code{globalPrecipPatterns} Create global precipitation patterns list
 
 \code{globalParameters}: Capability strings (internal name lookup/mapping) for Hector parameters - (should match UI component ids)
 
-\code{globalParamsDefault}: Default Parameter Sets
+\code{globalParamsDefault}: Default Parameter Set
 
 \code{globalParamsCanESM2}: CanESM2 Parameters for model emulation
 
@@ -78,6 +78,6 @@ Global constants for the Hector-Shiny UI
 
 \code{globalParamsMRIESM1}: MRI-ESM1 Parameters for model emulation
 
-\code{globalCapabilities} Capability string (internal name lookup/mapping) for Hector output variables
+\code{globalCapabilities} Capability string (internal name lookup/mapping) for Hector output variables, organized by group
 }
 \keyword{datasets}

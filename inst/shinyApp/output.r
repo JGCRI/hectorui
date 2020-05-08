@@ -1,4 +1,4 @@
-#' Internal function used to clean up visual elements when the number of number of output variables or scenarios changes
+#' Internal function used to clean up visual elements when the number of number of graph output variables changes
 #'
 #' @return Function does not return a value
 #'
@@ -6,6 +6,8 @@
 cleanPlots <- function()
 {
   print("in clean plots")
+
+  # Clean all plots if there's no active Hector cores
   if(length(hcores) < 1)
   {
     output[["plot1"]] <<- NULL
@@ -15,6 +17,7 @@ cleanPlots <- function()
   }
   else
   {
+    # Start in reverse and clear out (make NULL) any plots that exceed the number of output variables
     if(length(outputVariables) < 4)
       output[["plot4"]] <<- NULL
     if(length(outputVariables) < 3)
@@ -26,9 +29,9 @@ cleanPlots <- function()
   }
 }
 
-#' Main output function that generates the graphs
+#' Output function that generates the graphs
 #'
-#' Observer function designed to handle the loading/creation of the output graphs from the Hector model.
+#' Observer function designed to handle the loading/creation of the output graphs
 #' @return no return value
 #' @export
 #'
@@ -36,6 +39,7 @@ cleanPlots <- function()
 loadGraph <- function()
 {
   print("in load graph")
+
   # Set up local variables for dealing with output data frames
   hdata <- data.frame()
   df_total <- data.frame()
@@ -43,6 +47,7 @@ loadGraph <- function()
   # Main loop that handles graph output based on number of scenarios and number of output variables
   if(length(hcores) > 0)
   {
+    # If length is 5 or more than they've chosen too many variables
     if(length(outputVariables) < 5)
     {
       tryCatch(

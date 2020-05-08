@@ -3,19 +3,20 @@
 
 library(shinyBS)
 
-# Using Shiny Fixed layout
-fixedPage(theme = shinythemes::shinytheme("darkly"),
+  # Using Shiny Fixed layout
+  fixedPage(theme = shinythemes::shinytheme("darkly"),
   # shinythemes::themeSelector(),
   shinyalert::useShinyalert(),
+
   # Application title
   h2("Hector: An Interactive Climate Model", class="titleText"),
 
-  # Function that gets called on first load of application to load in any themes/css etc
+  # Code that gets called on first load of application to load in any themes/css etc
   # Loads the custom.css file that contains custom styles and overwrites some built in styles
   tags$head
   (
     tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
-    # ,
+    # , Future google analytics capability
     # tags$link(href="google-analytics.js")
   ),
   shinyjs::useShinyjs(),
@@ -30,7 +31,8 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
       "System Information",
       # Main Panel that holds the tabs for the Information section
       mainPanel
-      ( width = 9,
+      (
+        width = 9,
         tabsetPanel
         (
           # Information Tab Panel
@@ -178,7 +180,8 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                     shinyWidgets::prettyCheckbox(inputId = "input_RCP_6.0", label = "6.0", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "warning"),
                     shinyWidgets::prettyCheckbox(inputId = "input_RCP_8.5", label = "8.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "danger")
                     )
-                ), # radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
+                ),
+                # radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
 
                 # Divider that holds the parameter options/controls
                 div(id="myapp",
@@ -428,7 +431,6 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                 tags$td(width = "20", align="left", class="tdPushTop",
 popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Enable Comparative Differences",
                                                                                content = "This will change the temperature output on the map to show the difference between the computed temperature of the selected year and the temperature from the year 1900.", placement = "top")),
-#popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Parameters", content = "This will reset any/all parameters for each active Hector core, overwriting any custom parameter changes. Custom emissions will remain.", placement = "top" )
 
                 tags$td(shinyWidgets::prettyCheckbox(inputId = "input_map_compare", label = "Show as comparison to year 1900", value = FALSE,  inline = FALSE, icon = icon("check")))
 
