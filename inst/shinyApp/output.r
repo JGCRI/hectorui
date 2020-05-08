@@ -161,7 +161,7 @@ loadMap <- function()
           if(input$mapVar == "tas")
             patternFile <- globalTempPatterns[[input$mapPattern]]
           else
-            patternFile <- globalPrecipPatterns
+            patternFile <- globalPrecipPatterns[[input$mapPattern]]
 
           # Fetch needed data from Hector cores
           results <- hector::fetchvars(hcores[[input$mapCore]], 1900:2100)

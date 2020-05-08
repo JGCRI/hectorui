@@ -241,6 +241,10 @@ library(shinyBS)
                 ),
 
                 # Divider that holds the custom emissions options/controls
+                # bsCollapse(
+                #   bsCollapsePanel(title="Custom Emissions",
+
+
                 div(h5("Custom Emissions"),
                     tags$hr(class="hrNav"),
                     p("Note: Custom emissions are only applicable to standard scenarios (not custom created scenarios)"),
@@ -273,7 +277,8 @@ library(shinyBS)
                         actionButton(inputId="input_reset_custom_emissions", label="Reset All Emissions"),
                         popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions", content = "This will reset all active Standard Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
                     )
-                )
+                 )# ) Collapsible comment
+                # )
               )
           ), # End Information Panel
 

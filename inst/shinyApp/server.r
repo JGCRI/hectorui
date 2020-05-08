@@ -58,13 +58,13 @@ server <- function(input, output, session)
     plot_output_list <- lapply(1:4, function(i)
     {
       plotname <- paste("plot", i, sep="")
-      plot <-  plotly::plotlyOutput(plotname, height = 270, width = 550) #%>%
+      plot <-  plotly::plotlyOutput(plotname, height = 255, width = 510) #%>%
                # layout(dragmode = "select") %>%
                # event_register("plotly_selecting")
 
       tags$div(class = "group-output",
                # textOutput(plottitle, container = h3),
-               plotly::plotlyOutput(plotname, height = 270, width = 550)
+               plotly::plotlyOutput(plotname, height = 255, width = 510)
       )
     })
 
@@ -78,10 +78,10 @@ server <- function(input, output, session)
     map_output_list <- lapply(1:1, function(i)
     {
       mapname <- paste("map", i, sep="")
-      map <-  plotly::plotlyOutput(mapname, height = 550, width = 1100)
+      map <-  plotly::plotlyOutput(mapname, height = 550, width = 1050)
 
       shinyjs::hidden(tags$div(class = "group-output", id = "map-div",
-               shinycustomloader::withLoader(plotly::plotlyOutput(mapname, height = 550, width = 1100), type="text",
+               shinycustomloader::withLoader(plotly::plotlyOutput(mapname, height = 550, width = 1050), type="text",
                                              loader = list(shinycustomloader::marquee("Please Wait... Finalizing Raster Output", style="font-size:30px; color:white; text-align:center", scrollamount = 0))))
       )
     })

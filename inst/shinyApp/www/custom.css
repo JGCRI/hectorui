@@ -3,7 +3,7 @@
 
 body
 {
-	font-size: 13px;
+	font-size: 12px;
 	background-color:#000000;
 }
 
@@ -47,7 +47,7 @@ h5
 
 h6
 {
-	font-size:15px; 
+	font-size:15px;
 	font-weight: bold;
 	margin-top: 5px;
 	margin-bottom: 10px;
@@ -89,7 +89,7 @@ li
 
 ol
 {
-	
+
 	list-style-position: outside;
 	/*counter-reset: my-awesome-counter;*/
 	padding-left: 10px;
@@ -100,13 +100,13 @@ ol li
 	counter-increment: my-awesome-counter;
 }
 
-ol li::before 
+ol li::before
 {
 	content: counter(my-awesome-counter) ". ";
 	color: #FAF7F2;
 	font-weight: bold;
 	font-size: 16px;
-	
+
 }
 */
 table a:not(.btn), .table a:not(.btn)
@@ -190,9 +190,8 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 
 .container
 {
-	width: 1600px;
+	width: 1480px;
 	background-color:#222222;
-	height: 100vh;
 }
 
 .container-fluid
@@ -276,7 +275,7 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 	padding: 3px;
 }
 
-.js-plotly-plot .plotly .modebar 
+.js-plotly-plot .plotly .modebar
 {
  	padding-top: 24px;
   	position: absolute;
@@ -298,7 +297,7 @@ table a:not(.btn):hover, .table a:not(.btn):hover
 {
 	color: #FFFFFF;
 	background-color: #375a7f;
-	
+
 }
 
 .navbar
