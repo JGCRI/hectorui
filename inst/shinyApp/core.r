@@ -22,6 +22,7 @@ loadScenario <- function(scenario)
     error = function(err)
     {
       shinyalert::shinyalert("Initalization Error", print(paste('Error starting Hector: ', err)), type = "error")
+      print(scenario)
     })
   return(hcore)
 }

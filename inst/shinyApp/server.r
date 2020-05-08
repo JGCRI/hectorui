@@ -1,5 +1,6 @@
 
 library(HectorShiny)
+library(hector)
 
 #' Main server/data processing function
 #'
