@@ -78,3 +78,4 @@ vignettes/rsconnect
 rsconnect
 inst/shinyApp/temp.ini
 inst/shinyApp/test.ini
+packrat/lib*/
