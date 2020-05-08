@@ -37,7 +37,8 @@ Imports:
     fldgen,
     rgdal,
     maps, 
-    shinycustomloader
+    shinycustomloader,
+    hector
 Depends:
 RoxygenNote: 6.1.1
 
