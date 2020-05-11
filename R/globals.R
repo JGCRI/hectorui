@@ -207,11 +207,11 @@
   globalCapabilities[['f_n2o']] <- hector::RF_N2O()
   attr(globalCapabilities[['f_n2o']], 'longName') <- "RF - N2O"
   # "RF - H2O"
-  globalCapabilities[['f_h2o']] <- hector::RF_H2O()
-  attr(globalCapabilities[['f_h2o']], 'longName') <- "RF - H2O"
+  # globalCapabilities[['f_h2o']] <- hector::RF_H2O()
+  # attr(globalCapabilities[['f_h2o']], 'longName') <- "RF - H2O"
   # "RF - Ozone"
-  globalCapabilities[['f_oz']] <- hector::RF_O3()
-  attr(globalCapabilities[['f_oz']], 'longName') <- "RF - Ozone"
+  # globalCapabilities[['f_oz']] <- hector::RF_O3()
+  # attr(globalCapabilities[['f_oz']], 'longName') <- "RF - Ozone"
   # "RF - Black Carbon"
   globalCapabilities[['f_bc']] <- hector::RF_BC()
   attr(globalCapabilities[['f_bc']], 'longName') <- "RF - Black Carbon"
@@ -290,14 +290,14 @@
   globalCapabilities[['he_ch3ccl3']] <- hector::EMISSIONS_CH3CCL3()
   attr(globalCapabilities[['he_ch3ccl3']], 'longName') <- "CH3CCl3 Emissions"
   # "HCFC-22 Emissions"
-  globalCapabilities[['he_hcfc22']] <- hector::EMISSIONS_HCF22()
-  attr(globalCapabilities[['he_hcfc22']], 'longName') <- "HCFC-22 Emissions"
+  # globalCapabilities[['he_hcfc22']] <- hector::EMISSIONS_HCF22()
+  # attr(globalCapabilities[['he_hcfc22']], 'longName') <- "HCFC-22 Emissions"
   # "HCFC-141b Emissions"
-  globalCapabilities[['he_hcfc141b']] <- hector::EMISSIONS_HCF141B()
-  attr(globalCapabilities[['he_hcfc141b']], 'longName') <- "HCFC-141b Emissions"
+  # globalCapabilities[['he_hcfc141b']] <- hector::EMISSIONS_HCF141B()
+  # attr(globalCapabilities[['he_hcfc141b']], 'longName') <- "HCFC-141b Emissions"
   # "HCFC-142b Emissions"
-  globalCapabilities[['he_hcfc142b']] <- hector::EMISSIONS_HCF142B()
-  attr(globalCapabilities[['he_hcfc142b']], 'longName') <- "HCFC-142b Emissions"
+  # globalCapabilities[['he_hcfc142b']] <- hector::EMISSIONS_HCF142B()
+  # attr(globalCapabilities[['he_hcfc142b']], 'longName') <- "HCFC-142b Emissions"
   # "Halon-1211 Emissions"
   globalCapabilities[['he_halon1211']] <- hector::EMISSIONS_HALON1211()
   attr(globalCapabilities[['he_halon1211']], 'longName') <- "Halon-1211 Emissions"
@@ -370,14 +370,14 @@
   globalCapabilities[['hf_ch3ccl3']] <- hector::RF_CH3CCL3()
   attr(globalCapabilities[['hf_ch3ccl3']], 'longName') <- "CH3CCl3 Forcing"
   # "HCFC-22 Forcing"
-  globalCapabilities[['hf_hcfc22']] <- hector::RF_HCF22()
-  attr(globalCapabilities[['hf_hcfc22']], 'longName') <- "HCFC-22 Forcing"
+  # globalCapabilities[['hf_hcfc22']] <- hector::RF_HCF22()
+  # attr(globalCapabilities[['hf_hcfc22']], 'longName') <- "HCFC-22 Forcing"
   # "HCFC-141b Forcing"
-  globalCapabilities[['hf_hcfc141b']] <- hector::RF_HCF141B()
-  attr(globalCapabilities[['hf_hcfc141b']], 'longName') <- "HCFC-141b Forcing"
+  # globalCapabilities[['hf_hcfc141b']] <- hector::RF_HCF141B()
+  # attr(globalCapabilities[['hf_hcfc141b']], 'longName') <- "HCFC-141b Forcing"
   # "HCFC-142b Forcing"
-  globalCapabilities[['hf_hcfc142b']] <- hector::RF_HCF142B()
-  attr(globalCapabilities[['hf_hcfc142b']], 'longName') <- "HCFC-142b Forcing"
+  # globalCapabilities[['hf_hcfc142b']] <- hector::RF_HCF142B()
+  # attr(globalCapabilities[['hf_hcfc142b']], 'longName') <- "HCFC-142b Forcing"
   # "Halon-1211 Forcing"
   globalCapabilities[['hf_halon1211']] <- hector::RF_HALON1211()
   attr(globalCapabilities[['hf_halon1211']], 'longName') <- "Halon-1211 Forcing"
@@ -513,8 +513,8 @@
   globalCapabilities[['t_oat']] <- hector::OCEAN_AIR_TEMP()
   attr(globalCapabilities[['t_oat']], 'longName') <- "Ocean Air Temperature"
   # "Land Temp Anomaly"
-  globalCapabilities[['t_lta']] <- hector::LAND_TEMP()
-  attr(globalCapabilities[['t_lta']], 'longName') <- "Land Temperature Anomaly"
+  # globalCapabilities[['t_lta']] <- hector::LAND_TEMP()
+  # attr(globalCapabilities[['t_lta']], 'longName') <- "Land Temperature Anomaly"
   # "Heat Flux - Mixed Layer Ocean"
   globalCapabilities[['t_hf_mlo']] <- hector::FLUX_MIXED()
   attr(globalCapabilities[['t_hf_mlo']], 'longName') <- "Heat Flux - Mixed Layer Ocean"
