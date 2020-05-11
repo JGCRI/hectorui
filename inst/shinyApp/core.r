@@ -13,15 +13,15 @@ loadScenario <- function(scenario)
 {
   print("in load scenario")
   tryCatch(
-    {
-      inifile <<- system.file(globalScenarios[paste("RCP", scenario)], package='hector', mustWork=TRUE)
+    {browser()
+      inifile <<- system.file(globalScenarios[paste0("RCP-", scenario)], package='hector', mustWork=TRUE)
       hcore <- hector::newcore(inifile, suppresslogging=TRUE, name=paste(globalScenarios[paste("RCP", scenario)]))
       setCoreParameters(hcore)
       hector::run(hcore, globalVars[['endDate']])
     },
     error = function(err)
     {
-      shinyalert::shinyalert("Initalization Error", print(paste('Error starting Hector: ', err)), type = "error")
+      shinyalert::shinyalert("Initalization Error", print(paste('Error starting Hector: ', err, ' scen= ', scenario, ' gs=',globalScenarios[paste("RCP", scenario)])), type = "error")
       print(scenario)
     })
   return(hcore)
