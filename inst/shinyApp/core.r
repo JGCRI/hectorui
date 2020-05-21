@@ -13,7 +13,7 @@ loadScenario <- function(scenario)
 {
   print("in load scenario")
   tryCatch(
-    {browser()
+    {
       inifile <<- system.file(globalScenarios[paste0("RCP-", scenario)], package='hector', mustWork=TRUE)
       hcore <- hector::newcore(inifile, suppresslogging=TRUE, name=paste(globalScenarios[paste("RCP", scenario)]))
       setCoreParameters(hcore)
