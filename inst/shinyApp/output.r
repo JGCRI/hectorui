@@ -262,8 +262,9 @@ loadMap <- function()
 
         # Construct ggplot map object
         ggplotMap <<- ggplot2::ggplot() +
-          mapWorld +
+
           ggplot2::geom_raster(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar),interpolate = TRUE ) +
+          mapWorld +
           # ggplot2::geom_point(data = combined_data, ggplot2::aes(x = Lon, y = Lat, color = Neg, alpha = 0.5)) +
           ggplot2::coord_fixed(ratio = 1) +
           ggplot2::scale_fill_distiller(palette = mapPalette,type = "div", direction = mapDirection, na.value = "Gray") + #, limits = c(-1,1)*max(abs(combined_data[[mapVar]]))) +
