@@ -301,7 +301,7 @@ library(shinyBS)
               tags$table(
                 tags$tr(width = "100%",
                   tags$td(width = "145", "Baseline Scenario:"),
-                  tags$td(width = "155", selectInput("input_custom_RCP", label = NULL, list("RCP 2.6" = "RCP 2.6","RCP 4.5"="RCP 4.5", "RCP 6"="RCP 6.0", "RCP 8.5" = "RCP 8.5"), width=150, selected = "RCP 4.5"))
+                  tags$td(width = "155", selectInput("input_custom_RCP", label = NULL, list("RCP2.6" = "RCP-2.6","RCP 4.5"="RCP-4.5", "RCP 6"="RCP-6.0", "RCP 8.5" = "RCP-8.5"), width=150, selected = "RCP-4.5"))
                 ),
                 tags$tr(width = "100%",
                   tags$td(width = "145", "Custom Scenario Name:"),
@@ -311,19 +311,19 @@ library(shinyBS)
 
               div(
                 conditionalPanel(
-                  condition = "input.input_custom_RCP == 'RCP 2.6'",
+                  condition = "input.input_custom_RCP == 'RCP-2.6'",
                   a(h6("Download RCP 2.6 Emissions File Template"), href="input/emissions/RCP26_custom_template.csv")
                 ),
                 conditionalPanel(
-                  condition = "input.input_custom_RCP == 'RCP 4.5'",
+                  condition = "input.input_custom_RCP == 'RCP-4.5'",
                   a(h6("Download RCP 4.5 Emissions File Template"), href="input/emissions/RCP45_custom_template.csv")
                 ),
                 conditionalPanel(
-                  condition = "input.input_custom_RCP == 'RCP 6.0'",
+                  condition = "input.input_custom_RCP == 'RCP-6.0'",
                   a(h6("Download RCP 6.0 Emissions File Template"), href="input/emissions/RCP6_custom_template.csv")
                 ),
                 conditionalPanel(
-                  condition = "input.input_custom_RCP == 'RCP 8.5'",
+                  condition = "input.input_custom_RCP == 'RCP-8.5'",
                   a(h6("Download RCP 8.5 Emissions File Template"), href="input/emissions/RCP85_custom_template.csv")
                 ),
 

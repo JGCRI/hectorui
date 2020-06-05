@@ -373,10 +373,10 @@
   # globalCapabilities[['hf_hcfc22']] <- hector::RF_HCF22()
   # attr(globalCapabilities[['hf_hcfc22']], 'longName') <- "HCFC-22 Forcing"
   # "HCFC-141b Forcing"
-  # globalCapabilities[['hf_hcfc141b']] <- hector::RF_HCF141B()
+  # globalCapabilities[['hf_hcfc141b']] <- hector::RF_HCFC141B()
   # attr(globalCapabilities[['hf_hcfc141b']], 'longName') <- "HCFC-141b Forcing"
   # "HCFC-142b Forcing"
-  # globalCapabilities[['hf_hcfc142b']] <- hector::RF_HCF142B()
+  # globalCapabilities[['hf_hcfc142b']] <- hector::RF_HCFC142B()
   # attr(globalCapabilities[['hf_hcfc142b']], 'longName') <- "HCFC-142b Forcing"
   # "Halon-1211 Forcing"
   globalCapabilities[['hf_halon1211']] <- hector::RF_HALON1211()

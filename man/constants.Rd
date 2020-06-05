@@ -18,7 +18,35 @@
 \alias{globalParamsMRIESM1}
 \alias{globalCapabilities}
 \title{Global constants for the Hector-Shiny UI}
-\format{An object of class \code{list} of length 3.}
+\format{
+An object of class \code{list} of length 3.
+
+An object of class \code{character} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{character} of length 6.
+
+An object of class \code{character} of length 6.
+
+An object of class \code{character} of length 7.
+
+An object of class \code{numeric} of length 7.
+
+An object of class \code{numeric} of length 7.
+
+An object of class \code{numeric} of length 7.
+
+An object of class \code{numeric} of length 7.
+
+An object of class \code{numeric} of length 7.
+
+An object of class \code{numeric} of length 7.
+
+An object of class \code{numeric} of length 7.
+
+An object of class \code{list} of length 111.
+}
 \usage{
 globalVars
 

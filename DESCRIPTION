@@ -40,5 +40,4 @@ Imports:
     shinycustomloader,
     hector
 Depends:
-RoxygenNote: 6.1.1
-
+RoxygenNote: 7.1.0

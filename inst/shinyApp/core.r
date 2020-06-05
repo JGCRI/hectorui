@@ -56,7 +56,7 @@ restartCore <- function()
 {
   print("in restart core")
   tryCatch(
-  {
+  {browser()
     if(length(hcores) > 0)
     {
       withProgress(message = 'Restarting Hector Cores...\n', value = 0,
@@ -68,7 +68,7 @@ restartCore <- function()
           if(substr(scenarioName, 1, 8) =="Standard")
           {
             core <- hcores[[i]]
-            inifile <- system.file(core$name, package='hector', mustWork=TRUE)
+            #inifile <- system.file(core$name, package='hector', mustWork=TRUE)
             hector::shutdown(core = hcores[[i]])
             hcores[[scenarioName]] <<- loadScenario(substr(scenarioName, nchar(scenarioName)-2, nchar(scenarioName))) #  hector::newcore(inifile, suppresslogging=TRUE, name=paste(globalScenarios[paste("RCP",  scenario)]))
             hector::run(hcores[[i]], globalVars[['endDate']])

@@ -258,22 +258,28 @@ loadMap <- function()
         }
 
         # Create world map borders
-        mapWorld <- ggplot2::borders("world",  ylim=c(lat_min, lat_max), xlim=c(lon_min, lon_max)) #  colour="black", col="white",, fill="gray100"
-
+        mapWorld <- ggplot2::borders("world", fill = NA, ylim=c(lat_min, lat_max), xlim=c(lon_min, lon_max))
+        # switching from ggplot borders to actual shape obj
+          #mapWorld <- sf::st_read(system.file("shinyApp/www/maps/TM_WORLD_BORDERS_SIMPL-0.3.shp", package="HectorShiny"))
+#browser()
         # Construct ggplot map object
         ggplotMap <<- ggplot2::ggplot() +
-
-          ggplot2::geom_raster(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar),interpolate = TRUE ) +
           mapWorld +
+         # ggplot2::geom_sf(data = mapWorld, na.rm = TRUE, fill=NA) +
+          ggplot2::geom_raster(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar),interpolate = TRUE ) +
+
           # ggplot2::geom_point(data = combined_data, ggplot2::aes(x = Lon, y = Lat, color = Neg, alpha = 0.5)) +
-          ggplot2::coord_fixed(ratio = 1) +
+         # ggplot2::coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max)) +
+          ggplot2::coord_fixed() +
           ggplot2::scale_fill_distiller(palette = mapPalette,type = "div", direction = mapDirection, na.value = "Gray") + #, limits = c(-1,1)*max(abs(combined_data[[mapVar]]))) +
           ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = mapFill) +
           ggplot2::scale_y_continuous(limits=c(lat_min, lat_max), expand = c(0, 0), breaks=seq(-90,90,30))+
-          ggplot2::scale_x_continuous(limits=c(lon_min, lon_max), expand = c(0, 0), breaks=seq(-180,180,30))
+          ggplot2::scale_x_continuous(limits=c(lon_min, lon_max), expand = c(0, 0), breaks=seq(-180,180,30))#+
+         # ggplot2::theme_minimal()
 
-        localPlot <- plotly::ggplotly(p = ggplotMap)
-        plotly::layout(p=localPlot, yaxis = list(tickformat = "\u00B0C", dtick = 10))
+        localPlot <- plotly::ggplotly(p = ggplotMap  )
+        plotly::layout(p=localPlot, yaxis = list(tickformat = "\u00B0C", dtick = 10, showgrid=FALSE))
+        plotly::layout(p=localPlot,  xaxis = list(showgrid = FALSE))
 
         output[[mapname]] <- plotly::renderPlotly(localPlot)
         incProgress(1/1, detail = "Map loaded.")
@@ -344,7 +350,7 @@ output$downloadData <- downloadHandler(
      },
    content = function(file)
      {
-        #browser()
+       # browser()
         ggplot2::ggsave(filename = file, plot = ggplotMap, device = "png", dpi = 150, limitsize = TRUE, width = 15, height = 10)
     }
  )
