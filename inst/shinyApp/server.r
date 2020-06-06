@@ -33,7 +33,7 @@ server <- function(input, output, session)
   customLoaded <- FALSE
   ggthemr::ggthemr('dust', type = "outer")
   selectedIndex <<- 1
-  ggplotMap <<- ggplot2::ggplot()
+  ggplotSave <<- ggplot2::ggplot()
 
   # These variables are for storing the current parameter values so that if a change is made (like loading new scenario)
   # then the custom params set by user will persist beyond core restarts

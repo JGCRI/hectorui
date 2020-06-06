@@ -56,7 +56,7 @@ restartCore <- function()
 {
   print("in restart core")
   tryCatch(
-  {browser()
+  {#browser()
     if(length(hcores) > 0)
     {
       withProgress(message = 'Restarting Hector Cores...\n', value = 0,
