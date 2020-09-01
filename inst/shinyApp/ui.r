@@ -5,7 +5,6 @@ library(shinyBS)
 
   # Using Shiny Fixed layout
   fixedPage(theme = shinythemes::shinytheme("darkly"),
-  # shinythemes::themeSelector(),
   shinyalert::useShinyalert(),
 
   # Application title
@@ -147,11 +146,6 @@ library(shinyBS)
             p(icon("comment", "fa-2x"), "Support", value="feedbackTab"),
             h5("Submit Feedback"), tags$hr(class="hrNav"),
             p("Please use the form below to contact the Hector team regarding any questions, concerns, suggestions, or problems you may encounter."),
-            # h3("Feedback Form"),
-            # textInput("feedbackEmail", "Email Address:", width = 250),
-            # selectInput("feedbackType", "Type of Feedback:", choices = c("Bug Report", "Comment", "Feature Request", "Question"), width = 180),
-            # textAreaInput("feedbackInfo", "Feedback:", width = 300 ),
-            # actionButton("input_submit_feedback","Submit Feedback")
             htmlOutput("feedbackFrame")
           )
         )
@@ -181,7 +175,6 @@ library(shinyBS)
                     shinyWidgets::prettyCheckbox(inputId = "input_RCP_8.5", label = "8.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "danger")
                     )
                 ),
-                # radioButtons("input_Driven", "", list("Emissions Driven"), inline=TRUE),
 
                 # Divider that holds the parameter options/controls
                 div(id="myapp",
@@ -241,10 +234,6 @@ library(shinyBS)
                 ),
 
                 # Divider that holds the custom emissions options/controls
-                # bsCollapse(
-                #   bsCollapsePanel(title="Custom Emissions",
-
-
                 div(h5("Custom Emissions"),
                     tags$hr(class="hrNav"),
                     p("Note: Custom emissions are only applicable to standard scenarios (not custom created scenarios)"),
@@ -331,23 +320,6 @@ library(shinyBS)
                 div(
                   class="paramDivs", actionButton(inputId="input_load_emissions", label="Create Scenario"))
               )
-              # conditionalPanel(
-              #   condition = "input.input_custom_RCP == 'custom'",
-              #   h5("Custom Scenario (Advanced Users)"),
-              #   tags$hr(class="hrNav"),
-              #   p("To customize a scenario, first download the file package below, extract the files and follow these steps:"),
-              #   tags$ol(
-              #     tags$li("Customize the .INI file that corresponds closest to your desired starting point (i.e. Hector_RCP26.ini)"),
-              #     tags$li("Replace every emissions file path in the .INI file with a fully qualified local path (i.e. c:\\files\\emissions.csv)"),
-              #     tags$li("(Optional) Change emissions data in emissions file(s)"),
-              #     tags$li("Upload the .INI file below to create a custom scenario")
-              #   ),
-              #   a(h6("Download Custom Scenario File Package"), href="input/HectorCustomFiles.zip"),
-              #   fileInput("input_custom_scenario_ini", "Upload Custom Scenario File (.INI):", width=275, buttonLabel = "Choose File", accept = c(".ini")),
-              #   fileInput("input_custom_scenario_csv", "Upload Custom Emissions File (.CSV):", width=275, buttonLabel = "Choose File", accept = c(".ini")),
-              #     div(class="paramDivs", actionButton(inputId="input_load_custom", label="Create Scenario"))
-              # ) # End conditional Panel
-
             ) # End Div
           ) # End Custom Scenarios Tab Panel
         ) # End Tabset
@@ -467,7 +439,6 @@ popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Enable Com
             ),
             actionButton(inputId="loadMaps", label="Load Map", width = 150),
             downloadButton("downloadMap", label="Save Hi-Res Map", width = 150),
-            # actionButton(inputId="saveMap", label="Save Hi-Res Map", width=150),
             uiOutput("maps", class = "customPlot")
           ) # End Maps Tab
         ) # End tabset panel

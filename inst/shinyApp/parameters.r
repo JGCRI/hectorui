@@ -8,8 +8,6 @@
 #' @examples
 setCoreParameters <- function(hcore)
 {
-  # if(length(hcores) > 0)
-  # {
     hector::setvar(hcore, dates = NA, var = globalParameters['aero'], values = c(as.double(paramsList[['alpha']])), unit = "unitless")
     hector::setvar(hcore, dates = NA, var = globalParameters['beta'], values = c(as.double(paramsList[['beta']])), unit = "unitless")
     hector::setvar(hcore, dates = NA, var = globalParameters['diff'], values = c(as.double(paramsList[['diff']])), unit = "cm2/s")
@@ -17,11 +15,6 @@ setCoreParameters <- function(hcore)
     hector::setvar(hcore, dates = NA, var = globalParameters['pco2'], values = c(as.double(paramsList[['C']])), unit = "ppmv CO2")
     hector::setvar(hcore, dates = NA, var = globalParameters['q10'],  values = c(as.double(paramsList[['q10_rh']])), unit = "unitless")
     hector::setvar(hcore, dates = NA, var = globalParameters['volc'], values = c(as.double(paramsList[['volscl']])), unit = "unitless")
-  # }
-  # else
-  # {
-  #   shinyalert::shinyalert("No active Hector cores", "Please set at least one of the RCP scenarios to active or upload a custom emissions scenario before downloading.", type = "warning")
-  # }
 }
 
 #' Assign Parameters from parameter model values into numeric input components
@@ -96,8 +89,7 @@ loadModelParameters <- function()
 
     resetCore()
   }
-  # if(!firstLoad)
-  #   setParamsChanged(toggle = TRUE)
+
   if(length(hcores) > 0)
     loadGraph()
 }

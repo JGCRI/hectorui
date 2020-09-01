@@ -94,21 +94,7 @@ ol
 	/*counter-reset: my-awesome-counter;*/
 	padding-left: 10px;
 }
-/*
-ol li
-{
-	counter-increment: my-awesome-counter;
-}
 
-ol li::before
-{
-	content: counter(my-awesome-counter) ". ";
-	color: #FAF7F2;
-	font-weight: bold;
-	font-size: 16px;
-
-}
-*/
 table a:not(.btn), .table a:not(.btn)
 {
 	text-decoration: none;

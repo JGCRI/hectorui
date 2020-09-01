@@ -1,3 +1,4 @@
+# This file is the application controller
 
 library(HectorShiny)
 library(hector)
@@ -59,12 +60,9 @@ server <- function(input, output, session)
     plot_output_list <- lapply(1:4, function(i)
     {
       plotname <- paste("plot", i, sep="")
-      plot <-  plotly::plotlyOutput(plotname, height = 255, width = 510) #%>%
-               # layout(dragmode = "select") %>%
-               # event_register("plotly_selecting")
+      plot <-  plotly::plotlyOutput(plotname, height = 255, width = 510)
 
       tags$div(class = "group-output",
-               # textOutput(plottitle, container = h3),
                plotly::plotlyOutput(plotname, height = 255, width = 510)
       )
     })

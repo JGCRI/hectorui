@@ -1,3 +1,5 @@
+# This file handles anything output related (screen, file, etc)
+
 #' Internal function used to clean up visual elements when the number of number of graph output variables changes
 #'
 #' @return Function does not return a value
@@ -188,15 +190,9 @@ loadMap <- function()
             }
             mapPalette <- "RdYlBu"
             mapDirection <- -1
-           # mapVar <- "Temp"
-           # if(input$input_map_compare)
               combined_data <- dplyr::mutate(coordinates, Temp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 2),
                                              deltaTemp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1], 2),
                                              Lon=round(lon, 2), Lat=round(lat,2), Neg = ifelse(deltaTemp < 0, TRUE, FALSE))
-           # else
-            #  combined_data <- dplyr::mutate(combined_data, deltaTemp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 2), Lon=round(lon, 2), Lat=round(lat,2))
-           # combined_data$Neg <- ifelse(combined_data$Temp < 0, TRUE, FALSE)
-           # browser()
         }
         else
         {
@@ -250,8 +246,6 @@ loadMap <- function()
 
         # Create world map borders
         mapWorld <- ggplot2::borders("world", fill = NA)
-        # switching from ggplot borders to actual shape obj
-          #mapWorld <- sf::st_read(system.file("shinyApp/www/maps/TM_WORLD_BORDERS_SIMPL-0.3.shp", package="HectorShiny"))
 
         # Construct ggplot map object
         ggplotMap <- ggplot2::ggplot() +
@@ -265,22 +259,17 @@ loadMap <- function()
 
         # Separate save plot fixes missing shape layer when saving
         ggplotSave <<- ggplot2::ggplot() +
-         # ggplot2::geom_sf(data = mapWorld, na.rm = TRUE, fill=NA) +
           ggplot2::geom_raster(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar),interpolate = TRUE ) +
           mapWorld +
-          # ggplot2::geom_point(data = combined_data, ggplot2::aes(x = Lon, y = Lat, color = Neg, alpha = 0.5)) +
-         # ggplot2::coord_sf(xlim = c(lon_min, lon_max), ylim = c(lat_min, lat_max)) +
           ggplot2::coord_equal(clip = "off",expand = FALSE) +
           ggplot2::scale_fill_distiller(palette = mapPalette,type = "div", direction = mapDirection, na.value = "Gray") + #, limits = c(-1,1)*max(abs(combined_data[[mapVar]]))) +
           ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = mapFill) +
           ggplot2::scale_y_continuous(limits=c(lat_min, lat_max), expand = c(0, 0), breaks=seq(-90,90,30))+
-          ggplot2::scale_x_continuous(limits=c(lon_min, lon_max), expand = c(0, 0), breaks=seq(-180,180,30))#+
-         # ggplot2::theme_minimal()
+          ggplot2::scale_x_continuous(limits=c(lon_min, lon_max), expand = c(0, 0), breaks=seq(-180,180,30))
 
         localPlot <- plotly::ggplotly(p = ggplotMap  )
         plotly::layout(p=localPlot, yaxis = list(tickformat = "\u00B0C", dtick = 10, showgrid=FALSE))
         plotly::layout(p=localPlot,  xaxis = list(showgrid = FALSE))
-
 
         output[[mapname]] <- plotly::renderPlotly(localPlot)
         incProgress(1/1, detail = "Map loaded.")
