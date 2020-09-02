@@ -3,13 +3,13 @@ title: 'hector-ui: A web-based interactive scenario builder and visualization ap
 tags:
   - R
   - Hector
-  - climate
+  - climate model
   - R Shiny
 authors:
   - name: Jason Evanoff
-    orcid: <your orchid id>
+    orcid: 0000-0002-8858-2783
     affiliation: 1
-  - name: Chris Vernon
+  - name: Chris R. Vernon
     orcid: 0000-0002-3406-6214
     affiliation: 1
   - name: Stephanie Waldhoff
