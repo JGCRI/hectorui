@@ -1,41 +1,39 @@
 ---
-title: 'ambrosia: A Python package for calculating food demand'
+title: 'hector-ui: A web-based interactive scenario builder and visualization application for the Hector climate model'
 tags:
-  - Python
-  - GCAM
-  - food
+  - R
+  - Hector
+  - climate
+  - R Shiny
 authors:
-  - name: Kanishka Narayan
+  - name: Jason Evanoff
     orcid: <your orchid id>
+    affiliation: 1
+  - name: Chris Vernon
+    orcid: 0000-0002-3406-6214
     affiliation: 1
   - name: Stephanie Waldhoff
-    orcid: <your orchid id>
+    orcid: 0000-0002-8073-0868
     affiliation: 1
-  - name: Robert Link
-    orcid: <your orchid id>
+  - name: Corinne Hartin
+    orcid: 0000-0003-1834-6539
     affiliation: 1
-  - name: Jae Edmonds
-    orcid: <your orchid id>
-    affiliation: 1
-  - name: Chris R. Vernon
-    orchid: 0000-0002-3406-6214
+  - name: Abigail Snyder
+    orchid: 0000-0002-9034-9948
     affiliation: 1
 affiliations:
- - name: Pacific Northwest National Laboratory, Richland, WA, USA
+ - name: Joint Global Change Research Institute, Pacific Northwest National Laboratory, College Park, MD, USA
    index: 1
-date: 5 May 2020
+date: 2 September 2020
 bibliography: paper.bib
 ---
 
 # Summary
 
-The Edmonds model [@edmonds2017global] divides food consumption into two categories, staples, which represent basic foodstuffs, and non-staples, which represent higher-quality foods. Demand for staples increases at low income, but eventually peaks and begins to decline with higher income. Demand for non-staples increases with income over all income ranges; however, total (staple + non-staple) demand saturates asymptotically at high income.
-
-This is an example of a different use where we say @edmonds2017global did stuff.
-
+The Hector model [@Hartin2015] does stuff.  @Hartin2016 has demonstrated Hector in applications such as some stuff.
 
 # Acknowledgements
 
-This research was supported by the U.S. Department of Energy (DOE), Office of Science, Office of Biological and Environmental Research, as a part of research in the MultiSector Dynamics, Earth and Environmental System Modeling Program.
+This research was supported by the U.S. Department of Energy's Office of Science as a part of the MultiSector Dynamics program area within the Earth and Environmental System Modeling Program.
 
 # References
