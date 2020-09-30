@@ -2,7 +2,7 @@
 
 #----- MISC Variables
 
-  #' Global constants for the Hector-Shiny UI
+  #' Global constants for hectorui
   #' @import hector
   #' @name constants
   NULL

@@ -1,8 +1,9 @@
-Package: HectorShiny
+Package: hectorui
 Type: Package
 Title: A visual web interface for the Hector Simple Climate Model https://jgcri.github.io/hector
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: c(person("Jason", "Evanoff", email = "jason.evanoff@pnnl.gov", role = c("aut", "cre")),
+         person("Chris", "Vernon", email = "chris.vernon@pnnl.gov", role = "aut"),
          person("Robert", "Link", email = "robert.link@pnnl.gov", role = c("aut")),
 	     person("Corinne", "Hartin", email = "corinne.hartin@pnnl.gov", role = "aut"),
 	     person("Ben", "Bond-Lamberty", email = "BondLamberty@pnnl.gov", role = "aut"),
