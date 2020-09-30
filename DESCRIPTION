@@ -1,8 +1,9 @@
-Package: HectorShiny
+Package: hectorui
 Type: Package
 Title: A visual web interface for the Hector Simple Climate Model https://jgcri.github.io/hector
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: c(person("Jason", "Evanoff", email = "jason.evanoff@pnnl.gov", role = c("aut", "cre")),
+         person("Chris", "Vernon", email = "chris.vernon@pnnl.gov", role = "aut"),
          person("Robert", "Link", email = "robert.link@pnnl.gov", role = c("aut")),
 	     person("Corinne", "Hartin", email = "corinne.hartin@pnnl.gov", role = "aut"),
 	     person("Ben", "Bond-Lamberty", email = "BondLamberty@pnnl.gov", role = "aut"),
@@ -13,9 +14,9 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: 
+    remotes,
     shiny,
     shinyjs,
-    hector,
     devtools,
     dplyr,
     BH,
@@ -32,12 +33,16 @@ Imports:
     magrittr,
     shinythemes,
     shinyWidgets,
-    ggthemr,
     stringr, 
-    fldgen,
     rgdal,
     maps, 
     shinycustomloader,
-    hector
 Depends:
+    hector,
+    fldgen,
+    ggthemr
+Remotes:
+    github::JGCRI/hector@v2.3.0,
+    github::JGCRI/fldgen,
+    github::cttobin/ggthemr@v1.1.0
 RoxygenNote: 7.1.0
