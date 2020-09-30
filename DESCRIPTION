@@ -14,9 +14,9 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: 
+    remotes,
     shiny,
     shinyjs,
-    hector,
     devtools,
     dplyr,
     BH,
@@ -33,12 +33,16 @@ Imports:
     magrittr,
     shinythemes,
     shinyWidgets,
-    ggthemr,
     stringr, 
-    fldgen,
     rgdal,
     maps, 
     shinycustomloader,
-    hector
 Depends:
+    hector,
+    fldgen,
+    ggthemr
+Remotes:
+    github::JGCRI/hector@v2.3.0,
+    github::JGCRI/fldgen,
+    github::cttobin/ggthemr@v1.1.0
 RoxygenNote: 7.1.0
