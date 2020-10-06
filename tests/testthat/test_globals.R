@@ -52,14 +52,6 @@ test_that("globals:  precipitation patterns", {
                                        "MPI-ESM-LR" = "www/maps/pr_Amon_MPI-ESM-LR_rcp85_r1i1p1_200601-210012_pattern.rds",
                                        "MRI-ESM1" = "www/maps/pr_Amon_MRI-ESM1_rcp85_r1i1p1_200601-210012_pattern.rds"))
 
-  # Make sure pattern files exist/were deployed
-  expect_equal(file.exists(system.file("inst", file.path("shinyApp", globalPrecipPatterns[['CanESM2']]), package="hectorui")), TRUE)
-  expect_equal(file.exists(system.file("inst", file.path("shinyApp", globalPrecipPatterns[['CESM1-BGC']]), package="hectorui")), TRUE)
-  expect_equal(file.exists(system.file("inst", file.path("shinyApp", globalPrecipPatterns[['GFDL-ESM2G']]), package="hectorui")), TRUE)
-  expect_equal(file.exists(system.file("inst", file.path("shinyApp", globalPrecipPatterns[['MIROC-ESM']]), package="hectorui")), TRUE)
-  expect_equal(file.exists(system.file("inst", file.path("shinyApp", globalPrecipPatterns[['MPI-ESM-LR']]), package="hectorui")), TRUE)
-  expect_equal(file.exists(system.file("inst", file.path("shinyApp", globalPrecipPatterns[['MRI-ESM1']]), package="hectorui")), TRUE)
-
 })
 
 
