@@ -36,13 +36,18 @@ Imports:
     stringr, 
     rgdal,
     maps, 
-    shinycustomloader,
+    shinycustomloader
 Depends:
+    R (>= 3.6.0),
     hector,
     fldgen,
     ggthemr
+Suggests:
+    testthat
 Remotes:
     github::JGCRI/hector@v2.3.0,
     github::JGCRI/fldgen,
     github::cttobin/ggthemr@v1.1.0
 RoxygenNote: 7.1.1
+VignetteBuilder: knitr
+
