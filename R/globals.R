@@ -2,7 +2,7 @@
 
 #----- MISC Variables
 
-  #' Global constants for the Hector-Shiny UI
+  #' Global constants for hectorui
   #' @import hector
   #' @name constants
   NULL
@@ -411,7 +411,7 @@
   globalCapabilities[['m_soil_loss']] <- hector::LIFETIME_SOIL()
   attr(globalCapabilities[['m_soil_loss']], 'longName') <- "Methane Loss - Soil"
   # "Methane Loss - Straosphere"
-  globalCapabilities[['m_strat_loss']] <- hector::LIFETIME_STRAT
+  globalCapabilities[['m_strat_loss']] <- hector::LIFETIME_STRAT()
   attr(globalCapabilities[['m_strat_loss']], 'longName') <- "Methane Loss - Straosphere"
 
   # OCEAN

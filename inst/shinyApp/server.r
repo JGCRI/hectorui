@@ -1,6 +1,6 @@
 # This file is the application controller
 
-library(HectorShiny)
+library(hectorui)
 library(hector)
 
 #' Main server/data processing function

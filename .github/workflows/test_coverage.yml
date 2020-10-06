@@ -1,0 +1,47 @@
+env:
+    cache-version: v1
+    r-version: 4.0
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+name: build
+
+jobs:
+  test-coverage:
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          r-version: ${{ env.r-version }}
+
+      - uses: r-lib/actions/setup-r@master
+
+      - name: Query dependencies
+        run: |
+          install.packages(c("remotes", "rcmdcheck"), repos = "https://cloud.r-project.org")
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+        shell: Rscript {0}
+
+      - name: Cache R packages
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ env.cache-version }}-macOS-r-${{ env.r-version }}-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ env.cache-version }}-macOS-r-${{ env.r-version }}-
+
+      - name: Install dependencies
+        run: |
+          install.packages(c("remotes", "covr"), repos = "https://cloud.r-project.org")
+          remotes::install_deps(dependencies = TRUE)
+        shell: Rscript {0}
+
+      - name: Test coverage
+        run: covr::codecov()
+        shell: Rscript {0}
+
