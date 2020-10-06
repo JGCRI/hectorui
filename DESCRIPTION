@@ -36,7 +36,8 @@ Imports:
     stringr, 
     rgdal,
     maps, 
-    shinycustomloader
+    shinycustomloader,
+    knitr
 Depends:
     R (>= 3.6.0),
     hector,
