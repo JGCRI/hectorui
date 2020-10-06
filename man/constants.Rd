@@ -17,7 +17,7 @@
 \alias{globalParamsMPIESMLR}
 \alias{globalParamsMRIESM1}
 \alias{globalCapabilities}
-\title{Global constants for the Hector-Shiny UI}
+\title{Global constants for hectorui}
 \format{
 An object of class \code{list} of length 3.
 
@@ -77,7 +77,7 @@ globalParamsMRIESM1
 globalCapabilities
 }
 \description{
-Global constants for the Hector-Shiny UI
+Global constants for hectorui
 }
 \details{
 \code{globalVars}: Miscellaneous global variables
