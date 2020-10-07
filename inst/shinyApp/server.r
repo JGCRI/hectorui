@@ -35,7 +35,7 @@ rcps <- get_rcps()
 #' @details \code{globalScenarios} Scenario input file names and paths
 #' @rdname constants
 #' @export
-globalScenarios <- get_globalScenarios(rcps)
+globalScenarios <- get_globalScenarios()
 
 
 # Global scenario color schemes
