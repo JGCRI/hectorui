@@ -1,6 +1,6 @@
 env:
     cache-version: v1
-    r-version: 4.0
+    r-version: 3.6
 
 on:
   push:
@@ -13,8 +13,10 @@ on:
 name: build
 
 jobs:
-  test-coverage:
+  build:
     runs-on: macOS-latest
+    env:
+      GITHUB_PAT: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -22,26 +24,29 @@ jobs:
 
       - uses: r-lib/actions/setup-r@master
 
+      - uses: r-lib/actions/setup-pandoc@master
+
       - name: Query dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck"), repos = "https://cloud.r-project.org")
+          install.packages('remotes')
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
 
       - name: Cache R packages
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ env.cache-version }}-macOS-r-${{ env.r-version }}-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ env.cache-version }}-macOS-r-${{ env.r-version }}-
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "covr"), repos = "https://cloud.r-project.org")
+          install.packages(c("remotes"))
           remotes::install_deps(dependencies = TRUE)
+          remotes::install_cran("covr")
         shell: Rscript {0}
 
       - name: Test coverage
         run: covr::codecov()
         shell: Rscript {0}
-
