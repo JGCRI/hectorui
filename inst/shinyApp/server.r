@@ -3,6 +3,127 @@
 library(hectorui)
 library(hector)
 
+
+#' Global constants for hectorui
+#' @import hector
+#' @name constants
+NULL
+
+
+# Global vars for misc items such as the run date end year (2100)
+#' @details \code{globalVars}: Miscellaneous global variables
+#' @rdname constants
+#' @export
+globalVars <- get_globalVars()
+
+
+# Global vars for scale colors
+#' @details \code{globalColorScales}: Scale colors
+#' @rdname constants
+#' @export
+globalColorScales <- get_globalColorScales()
+
+
+# Global file paths vector
+#' @details \code{globalScenarios} Scenario input file names and paths
+#' @rdname constants
+#' @export
+rcps <- get_rcps()
+
+
+# Global file paths vector
+#' @details \code{globalScenarios} Scenario input file names and paths
+#' @rdname constants
+#' @export
+globalScenarios <- get_globalScenarios()
+
+
+# Global scenario color schemes
+#' @details \code{globalScenarios} Scenario color schemes
+#' @rdname constants
+#' @export
+globalScenarioColors <- get_globalScenarioColors()
+
+
+# Global temperature patterns
+#' @details \code{globalTempPatterns} Create global temperature patterns list
+#' @rdname constants
+#' @export
+globalTempPatterns <- get_globalTempPatterns()
+
+
+# Global precipitation patterns list
+#' @details \code{globalPrecipPatterns} Create global precipitation patterns list
+#' @rdname constants
+#' @export
+globalPrecipPatterns <- get_globalPrecipPatterns()
+
+
+# Create master list of parameter lookup strings
+#' @details \code{globalParameters}: Capability strings (internal name lookup/mapping) for Hector parameters - (should match UI component ids)
+#' @rdname constants
+#' @export
+globalParameters <- get_globalParameters()
+
+
+# Default Hector parameters
+#' @details \code{globalParamsDefault}: Default Parameter Set
+#' @rdname constants
+#' @export
+globalParamsDefault <- get_globalParamsDefault()
+
+
+# CanESM2 Parameter Sets
+#' @details \code{globalParamsCanESM2}: CanESM2 Parameters for model emulation
+#' @rdname constants
+#' @export
+globalParamsCanESM2 <- get_globalParamsCanESM2()
+
+
+# CESM1-BGC Parameter Set
+#' @details \code{globalParamsCESM1BGC}: CESM1-BGC Parameters for model emulation
+#' @rdname constants
+#' @export
+globalParamsCESM1BGC <- get_globalParamsCESM1BGC()
+
+
+# GFDL-ESM2G Parameter Set
+#' @details \code{globalParamsGFDLESM2G}: GFDL-ESM2G Parameters for model emulation
+#' @rdname constants
+#' @export
+globalParamsGFDLESM2G <- get_globalParamsGFDLESM2G()
+
+
+# MIROC-ESM Parameter Set
+#' @details \code{globalParamsMIROCESM}: MIROC-ESM Parameters for model emulation
+#' @rdname constants
+#' @export
+globalParamsMIROCESM <- get_globalParamsMIROCESM()
+
+
+# MPI-ESM-LR Parameter Set
+#' @details \code{globalParamsMPIESM-LR}: MPI-ESM-LR Parameters for model emulation
+#' @rdname constants
+#' @export
+globalParamsMPIESMLR <- get_globalParamsMPIESMLR()
+
+
+# MRI-ESM1 Parameter Set
+#' @details \code{globalParamsMRIESM1}: MRI-ESM1 Parameters for model emulation
+#' @rdname constants
+#' @export
+globalParamsMRIESM1 <- get_globalParamsMRIESM1()
+
+
+# Create master list of variable lookups for "capabilities" (output variables for graphing)
+#' @details \code{globalCapabilities} Capability string (internal name lookup/mapping) for Hector output variables, organized by group
+#' @rdname constants
+#' @export
+globalCapabilities <- get_globalCapabilities()
+
+
+
+
 #' Main server/data processing function
 #'
 #' The server function is the main function that processes inputs and handles data i/o.

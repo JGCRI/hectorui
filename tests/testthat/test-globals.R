@@ -1,9 +1,12 @@
-library(testthat)
 library(hector)
+
 
 context("globals")
 
+
 test_that("globals:  miscellaneous", {
+
+  globalVars <- get_globalVars()
 
   expect_equal(globalVars[['startDate']][1], 1900)
   expect_equal(globalVars[['endDate']], 2100)
@@ -14,24 +17,47 @@ test_that("globals:  miscellaneous", {
 
 test_that("globals:  color scale", {
 
+  globalColorScales <- get_globalColorScales()
+
   expect_equal(globalColorScales, c("RCP 2.6"="#db735c", "RCP 4.5"="#EFA86E", "RCP 6.0"="#9A8A76", "RCP 8.5"="#7A6752"))
+
+})
+
+
+test_that("globals:  rcps", {
+
+  rcps <- get_rcps()
+
+  expect_equal(rcps, c(26,45,60,85))
 
 })
 
 
 test_that("globals:  file paths", {
 
-  expect_equal(rcps, c(26,45,60,85))
+
+  globalScenarios <- get_globalScenarios()
+
   expect_equal(globalScenarios[['RCP-2.6']], file.path('input',paste0('hector_rcp',26,'.ini')))
   expect_equal(globalScenarios[['RCP-4.5']], file.path('input',paste0('hector_rcp',45,'.ini')))
   expect_equal(globalScenarios[['RCP-6.0']], file.path('input',paste0('hector_rcp',60,'.ini')))
   expect_equal(globalScenarios[['RCP-8.5']], file.path('input',paste0('hector_rcp',85,'.ini')))
+
+})
+
+
+test_that("globals:  scenario color scheme", {
+
+  globalScenarioColors <- get_globalScenarioColors()
+
   expect_equal(globalScenarioColors, c("RCP 2.6" = "#99cc33", "RCP 4.5" = "#FFFF00", "RCP 6.0" = "#ff9900", "RCP 8.5" = "#ff3333"))
 
 })
 
 
 test_that("globals:  temperature patterns", {
+
+  globalTempPatterns <- get_globalTempPatterns()
 
   expect_equal(globalTempPatterns, c("CanESM2" = "www/maps/tas_Amon_CanESM2_esmrcp85_r1i1p1_200601-210012_pattern.rds",
                                      "CESM1-BGC" = "www/maps/tas_Amon_CESM1-BGC_rcp85_r1i1p1_200601-210012_pattern.rds",
@@ -45,6 +71,8 @@ test_that("globals:  temperature patterns", {
 
 test_that("globals:  precipitation patterns", {
 
+  globalPrecipPatterns <- get_globalPrecipPatterns()
+
   expect_equal(globalPrecipPatterns, c("CanESM2" = "www/maps/pr_Amon_CanESM2_rcp85_r1i1p1_200601-210012_pattern.rds",
                                        "CESM1-BGC" = "www/maps/pr_Amon_CESM1-BGC_rcp85_r1i1p1_200601-210012_pattern.rds",
                                        "GFDL-ESM2G" = "www/maps/pr_Amon_GFDL-ESM2G_rcp85_r1i1p1_200601-210012_pattern.rds",
@@ -57,6 +85,8 @@ test_that("globals:  precipitation patterns", {
 
 test_that("globals:  parameters", {
 
+  globalParameters <- get_globalParameters()
+
   # Main Model Input Parameters
   expect_equal(globalParameters[['pco2']], hector::PREINDUSTRIAL_CO2())
   expect_equal(globalParameters[['q10']], hector::Q10_RH())
@@ -65,6 +95,19 @@ test_that("globals:  parameters", {
   expect_equal(globalParameters[['aero']], hector::AERO_SCALE())
   expect_equal(globalParameters[['volc']], hector::VOLCANIC_SCALE())
   expect_equal(globalParameters[['diff']], hector::DIFFUSIVITY())
+
+})
+
+
+test_that("globals:  default params", {
+
+  globalParamsDefault <- get_globalParamsDefault()
+  globalParamsCanESM2 <- get_globalParamsCanESM2()
+  globalParamsCESM1BGC <- get_globalParamsCESM1BGC()
+  globalParamsGFDLESM2G <- get_globalParamsGFDLESM2G()
+  globalParamsMIROCESM <- get_globalParamsMIROCESM()
+  globalParamsMPIESMLR <- get_globalParamsMPIESMLR()
+  globalParamsMRIESM1 <- get_globalParamsMRIESM1()
 
   # Default Hector parameters
   expect_equal(globalParamsDefault, c('alpha' = 1, 'beta' = 0.36, 'diff' = 2.3, 'S' = 3, 'C' = 276.09, 'q10_rh' = 2, 'volscl' = 1))
@@ -91,6 +134,8 @@ test_that("globals:  parameters", {
 
 
 test_that("globals:  output parameters", {
+
+  globalCapabilities <- get_globalCapabilities()
 
   expect_equal(globalCapabilities[['cc_lcf']][1] , hector::LAND_CFLUX())
   # "Atmospheric CO2"
