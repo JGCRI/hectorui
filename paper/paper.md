@@ -32,6 +32,7 @@ bibliography: paper.bib
 In a world of increasingly online, distributed, and diverse interdisciplinary research, there is a need to provide accessible and user-friendly interactive visualization tools that elucidate complex models and their output products. `hectorui` is an R Shiny web interface built to enhance the user experience for the simple global climate model Hector [@Hartin2015], originally designed in C++ and later extended with an R interface. Before `hectorui`, Hector only had a command line-based interface available which requires fluency in C++ or R and a full understanding of Hector’s parameter space to run the model and create output. `hectorui` provides a fast, efficient solution that makes the model more accessible to a broader user base and offers enhanced functionality (Figure 1). This implementation allows users that may not be fluent in a programming language to interactively explore model scenarios and outputs in an easy to use, guided point and click interface.
 
 ![Figure 1.  `hectorui` map scenario interface](figure1.png)
+
 _Figure 1.  The map scenario interface to `hectorui` that allows the user to parameterize inputs and visualize run outputs interactively._
 
 # Supporting Software
