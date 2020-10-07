@@ -1,5 +1,4 @@
-[![DOI](https://zenodo.org/badge/198255756.svg)](https://zenodo.org/badge/latestdoi/198255756) ![build](https://github.com/JGCRI/hectorui/workflows/build/badge.svg)
- ![R-CMD](https://github.com/JGCRI/hectorui/workflows/R-CMD/badge.svg) [![codecov](https://codecov.io/gh/JGCRI/hectorui/branch/master/graph/badge.svg?token=aOWN2ELixv)](https://codecov.io/gh/JGCRI/hectorui)
+[![DOI](https://zenodo.org/badge/198255756.svg)](https://zenodo.org/badge/latestdoi/198255756) ![R-CMD](https://github.com/JGCRI/hectorui/workflows/R-CMD/badge.svg) ![build](https://github.com/JGCRI/hectorui/workflows/build/badge.svg) [![codecov](https://codecov.io/gh/JGCRI/hectorui/branch/master/graph/badge.svg?token=aOWN2ELixv)](https://codecov.io/gh/JGCRI/hectorui)
 
 # hectorui
 
