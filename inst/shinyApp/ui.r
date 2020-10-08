@@ -42,7 +42,7 @@ library(shinyBS)
             tags$table(
               tags$tr(
                 tags$td(width = "50%", style="vertical-align: middle;",
-                        h6("Ready to get started? ", tags$a("View the Guide/Tutorial", href="https://rpubs.com/jevanoff/668514", target="blank")),
+                        h6("Ready to get started? ", tags$a("View the Guide/Tutorial", href="https://jgcri.github.io/hectorui/articles/Tutorial.html", target="blank")),
                 p("Welcome to the user interface for", tags$b("Hector:")," an open source, object-oriented, and interactive simple global
                 climate carbon-cycle model. It runs essentially instantaneously while still representing the most critical global scale earth system processes,
                 and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses."),
