@@ -10,7 +10,7 @@ Just getting started with `hectorui`?  We have constructed a tutorial to examine
 
 To navigate directly to the `hectorui` app **CLICK the following image**:
 
-![`hectorui` map scenario interface](https://raw.githubusercontent.com/JGCRI/hectorui/master/paper/figure1.png)
+[![`hectorui` map scenario interface](https://raw.githubusercontent.com/JGCRI/hectorui/master/paper/figure1.png)](https://jgcri.shinyapps.io/HectorUI/)
 
 _The map scenario interface to `hectorui` that allows the user to parameterize inputs and visualize run outputs interactively.  Image contains a link to the application._
 
