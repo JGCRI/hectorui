@@ -1,10 +1,10 @@
 ---
-title: "Hector User Interface - Guide and Tutorial"
+title: "`hectorui`: The Hector User Interface - Guide and Tutorial"
 author: "Jason Evanoff"
 date: "2020-09-02"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Hector User Interface - Guide and Tutorial}
+  %\VignetteIndexEntry{`hectorui`: The Hector User Interface - Guide and Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Introduction
 The Hector user interface was built to extend Hector, a simple, fast running global climate carbon-cycle mode into a web based interactive application. This vignette outlines the basics for interacting with the Hector user interface and includes a tutorial on how to use the Hector user interface to answer a simple science question: *What is the projected temperature change over time for a specific region?* The tools and features in this package will be able to show you the projected change in average temperature for a specific region compared to 1900 temperatures.
 
-To run this vignette, you will need to access the Hector UI online application at https://jgcri.shinyapps.io/HectorUI/ or install and setup the package locally.
+To run this vignette, you will need to access the `hectorui` online application at https://jgcri.shinyapps.io/HectorUI/ or install and setup the package locally.
 
 ## Setup
 Simply access the application here:  https://jgcri.shinyapps.io/HectorUI/.  To access the code or contribute, clone or fork hectorui here: https://github.com/JGCRI/hectorui.
