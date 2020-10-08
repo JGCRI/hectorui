@@ -38,7 +38,7 @@ Suggests:
     pkgdown
 Remotes:
     github::JGCRI/hector@v2.3.0,
-    github::JGCRI/fldgen,
+    github::JGCRI/fldgen@v2.0.0,
     github::cttobin/ggthemr@v1.1.0
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
