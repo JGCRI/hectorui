@@ -46,6 +46,6 @@ The ability to visualize and explore the model scenarios and data output for Hec
 `hectorui` can be accessed via the web at the public domain https://jgcri.shinyapps.io/HectorUI/ or it can be installed and run locally as a standalone package (see https://github.com/JGCRI/hectorui to clone or fork for collaborative purposes). We provide an R vignette step-by-step tutorial for users to get started with `hectorui` which is accessible here: [Tutorial](https://jgcri.github.io/hectorui/articles/Tutorial.html).
 
 # Acknowledgements
-This research was supported in part by the U.S. Department of Energy's Office of Science as a part of the MultiSector Dynamics program area within the Earth and Environmental System Modeling Program.  The authors also received support for this research through the U.S. Environmental Protection Agency, under Interagency Agreement DW08992459801. The views and opinions expressed in this paper are those of the authors alone.
+This research was supported in part by the U.S. Department of Energy, Office of Science, as part of research in MultiSector Dynamics, Earth and Environmental System Modeling Program. The Pacific Northwest National Laboratory is operated for DOE by Battelle Memorial Institute under contract DE-AC05-76RL01830.  The authors also received support for this research through the U.S. Environmental Protection Agency, under Interagency Agreement DW08992459801. The views and opinions expressed in this paper are those of the authors alone.
 
 # References
