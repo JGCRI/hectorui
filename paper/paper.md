@@ -28,12 +28,12 @@ date: 07 October 2020
 bibliography: paper.bib
 ---
 
-# Introduction
+# Statement of need
 In a world of increasingly online, distributed, and diverse interdisciplinary research, there is a need to provide accessible and user-friendly interactive visualization tools that elucidate complex models and their output products. `hectorui` is an R Shiny web interface built to enhance the user experience for the simple global climate model Hector [@Hartin2015], originally designed in C++ and later extended with an R interface. Before `hectorui`, Hector only had a command line-based interface available which requires fluency in C++ or R and a full understanding of Hector’s parameter space to run the model and create output. `hectorui` provides a fast, efficient solution that makes the model more accessible to a broader user base and offers enhanced functionality (Figure 1). This implementation allows users that may not be fluent in a programming language to interactively explore model scenarios and outputs in an easy to use, guided point and click interface.
 
 ![The map scenario interface to `hectorui` that allows the user to parameterize inputs and visualize run outputs interactively.](figure1.png)
 
-# Supporting Software
+# Supporting software
 The supporting software for `hectorui` is Hector, an open source, object-oriented, simple global climate carbon-cycle model. It runs essentially instantaneously while still representing the most critical global scale earth system processes and is one of a class of models heavily used for emulating complex climate models and uncertainty analyses [@Hartin2016]. Hector is also an input component for the Global Change Analysis Model [GCAM; @calvin2019gcam]. To run the model, a Hector core object is instantiated from an input file that contains a time series of greenhouse gas emissions. Hector comes equipped with input files, or scenarios, based on the Representative Concentration Pathways (RCP) 2.6 [@van2011rcp2], 4.5 [@clarke2007scenarios; @thomson2011rcp4], 6.0 [@fujino2006multi], and 8.5 [@riahi2007scenarios; @riahi2011rcp]. These scenarios were developed to cover the full range of potential emissions scenarios and were designed to meet research needs, such as output from human-Earth systems and sectoral models, impact analysis, and policy relevant research.
 
 # Summary
