@@ -251,7 +251,7 @@ library(shinyBS)
                               tags$td(width = 15),
                               tags$td(align = "left", shiny::textInput(inputId = "input_custom_end", label = "End Year:",  width = 65)),
                               tags$td(width = 15),
-                              tags$td(align = "left", shiny::textInput(inputId = "input_emissions_value", label = "Value:", width = 65)),
+                              tags$td(align = "left", shiny::textInput(inputId = "input_emissions_value", label = "Value (Tg):", width = 65)),
                               tags$td()
                       )
                     ),
