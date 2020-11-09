@@ -6,14 +6,24 @@ A web-based interactive scenario builder and visualization application for the H
 
 ## Using `hectorui`
 
-Just getting started with `hectorui`?  We have constructed a tutorial to examine some sample use-cases which are available here:  [Tutorial](https://jgcri.github.io/hectorui/articles/Tutorial.html)
+Just getting started with `hectorui`?  We have constructed a tutorial to examine a sample use-cases available here:  [`hectorui` Tutorial](https://rpubs.com/jevanoff/hectorui)
 
-To navigate directly to the `hectorui` app **CLICK the following image**:
+To navigate directly to the `hectorui` app:  [`hector-ui` Application](https://jgcri.shinyapps.io/HectorUI/)
 
-[![`hectorui` map scenario interface](https://raw.githubusercontent.com/JGCRI/hectorui/master/paper/figure1.png)](https://jgcri.shinyapps.io/HectorUI/)
+![`hectorui` map scenario interface](https://raw.githubusercontent.com/JGCRI/hectorui/master/paper/figure1.png)
 
-_The map scenario interface to `hectorui` that allows the user to parameterize inputs and visualize run outputs interactively.  Image contains a link to the application._
+_The map scenario interface to `hectorui` that allows the user to parameterize inputs and visualize run outputs interactively._
+
+## Installing Locally
+
+To install hectorui as an R package for local use, please follow these steps in your R command line:
+
+- library(devtools)
+- devtools::install_github("JGCRI/hectorui")
 
 ## Contributing to `hectorui`
 
-We welcome contributions to `hectorui` from the development community.  Please contact us if you want to collaborate!  The `hectorui` GitHub repository is accessible here:  [GitHub Repository](https://github.com/JGCRI/hectorui)
+We welcome contributions to `hectorui` from the development community.  Please contact us if you want to collaborate!  The `hectorui` GitHub repository is accessible here:  [`hector-ui` GitHub Repository](https://github.com/JGCRI/hectorui)
+
+For more information about contributing, please contact Jason Evanoff at jason.evanoff@pnnl.gov or Chris Vernon at chris.vernon@pnnl.gov
+
