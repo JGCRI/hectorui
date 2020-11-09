@@ -6,13 +6,11 @@ A web-based interactive scenario builder and visualization application for the H
 
 ## Using `hectorui`
 
-Just getting started with `hectorui`?  We have constructed a tutorial to examine a sample use-cases available here:  [`hectorui` Tutorial](https://rpubs.com/jevanoff/hectorui)
+Just getting started with `hectorui`?  We have constructed a tutorial to examine some sample use-cases which are available here:  [Tutorial](https://jgcri.github.io/hectorui/articles/Tutorial.html)
 
-To navigate directly to the `hectorui` app:  [`hector-ui` Application](https://jgcri.shinyapps.io/HectorUI/)
+To navigate directly to the `hectorui` app **CLICK the following image**:
 
-![`hectorui` map scenario interface](https://raw.githubusercontent.com/JGCRI/hectorui/master/paper/figure1.png)
-
-_The map scenario interface to `hectorui` that allows the user to parameterize inputs and visualize run outputs interactively._
+[![`hectorui` map scenario interface](https://raw.githubusercontent.com/JGCRI/hectorui/master/paper/figure1.png)](https://jgcri.shinyapps.io/HectorUI/)
 
 ## Installing Locally
 
