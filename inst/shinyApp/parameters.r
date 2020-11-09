@@ -1,6 +1,6 @@
 # Contains parameter related functions and observers
 
-#' Assign Parameters from model to core
+#' Assign Parameters from numeric components to core
 #'
 #' @return no return value
 #' @export
@@ -161,90 +161,51 @@ setParameters <- function()
   if(length(hcores) > 0)
   {
     newVals <- vector()
-    pass_check <- TRUE
     # Run through variables and make sure none are left empty and update the top level scope paramsList variable
     # and the hector core with any changed values
     tryCatch(
       {
         for(i in 1:length(hcores))
         {
-          if(!is.na(input$input_aero) && input$input_aero <= 1 && input$input_aero > 0)
+          if(!is.na(input$input_aero))
           {
             hector::setvar(hcores[[i]], dates = NA, var = globalParameters['aero'], values = c(as.double(input$input_aero)), unit = "unitless")
             paramsList['alpha'] <<- as.double(input$input_aero)
           }
-          else
-          {
-            shinyalert::shinyalert("Input Error:", "Aeroscale Forcing value out of bounds. Please use (0,1) as limits.", type = "error")
-            pass_check <- FALSE
-          }
-          if(!is.na(input$input_beta) && input$input_beta > 0 && input$input_beta <= 5)
+          if(!is.na(input$input_beta))
           {
             hector::setvar(hcores[[i]], dates = NA, var = globalParameters['beta'], values = c(as.double(input$input_beta)), unit = "unitless")
             paramsList['beta'] <<- as.double(input$input_aero)
           }
-          else
-          {
-            shinyalert::shinyalert("Input Error:", "CO2 Fertilization Factor value out of bounds. Please use (0,5) as limits.", type = "error")
-            pass_check <- FALSE
-          }
-          if(!is.na(input$input_diff) && input$input_diff > 0)
+          if(!is.na(input$input_diff))
           {
             hector::setvar(hcores[[i]], dates = NA, var = globalParameters['diff'], values = c(as.double(input$input_diff)), unit = "cm2/s")
             paramsList['diff'] <<- as.double(input$input_aero)
           }
-          else
-          {
-            shinyalert::shinyalert("Input Error:", "Ocean Heat Diffusivity value out of bounds. Please use (>0) as limits.", type = "error")
-            pass_check <- FALSE
-          }
-          if(!is.na(input$input_ecs) && input$input_ecs >=1 && input$input_ecs <= 6)
+          if(!is.na(input$input_ecs))
           {
             hector::setvar(hcores[[i]], dates = NA, var = globalParameters['ecs'],  values = c(as.double(input$input_ecs)), unit = "degC")
             paramsList['S'] <<- as.double(input$input_aero)
           }
-          else
-          {
-            shinyalert::shinyalert("Input Error:", "ECS value out of bounds. Please use (1,6) as limits.", type = "error")
-            pass_check <- FALSE
-          }
-          if(!is.na(input$input_pco2) && input$input_pco2 >= 250 && input$input_pco2 <= 300)
+          if(!is.na(input$input_pco2))
           {
             hector::setvar(hcores[[i]], dates = NA, var = globalParameters['pco2'], values = c(as.double(input$input_pco2)), unit = "ppmv CO2")
             paramsList['C'] <<- as.double(input$input_aero)
           }
-          else
-          {
-            shinyalert::shinyalert("Input Error:", "Preindustrial CO2 value out of bounds. Please use (250, 300) as limits.", type = "error")
-            pass_check <- FALSE
-          }
-          if(!is.na(input$input_q10) && input$input_q10 > 0 && input$input_q10 <= 10)
+          if(!is.na(input$input_q10))
           {
             hector::setvar(hcores[[i]], dates = NA, var = globalParameters['q10'],  values = c(as.double(input$input_q10)), unit = "unitless")
             paramsList['q10_rh'] <<- as.double(input$input_aero)
           }
-          else
-          {
-            shinyalert::shinyalert("Input Error:", "Q10 value out of bounds. Please use (0, 10) as limits.", type = "error")
-            pass_check <- FALSE
-          }
-          if(!is.na(input$input_volc) && input$input_volc > 0 && input$input_volc <= 1)
+          if(!is.na(input$input_volc))
           {
             hector::setvar(hcores[[i]], dates = NA, var = globalParameters['volc'], values = c(as.double(input$input_volc)), unit = "unitless")
             paramsList['volscl'] <<- as.double(input$input_aero)
           }
-          else
-          {
-            shinyalert::shinyalert("Input Error:", "Volcanic Forcing value out of bounds. Please use (0,1) as limits.", type = "error")
-            pass_check <- FALSE
-          }
         }
-        if(pass_check == TRUE)
-        {
-          resetCore()
-          if(length(hcores) > 0)
-            loadGraph()
-        }
+        resetCore()
+        if(length(hcores) > 0)
+          loadGraph()
       },
       warning = function(war)
       {

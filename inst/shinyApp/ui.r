@@ -199,7 +199,7 @@ library(shinyBS)
                       tags$tr(width = "100%",
                               tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor", content = "Setting this value will change the CO2 Forcing Factor for any active Hector cores.", placement = "top" )),
                               tags$td(width = "68%", div("CO2 fertilization factor (unitless)")),
-                              tags$td(width = "24%", numericInput("input_beta", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01, max = 4.99))
+                              tags$td(width = "24%", numericInput("input_beta", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01))
                       ),
                       tags$tr(width = "100%",
                               tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity", content = "Setting this value will change the Ocean Heat Diffusivity for any active Hector cores.", placement = "top" )),
