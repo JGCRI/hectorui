@@ -18,3 +18,12 @@ _The map scenario interface to `hectorui` that allows the user to parameterize i
 ## Contributing to `hectorui`
 
 We welcome contributions to `hectorui` from the development community.  Please contact us if you want to collaborate!  The `hectorui` GitHub repository is accessible here:  [`hector-ui` GitHub Repository](https://github.com/JGCRI/hectorui)
+
+For more information about contributing, please contact Chris Vernon at chris.vernon@pnnl.gov
+
+## Installing Locally
+
+To install hectorui as an R package for local use, please follow these steps in your R command line:
+
+- library(devtools)
+- devtools::install_github("JGCRI/hectorui")
