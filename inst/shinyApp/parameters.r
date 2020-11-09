@@ -121,7 +121,7 @@ loadParameters <- function()
 {
   print("in load params")
 
-  # Fetch hector parameters from core sadf asdfasdf ds
+  # Fetch hector parameters from core
   for(i in 1:length(hcores))
   {
     hdata <- hector::fetchvars(core = hcores[[i]], dates = NA, vars = globalParameters, "\n")
