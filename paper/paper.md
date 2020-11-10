@@ -34,6 +34,8 @@ In a world of increasingly online, distributed, and diverse interdisciplinary re
 ![The map scenario interface to `hectorui` that allows the user to parameterize inputs and visualize run outputs interactively.](figure1.png)
 
 # Supporting software
+The `hectorui` application was built in R Studio using the Shiny package. Shiny is a package for R that makes it easy to build and deploy interactive web apps straight from R [@shiny]. The built in components provide easy to use controls and layout functionality for building web applications without writing HTML.
+
 The supporting software for `hectorui` is Hector, an open source, object-oriented, simple global climate carbon-cycle model. It runs essentially instantaneously while still representing the most critical global scale earth system processes and is one of a class of models heavily used for emulating complex climate models and uncertainty analyses [@Hartin2016]. Hector is also an input component for the Global Change Analysis Model [GCAM; @calvin2019gcam]. To run the model, a Hector core object is instantiated from an input file that contains a time series of greenhouse gas emissions. Hector comes equipped with input files, or scenarios, based on the Representative Concentration Pathways (RCP) 2.6 [@van2011rcp2], 4.5 [@clarke2007scenarios; @thomson2011rcp4], 6.0 [@fujino2006multi], and 8.5 [@riahi2007scenarios; @riahi2011rcp]. These scenarios were developed to cover the full range of potential emissions scenarios and were designed to meet research needs, such as output from human-Earth systems and sectoral models, impact analysis, and policy relevant research.
 
 # Summary
