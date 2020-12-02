@@ -22,17 +22,17 @@ To install hectorui as an R package for local use, please follow these steps in 
 ## Developing Locally
 How you launch the app after installation depends on your R environment.  See the following.
 
-### For RStudio Users
+#### For RStudio Users
 If you are using RStudio, simply open the `server.r` or `ui.r` file and execute `Run App`.
 
-### For CMD Users
+#### For CMD Users
 Start `R.exe` and enter the following command:
 
 ```R
 shiny::runApp(system.file("shinyApp", package = "hectorui"))
 ```
 
-### Adding New Features
+#### Adding New Features
 Users familiar with R Shiny can add new features by working directly in the `hectorui/inst/shinyApp` directory.
 
 ## Contributing to `hectorui`
