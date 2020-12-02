@@ -19,11 +19,24 @@ To install hectorui as an R package for local use, please follow these steps in 
 - library(devtools)
 - devtools::install_github("JGCRI/hectorui")
 
-To run the app after installation, the method depends on your R environment. If you are using RStudio, simply open the server.r or ui.r file and hit "> Run App". If you are working in a command line environment, start R.exe and enter the following command: shiny::runApp(system.file("shinyApp",package = "hectorui")).
+## Developing Locally
+How you launch the app after installation depends on your R environment.  See the following.
+
+### For RStudio Users
+If you are using RStudio, simply open the `server.r` or `ui.r` file and execute `Run App`.
+
+### For CMD Users
+Start `R.exe` and enter the following command:
+
+```R
+shiny::runApp(system.file("shinyApp", package = "hectorui"))
+```
+
+### Adding New Features
+Users familiar with R Shiny can add new features by working directly in the `hectorui/inst/shinyApp` directory.
 
 ## Contributing to `hectorui`
 
 We welcome contributions to `hectorui` from the development community.  Please contact us if you want to collaborate!  The `hectorui` GitHub repository is accessible here:  [`hector-ui` GitHub Repository](https://github.com/JGCRI/hectorui)
 
 For more information about contributing, please contact Jason Evanoff at jason.evanoff@pnnl.gov or Chris Vernon at chris.vernon@pnnl.gov
-
