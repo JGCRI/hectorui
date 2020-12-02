@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">hectorui</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.4</span>
       </span>
     </div>
 
@@ -84,13 +84,50 @@
 <p>Just getting started with <code>hectorui</code>? We have constructed a tutorial to examine some sample use-cases which are available here: <a href="https://jgcri.github.io/hectorui/articles/Tutorial.html">Tutorial</a></p>
 <p>To navigate directly to the <code>hectorui</code> app <strong>CLICK the following image</strong>:</p>
 <p><a href="https://jgcri.shinyapps.io/HectorUI/"><img src="https://raw.githubusercontent.com/JGCRI/hectorui/master/paper/figure1.png" alt="hectorui map scenario interface"></a></p>
-<p><em>The map scenario interface to <code>hectorui</code> that allows the user to parameterize inputs and visualize run outputs interactively. Image contains a link to the application.</em></p>
+</div>
+<div id="installing-locally" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installing-locally" class="anchor"></a>Installing Locally</h2>
+<p>To install hectorui as an R package for local use, please follow these steps in your R command line:</p>
+<ul>
+<li>library(devtools)</li>
+<li>devtools::install_github(“JGCRI/hectorui”)</li>
+</ul>
+</div>
+<div id="developing-locally" class="section level2">
+<h2 class="hasAnchor">
+<a href="#developing-locally" class="anchor"></a>Developing Locally</h2>
+<p>How you launch the app after installation depends on your R environment. See the following.</p>
+<div id="for-rstudio-users" class="section level4">
+<h4 class="hasAnchor">
+<a href="#for-rstudio-users" class="anchor"></a>For RStudio Users</h4>
+<p>If you are using RStudio, simply open the <code>server.r</code> or <code>ui.r</code> file and execute <code>Run App</code>.</p>
+</div>
+<div id="for-cmd-users" class="section level4">
+<h4 class="hasAnchor">
+<a href="#for-cmd-users" class="anchor"></a>For CMD Users</h4>
+<p>Start <code>R.exe</code> and enter the following command:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/runApp.html">runApp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"shinyApp"</span>, package <span class="op">=</span> <span class="st">"hectorui"</span><span class="op">)</span><span class="op">)</span></pre></div>
+</div>
+<div id="adding-new-features" class="section level4">
+<h4 class="hasAnchor">
+<a href="#adding-new-features" class="anchor"></a>Adding New Features</h4>
+<p>Users familiar with R Shiny can add new features by working directly in the <code>hectorui/inst/shinyApp</code> directory.</p>
+</div>
 </div>
 <div id="contributing-to-hectorui" class="section level2">
 <h2 class="hasAnchor">
 <a href="#contributing-to-hectorui" class="anchor"></a>Contributing to <code>hectorui</code>
 </h2>
-<p>We welcome contributions to <code>hectorui</code> from the development community. Please contact us if you want to collaborate! The <code>hectorui</code> GitHub repository is accessible here: <a href="https://github.com/JGCRI/hectorui">GitHub Repository</a></p>
+<p>We welcome contributions to <code>hectorui</code> from the development community. Please contact us if you want to collaborate! The <code>hectorui</code> GitHub repository is accessible here: <a href="https://github.com/JGCRI/hectorui"><code>hector-ui</code> GitHub Repository</a></p>
+<p>For more information about contributing, please contact Jason Evanoff at <a href="mailto:jason.evanoff@pnnl.gov" class="email">jason.evanoff@pnnl.gov</a> or Chris Vernon at <a href="mailto:chris.vernon@pnnl.gov" class="email">chris.vernon@pnnl.gov</a></p>
+</div>
+<div id="learn-more-about-hector" class="section level2">
+<h2 class="hasAnchor">
+<a href="#learn-more-about-hector" class="anchor"></a>Learn More About Hector</h2>
+<p>Read more about the Hector simple climate model here: <a href="https://jgcri.github.io/hector/"><code>Hector</code> Documentation</a>. <code>Hector</code> has been published in the following:</p>
+<pre><code>Hartin CA, Patel P, Schwarber A, Link R, Bond-Lamberty B (2015). “A simple object-oriented and open-source model for scientific and policy analyses of the global climate system–Hector v1.0.” Geoscientific Model Development, 8(4), 939–955.</code></pre>
 </div>
 </div>
 
