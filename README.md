@@ -1,6 +1,6 @@
-[![DOI](https://zenodo.org/badge/198255756.svg)](https://zenodo.org/badge/latestdoi/198255756) ![R-CMD](https://github.com/JGCRI/hectorui/workflows/R-CMD/badge.svg) ![build](https://github.com/JGCRI/hectorui/workflows/build/badge.svg) [![codecov](https://codecov.io/gh/JGCRI/hectorui/branch/master/graph/badge.svg?token=aOWN2ELixv)](https://codecov.io/gh/JGCRI/hectorui)
+[![DOI](https://zenodo.org/badge/198255756.svg)](https://zenodo.org/badge/latestdoi/198255756) ![R-CMD](https://github.com/JGCRI/hectorui/workflows/R-CMD/badge.svg) ![build](https://github.com/JGCRI/hectorui/workflows/build/badge.svg) [![codecov](https://codecov.io/gh/JGCRI/hectorui/branch/master/graph/badge.svg?token=aOWN2ELixv)](https://codecov.io/gh/JGCRI/hectorui) [![DOI](https://joss.theoj.org/papers/10.21105/joss.02782/status.svg)](https://doi.org/10.21105/joss.02782)
 
-# hectorui
+#  hectorui
 
 A web-based interactive scenario builder and visualization application for the Hector climate model
 
