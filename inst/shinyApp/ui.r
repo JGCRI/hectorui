@@ -4,7 +4,7 @@
 library(shinyBS)
 
 # Using Shiny Fixed layout
-fixedPage(theme = shinythemes::shinytheme("darkly"),
+fluidPage(theme = shinythemes::shinytheme("darkly"),
           shinyalert::useShinyalert(),
 
           # Application title
@@ -23,8 +23,24 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
           # Main component from which all other components fall under, navbarPage, a multi-page user-interface that includes a navigation bar
           navbarPage
           (
-            "Navigation:",
-            # Main navigation - divides app into 2 sections: informational and interactive
+            id = "nav",
+            title = "Navigation:",
+            # Main navigation
+            tabPanel(
+              "Home",
+              mainPanel
+              (
+                actionButton(inputId = "launch_scenario", label = "Launch Scenarios"),
+                p("Welcome to the user interface for",
+                  tags$b("Hector:"),
+                  " an open source, object-oriented, and interactive simple global climate carbon-cycle model.
+                                  It runs essentially instantaneously while still representing the most critical global scale earth system processes,
+                                  and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses."),
+                p("This interactive version is built upon previous work by developers at the ",
+                  a("Joint Global Change Research Institute (JGCRI)", href="http://globalchange.umd.edu/", target="blank"),
+                  " including the development of the initial C++ version of Hector, and the follow up R Package, \"Hector R\".")
+              )
+            ),
             tabPanel
             (
               "System Information",
@@ -45,15 +61,6 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
                                 style="vertical-align: middle;",
                                 h6("Ready to get started? ",
                                    tags$a("View the Guide/Tutorial", href="https://jgcri.github.io/hectorui/articles/Tutorial.html", target="blank")),
-                                p("Welcome to the user interface for",
-                                  tags$b("Hector:"),
-                                  " an open source, object-oriented, and interactive simple global climate carbon-cycle model.
-                                  It runs essentially instantaneously while still representing the most critical global scale earth system processes,
-                                  and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses."),
-                                p("This interactive version is built upon previous work by developers at the ",
-                                  a("Joint Global Change Research Institute (JGCRI)", href="http://globalchange.umd.edu/", target="blank"),
-                                  " including the development of the initial C++ version of Hector, and the follow up R Package, \"Hector R\".
-                                  The simple diagram below outlines their relationships:"),
                                 h3("The Hector Product Family", style="text-align: center"),
                                 img(src="images/Hector-sm.png")
                                 ),
@@ -195,7 +202,7 @@ fixedPage(theme = shinythemes::shinytheme("darkly"),
             # Main panel for the interactive section of the application
             tabPanel
             (
-              "Run Scenario",
+              title = "Run Scenario",
               # The sidebar panel splits the page into a left hand nav and right side content
               sidebarPanel
               (
