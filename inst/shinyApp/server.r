@@ -228,6 +228,7 @@ server <- function(input, output, session)
 #----- Set up observer functions to catch user interaction on the input fields
 
   observeEvent(input$launch_scenario, updateTabsetPanel(session, "nav", selected = "Run Scenario"), ignoreInit = TRUE)
+  observeEvent(input$guides, updateTabsetPanel(session, "nav", selected = "Guides"), ignoreInit = TRUE)
   observeEvent(input$capabilities, setCapabilities(), ignoreInit = FALSE)
   observeEvent(input$loadGraphs, loadGraph(), ignoreInit = TRUE)
   observeEvent(input$set_Params, setParameters(), ignoreInit = TRUE)

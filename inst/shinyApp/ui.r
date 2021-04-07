@@ -6,9 +6,11 @@ library(shinyBS)
 # Using Shiny Fixed layout
 fluidPage(theme = shinythemes::shinytheme("darkly"),
           shinyalert::useShinyalert(),
+          title = "HectorUI",
 
           # Application title
-          h2("Hector: An Interactive Climate Model", class="titleText"),
+          h1("HectorUI", class = "text-center"),
+          h2("An Interactive Climate Model", class = "text-center"),
 
           # Code that gets called on first load of application to load in any themes/css etc
           # Loads the custom.css file that contains custom styles and overwrites some built in styles
@@ -24,13 +26,16 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
           navbarPage
           (
             id = "nav",
-            title = "Navigation:",
+            title = "",
+            position = "fixed-top",
             # Main navigation
             tabPanel(
               "Home",
               mainPanel
               (
                 actionButton(inputId = "launch_scenario", label = "Launch Scenarios"),
+                br(),
+                actionButton(inputId = "guides", label = "Guides"),
                 p("Welcome to the user interface for",
                   tags$b("Hector:"),
                   " an open source, object-oriented, and interactive simple global climate carbon-cycle model.
@@ -41,168 +46,10 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                   " including the development of the initial C++ version of Hector, and the follow up R Package, \"Hector R\".")
               )
             ),
-            tabPanel
-            (
-              "System Information",
-              # Main Panel that holds the tabs for the Information section
-              mainPanel
-              (
-                width = 9,
-                tabsetPanel
-                (
-                  # Information Tab Panel
-                  tabPanel
-                  (
-                    p(icon("info-circle", "fa-2x"), "Hector Information", value="infoTab"),
-                    h5("Background Information"), tags$hr(class="hrNav"),
-                    tags$table(
-                      tags$tr(
-                        tags$td(width = "50%",
-                                style="vertical-align: middle;",
-                                h6("Ready to get started? ",
-                                   tags$a("View the Guide/Tutorial", href="https://jgcri.github.io/hectorui/articles/Tutorial.html", target="blank")),
-                                h3("The Hector Product Family", style="text-align: center"),
-                                img(src="images/Hector-sm.png")
-                                ),
-                        tags$td(tags$figure(
-                          tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results"),
-                          img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',
-                              height="330",
-                              class="zenodo")
-                          ), style="text-align: center"
-                          )
-                        )
-                      ),
-                    br(),
-                    h5("Documentation/Downloads"),
-                    tags$hr(class="hrNav"),
-                    p("The primary link to the Hector model documentation is the ",
-                      a("online manual", href="https://jgcri.github.io/hector/articles/manual", target="blank"),
-                      ", which is included in the vignettes/manual directory. The code is also documented with ",
-                      a("Doxygen-style", href="http://doxygen.org", target="blank"),
-                      " comments."),
-                    p("A formal model description paper via ",
-                      a("Hartin et al. 2015", href="http://www.geosci-model-dev.net/8/939/2015/gmd-8-939-2015.html", target="blank"),
-                      " documents its science internals and performance relative to observed data, the ",
-                      a("CMIP5", href="http://cmip-pcmdi.llnl.gov/cmip5/",  target="blank"),
-                      " archive, and the reduced-complexity ",
-                      a("MAGICC",href="http://www.magicc.org", target="blank"),
-                      " model (as of ",
-                      a("version 1.0", href="https://github.com/JGCRI/hector/tree/v1.0", target="blank"),
-                      "). In addition, we have developed two package vignettes demonstrating the ",
-                      a("basics of the Hector R interface", href="http://jgcri.github.io/hector/articles/intro-to-hector.html", target="blank"),
-                      ", and an example application of ",
-                      a("solving for an emissions pathway", href="http://jgcri.github.io/hector/articles/hector_apply.html", target="blank"),
-                      "."),
-                    tags$ul(
-                      tags$li(
-                        h5(tags$a("Hector User Interface package download/source link ", href="https://github.com/JGCRI/Hector-ui", target="blank"))),
-                      tags$li(
-                        h5(tags$a("Hector R / Hector C++ package download/source link", href="https://github.com/JGCRI/Hector", target="blank"))),
-                      tags$li(
-                        h5(tags$a("Code and data for Hector calibration papers", href="https://zenodo.org/record/3515153#.Xg9iGuhKiUl", target="blank"),
-                           tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", class="zenodo", alt="DOI")
-                           )
-                        )
-                      ),
-                    br(),
-                    h5("Tools and software that work with Hector"),
-                    tags$hr(class="hrNav"),
-                    tags$ul(
-                      tags$li(
-                        a("GCAM", href="https://github.com/JGCRI/gcam-core", target="blank"),
-                        ": Hector can be used as the climate component in the GCAM integrated assessment model."),
-                      tags$li(
-                        a("pyHector", href="https://github.com/openclimatedata/pyhector", target="blank"),
-                        ": A python interface to Hector."),
-                      tags$li(
-                        a("R/Shiny", href="https://shiny.rstudio.com/", target="blank"),
-                        ": This application was built as an R-Shiny package wrapper over the existing model code.")
-                      )
-                    ),
-                  # Citation Tab Panel
-                  tabPanel
-                  (
-                    p(icon("copyright", "fa-2x"),
-                      "License/How to Cite",
-                      value="citeTab"),
-                    h5("License Information"),
-                    tags$hr(class="hrNav"),
-                    tags$div(class="citationsDiv", style="width: 500px;",
-                             tags$table(class="citationsTable",
-                                        tags$tr(
-                                          tags$td(rowspan=2, width=45, icon("balance-scale", "fa-2x")),
-                                          tags$td(("All Hector applications are licensed under the")
-                                                  ),
-                                          tags$tr(
-                                            tags$td(
-                                              tags$a(
-                                                h6("GNU General Public License v3.0"), href="https://github.com/JGCRI/hector/blob/master/LICENSE.md", target="blank")
-                                              )
-                                          )
-                                        ),
-                                        tags$table(class="citationsTable",
-                                                   tags$tr(
-                                                     tags$td(p("Permissions of this strong copyleft license are conditioned on making available complete source code
-                                                               of licensed works and modifications, which include larger works using a licensed work, under the same
-                                                               license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.")
-                                                             )
-                                                     )
-                                                   )
-                                        )
-                             ),
-                    div(class="citationsDiv",
-                        tags$span(class="citationsHeader", "Permissions"),
-                        tags$ul(class="ul-None",
-                                tags$li(icon("check"),"Commercial use"),
-                                tags$li(icon("check"),"Modification"),
-                                tags$li(icon("check"),"Distribution"),
-                                tags$li(icon("check"),"Patent use"),
-                                tags$li(icon("check"),"Private use"))
-                        ),
-                    div(class="citationsDiv",
-                        tags$span(class="citationsHeader", "Limitations"),
-                        tags$ul(class="ul-None",
-                                tags$li(icon("times")," Liability"),
-                                tags$li(icon("times")," Warranty"))
-                        ),
-                    div(class="citationsDiv",
-                        tags$span(class="citationsHeader", "Conditions"),
-                        tags$ul(class="ul-None",
-                                tags$li(icon("info"),"License and copyright notice"),
-                                tags$li(icon("info"),"State changes"),
-                                tags$li(icon("info"),"Disclose source"),
-                                tags$li(icon("info"),"Same license"))
-                        ),
-                    h5("How to Cite Hector"),
-                    tags$hr(class="hrNav"),
-                    p("When using graphs, figures, or other output from this applicaton please cite both the Hector Core",
-                      br(),
-                      "application as well as the Hector User Interface (this application). The DOI for both is provided below:"),
-                    tags$ul(
-                      tags$li(
-                        h5(tags$a("Hector User Interface DOI", href="https://doi.org/10.5281/zenodo.3603216", target = "blank"),
-                           tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3603216.svg", alt="DOI", class = "imgNoPadding"))),
-                      tags$li(
-                        h5(tags$a("Hector Core DOI", href="https://doi.org/10.5281/zenodo.3515153", target = "blank"),
-                           tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", alt="DOI", class = "imgNoPadding")))
-                      )
-                    ),
-                  # Feedback Tab Panel
-                  tabPanel
-                  (
-                    p(icon("comment", "fa-2x"), "Support", value="feedbackTab"),
-                    h5("Submit Feedback"), tags$hr(class="hrNav"),
-                    p("Please use the form below to contact the Hector team regarding any questions, concerns, suggestions, or problems you may encounter."),
-                    htmlOutput("feedbackFrame")
-                    )
-                  )
-                )
-              ),
             # Main panel for the interactive section of the application
             tabPanel
             (
-              title = "Run Scenario",
+              "Run Scenario",
               # The sidebar panel splits the page into a left hand nav and right side content
               sidebarPanel
               (
@@ -502,7 +349,170 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                   ) # End Maps Tab
                 ) # End tabset panel
               ) # End mainpanel
-            ) # End tabpanel
+            ), # End tabpanel
+              tabPanel(
+                  "Guides",
+                  mainPanel(
+                      style="vertical-align: middle;",
+                      h6("Ready to get started? ",
+                         tags$a("View the Guide/Tutorial", href="https://jgcri.github.io/hectorui/articles/Tutorial.html", target="blank")),
+                  )
+              ),
+              tabPanel
+              (
+                  "About",
+                  # Main Panel that holds the tabs for the Information section
+                  mainPanel
+                  (
+                      width = 9,
+                      tabsetPanel
+                      (
+                          # Information Tab Panel
+                          tabPanel
+                          (
+                              p(icon("info-circle", "fa-2x"), "Hector Information", value="infoTab"),
+                              h5("Background Information"), tags$hr(class="hrNav"),
+                              tags$table(
+                                  tags$tr(
+                                      tags$td(width = "50%",
+                                              h3("The Hector Product Family", style="text-align: center"),
+                                              img(src="images/Hector-sm.png")
+                                      ),
+                                      tags$td(tags$figure(
+                                          tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results"),
+                                          img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',
+                                              height="330",
+                                              class="zenodo")
+                                      ), style="text-align: center"
+                                      )
+                                  )
+                              ),
+                              br(),
+                              h5("Documentation/Downloads"),
+                              tags$hr(class="hrNav"),
+                              p("The primary link to the Hector model documentation is the ",
+                                a("online manual", href="https://jgcri.github.io/hector/articles/manual", target="blank"),
+                                ", which is included in the vignettes/manual directory. The code is also documented with ",
+                                a("Doxygen-style", href="http://doxygen.org", target="blank"),
+                                " comments."),
+                              p("A formal model description paper via ",
+                                a("Hartin et al. 2015", href="http://www.geosci-model-dev.net/8/939/2015/gmd-8-939-2015.html", target="blank"),
+                                " documents its science internals and performance relative to observed data, the ",
+                                a("CMIP5", href="http://cmip-pcmdi.llnl.gov/cmip5/",  target="blank"),
+                                " archive, and the reduced-complexity ",
+                                a("MAGICC",href="http://www.magicc.org", target="blank"),
+                                " model (as of ",
+                                a("version 1.0", href="https://github.com/JGCRI/hector/tree/v1.0", target="blank"),
+                                "). In addition, we have developed two package vignettes demonstrating the ",
+                                a("basics of the Hector R interface", href="http://jgcri.github.io/hector/articles/intro-to-hector.html", target="blank"),
+                                ", and an example application of ",
+                                a("solving for an emissions pathway", href="http://jgcri.github.io/hector/articles/hector_apply.html", target="blank"),
+                                "."),
+                              tags$ul(
+                                  tags$li(
+                                      h5(tags$a("Hector User Interface package download/source link ", href="https://github.com/JGCRI/Hector-ui", target="blank"))),
+                                  tags$li(
+                                      h5(tags$a("Hector R / Hector C++ package download/source link", href="https://github.com/JGCRI/Hector", target="blank"))),
+                                  tags$li(
+                                      h5(tags$a("Code and data for Hector calibration papers", href="https://zenodo.org/record/3515153#.Xg9iGuhKiUl", target="blank"),
+                                         tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", class="zenodo", alt="DOI")
+                                      )
+                                  )
+                              ),
+                              br(),
+                              h5("Tools and software that work with Hector"),
+                              tags$hr(class="hrNav"),
+                              tags$ul(
+                                  tags$li(
+                                      a("GCAM", href="https://github.com/JGCRI/gcam-core", target="blank"),
+                                      ": Hector can be used as the climate component in the GCAM integrated assessment model."),
+                                  tags$li(
+                                      a("pyHector", href="https://github.com/openclimatedata/pyhector", target="blank"),
+                                      ": A python interface to Hector."),
+                                  tags$li(
+                                      a("R/Shiny", href="https://shiny.rstudio.com/", target="blank"),
+                                      ": This application was built as an R-Shiny package wrapper over the existing model code.")
+                              )
+                          ),
+                          # Citation Tab Panel
+                          tabPanel
+                          (
+                              p(icon("copyright", "fa-2x"),
+                                "License/How to Cite",
+                                value="citeTab"),
+                              h5("License Information"),
+                              tags$hr(class="hrNav"),
+                              tags$div(class="citationsDiv", style="width: 500px;",
+                                       tags$table(class="citationsTable",
+                                                  tags$tr(
+                                                      tags$td(rowspan=2, width=45, icon("balance-scale", "fa-2x")),
+                                                      tags$td(("All Hector applications are licensed under the")
+                                                      ),
+                                                      tags$tr(
+                                                          tags$td(
+                                                              tags$a(
+                                                                  h6("GNU General Public License v3.0"), href="https://github.com/JGCRI/hector/blob/master/LICENSE.md", target="blank")
+                                                          )
+                                                      )
+                                                  ),
+                                                  tags$table(class="citationsTable",
+                                                             tags$tr(
+                                                                 tags$td(p("Permissions of this strong copyleft license are conditioned on making available complete source code
+                                                               of licensed works and modifications, which include larger works using a licensed work, under the same
+                                                               license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.")
+                                                                 )
+                                                             )
+                                                  )
+                                       )
+                              ),
+                              div(class="citationsDiv",
+                                  tags$span(class="citationsHeader", "Permissions"),
+                                  tags$ul(class="ul-None",
+                                          tags$li(icon("check"),"Commercial use"),
+                                          tags$li(icon("check"),"Modification"),
+                                          tags$li(icon("check"),"Distribution"),
+                                          tags$li(icon("check"),"Patent use"),
+                                          tags$li(icon("check"),"Private use"))
+                              ),
+                              div(class="citationsDiv",
+                                  tags$span(class="citationsHeader", "Limitations"),
+                                  tags$ul(class="ul-None",
+                                          tags$li(icon("times")," Liability"),
+                                          tags$li(icon("times")," Warranty"))
+                              ),
+                              div(class="citationsDiv",
+                                  tags$span(class="citationsHeader", "Conditions"),
+                                  tags$ul(class="ul-None",
+                                          tags$li(icon("info"),"License and copyright notice"),
+                                          tags$li(icon("info"),"State changes"),
+                                          tags$li(icon("info"),"Disclose source"),
+                                          tags$li(icon("info"),"Same license"))
+                              ),
+                              h5("How to Cite Hector"),
+                              tags$hr(class="hrNav"),
+                              p("When using graphs, figures, or other output from this applicaton please cite both the Hector Core",
+                                br(),
+                                "application as well as the Hector User Interface (this application). The DOI for both is provided below:"),
+                              tags$ul(
+                                  tags$li(
+                                      h5(tags$a("Hector User Interface DOI", href="https://doi.org/10.5281/zenodo.3603216", target = "blank"),
+                                         tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3603216.svg", alt="DOI", class = "imgNoPadding"))),
+                                  tags$li(
+                                      h5(tags$a("Hector Core DOI", href="https://doi.org/10.5281/zenodo.3515153", target = "blank"),
+                                         tags$img(src="https://zenodo.org/badge/DOI/10.5281/zenodo.3515153.svg", alt="DOI", class = "imgNoPadding")))
+                              )
+                          ),
+                          # Feedback Tab Panel
+                          tabPanel
+                          (
+                              p(icon("comment", "fa-2x"), "Support", value="feedbackTab"),
+                              h5("Submit Feedback"), tags$hr(class="hrNav"),
+                              p("Please use the form below to contact the Hector team regarding any questions, concerns, suggestions, or problems you may encounter."),
+                              htmlOutput("feedbackFrame")
+                          )
+                      )
+                  )
+              )
           ) # End navbarpage
 ) # End of everything.
 
