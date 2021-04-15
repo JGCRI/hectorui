@@ -4,21 +4,15 @@
 library(shinyBS)
 
 # Using Shiny Fixed layout
-fluidPage(theme = shinythemes::shinytheme("darkly"),
+fluidPage(theme = shinythemes::shinytheme("readable"),
           shinyalert::useShinyalert(),
           title = "HectorUI",
-
-          # Application title
-          h1("HectorUI", class = "text-center"),
-          h2("An Interactive Climate Model", class = "text-center"),
 
           # Code that gets called on first load of application to load in any themes/css etc
           # Loads the custom.css file that contains custom styles and overwrites some built in styles
           tags$head
           (
-            tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
-            # , Future google analytics capability
-            # tags$link(href="google-analytics.js")
+            tags$link(rel = "stylesheet", type = "text/css", href = "test.css")
           ),
           shinyjs::useShinyjs(),
 
@@ -27,329 +21,340 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
           (
             id = "nav",
             title = "",
-            position = "fixed-top",
+            collapsible = TRUE,
             # Main navigation
             tabPanel(
               "Home",
-              mainPanel
-              (
-                actionButton(inputId = "launch_scenario", label = "Launch Scenarios"),
-                br(),
-                actionButton(inputId = "guides", label = "Guides"),
-                p("Welcome to the user interface for",
-                  tags$b("Hector:"),
-                  " an open source, object-oriented, and interactive simple global climate carbon-cycle model.
+              h1("HectorUI", class = "title"),
+              h2("An Interactive Climate Model", class = "text-center"),
+              br(),
+              fluidRow(column(6, div(
+                  p("Welcome to the user interface for",
+                    tags$b("Hector:"),
+                    " an open source, object-oriented, and interactive simple global climate carbon-cycle model.
                                   It runs essentially instantaneously while still representing the most critical global scale earth system processes,
-                                  and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses."),
-                p("This interactive version is built upon previous work by developers at the ",
-                  a("Joint Global Change Research Institute (JGCRI)", href="http://globalchange.umd.edu/", target="blank"),
-                  " including the development of the initial C++ version of Hector, and the follow up R Package, \"Hector R\".")
-              )
-            ),
-            # Main panel for the interactive section of the application
-            tabPanel
-            (
-              "Run Scenario",
-              # The sidebar panel splits the page into a left hand nav and right side content
-              sidebarPanel
-              (
-                width=3,
-                # A tabsetPanel creates a group of tabs within the left hand nav
-                tabsetPanel
-                (
-                  # Standard Scenarios (RCP) Panel
-                  tabPanel
-                  (
-                    p( "Standard Scenarios", value="infoTab"),
-                    div(
-                      h5("RCP Scenarios"),#, icon("info-circle", "fa-1x")),
-                      tags$hr(class="hrNav"),
-                      div(class="checkboxDiv", "Choose 1 or more Scenarios:",
-                            p(
-                              shinyWidgets::prettyCheckbox(inputId = "input_RCP_2.6", label = "2.6", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "primary"),
-                              shinyWidgets::prettyCheckbox(inputId = "input_RCP_4.5", label = "4.5", value = TRUE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "success"),
-                              shinyWidgets::prettyCheckbox(inputId = "input_RCP_6.0", label = "6.0", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "warning"),
-                              shinyWidgets::prettyCheckbox(inputId = "input_RCP_8.5", label = "8.5", value = FALSE, width = 45, inline = TRUE, icon = icon("check"), animation = "pulse", status = "danger")
-                            )
-                          ),
-                      # Divider that holds the parameter options/controls
-                      div(id="myapp",
-                          h5("Model Parameters"),
-                          tags$hr(class="hrNav"),
-                          tags$table(
-                            tags$tr(width = "100%",
-                                    tags$td(width = "8%", align = "center",
-                                            popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters",
-                                                   content = "Choosing a model will load a unique set of parameters that correspond to that model for emulation in Hector.", placement = "top" )),
-                                    tags$td(width = "34%", div("Model Emulation:")),
-                                    tags$td(width = "58%", class="tdPushBottom",
-                                            selectInput("input_paramToggle", label = NULL,
-                                                        choices =  list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
-                                                                        "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 190)
-                                            )
-                                    )
-                            ),
-                          tags$table(
-                            tags$tr(width = "100%",
-                                    tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor",
-                                                                                   content = "Setting this value will change the Aerosol Forcing Factor for any active Hector cores.", placement = "top" )),
-                                    tags$td(width = "68%", div("Aerosol forcing scaling factor (unitless)")),
-                                    tags$td(width = "24%", numericInput("input_aero", width = 80, label = NULL, value = NA, step = 0.01))
-                                    ),
-                            tags$tr(width = "100%",
-                                    tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor",
-                                                                                   content = "Setting this value will change the CO2 Forcing Factor for any active Hector cores.", placement = "top" )),
-                                    tags$td(width = "68%", div("CO2 fertilization factor (unitless)")),
-                                    tags$td(width = "24%", numericInput("input_beta", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01))
-                                    ),
-                            tags$tr(width = "100%",
-                                    tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity",
-                                                                                   content = "Setting this value will change the Ocean Heat Diffusivity for any active Hector cores.", placement = "top" )),
-                                    tags$td(width = "68%", div("Ocean heat diffusivity (cm2/s)")),
-                                    tags$td(width = "24%", numericInput("input_diff", width = 80, label = NULL, value = NA, step = 0.01))
-                                    ),
-                            tags$tr(width = "100%",
-                                    tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity",
-                                                                                   content = "Setting this value will change the Equilibrium climate sensitivity for any active Hector cores.", placement = "top" )),
-                                    tags$td(width = "68%", div("Equilibrium climate sensitivity (degC)")),
-                                    tags$td(width = "24%", numericInput("input_ecs", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01, max = 25))
-                                    ),
-                            tags$tr(width = "100%",
-                                    tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ",
-                                                                                   content = "Setting this value will change the Preindustrial CO2 concentration for any active Hector cores.", placement = "top" )),
-                                    tags$td(width = "68%", div("Preindustrial CO2 conc. (ppmv CO2)")),
-                                    tags$td(width = "24%", numericInput("input_pco2", width = 80, label = NULL, value = NA, step = 0.01, min = 250, max = 350))
-                                    ),
-                            tags$tr(width = "100%",
-                                    tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)",
-                                                                                   content = "Setting this value will change the Temperature sensitivity factor for any active Hector cores.", placement = "top" )),
-                                    tags$td(width = "68%", div("Temp. sensitivity factor (Q10) (unitless)")),
-                                    tags$td(width = "24%", numericInput("input_q10", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01))
-                                    ),
-                            tags$tr(width = "100%",
-                                    tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor",
-                                                                                   content = "Setting this value will change the Volcanic forcing scaling factor for any active Hector cores.", placement = "top" )),
-                                    tags$td(width = "68%", div("Volcanic forcing scaling factor (unitless)")),
-                                    tags$td(width = "24%", numericInput("input_volc", width = 80, label = NULL, value = NA, step = 0.01))
-                                    )
-                            ),
-                          div(class="paramDivs",
-                              actionButton(inputId="set_Params", label="Set Parameters"),
-                              actionButton(inputId="reset_Params", label="Reset Parameters"),
-                              popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Parameters",
-                                     content = "This will reset any/all parameters for each active Hector core, overwriting any custom parameter changes. Custom emissions will remain.", placement = "top" )
-                              )
-                          ),
-                      # Divider that holds the custom emissions options/controls
-                      div(h5("Custom Emissions"),
-                          tags$hr(class="hrNav"),
-                          p("Note: Custom emissions are only applicable to standard scenarios (not custom created scenarios)"),
-                          tags$table(
-                            tags$tr(width = "100%",
-                                    tags$td(width="25%", "Emissions:"),
-                                    tags$td(shiny::selectInput(inputId = "input_custom_emissions", label = NULL, width = 200, multiple = F,
-                                                                 choices = list('Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'))))
-                                    )
-                            ),
-                          tags$table(
-                            tags$tr(width = "100%",
-                                    tags$td(align = "left", shiny::textInput(inputId = "input_custom_start", label = "Start Year:", width = 65)),
-                                    tags$td(width = 15),
-                                    tags$td(align = "left", shiny::textInput(inputId = "input_custom_end", label = "End Year:",  width = 65)),
-                                    tags$td(width = 15),
-                                    tags$td(align = "left", shiny::textInput(inputId = "input_emissions_value", label = "Value (Tg):", width = 65)),
-                                    tags$td()
-                                    )
-                            ),
-                          tags$table(
-                            tags$tr(width = "100%",
-                                    tags$td(width = "15%", align="left", class="tdPushTop",
-                                            popify(div(class="paramDivsPushTop", icon("info-circle", "fa-1x")), title = "Sloping Emissions",
-                                                                                                   content = "Choosing this option will create a smooth slope from the starting years value to the specified value at the end year.", placement = "top" )),
-                                    tags$td(width = "85%",shinyWidgets::prettyCheckbox(animation = "pulse", inputId = "input_slope_emissions", label = "Slope Emissions", value = FALSE,  inline = TRUE, icon = icon("check")))
-                                    )
-                            ),
-                          div(
-                            actionButton(inputId="input_set_custom_emissions", label="Set Emissions"),
-                            actionButton(inputId="input_reset_custom_emissions", label="Reset All Emissions"),
-                            popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions",
-                                   content = "This will reset all active Standard Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
-                            )
-                          )# ) Collapsible comment
-                      # )
-                      )
-                    ), # End Information Panel
-                  # Custom Scenarios Tab Panel
-                  tabPanel
-                  (
-                    p(icon("edit", "fa-1x"), "Custom Scenarios - BETA", value="infoTab"),
-                    div
-                    (
-                      h5("Custom Emissions Pathway"),
-                      tags$hr(class="hrNav"),
-                      p("Steps to run your own scenario with custom emissions:"),
-                      tags$ol(
-                        tags$li("Choose a baseline RCP scenario as your starting point"),
-                        tags$li("Give your new custom scenario a name"),
-                        tags$li("Download the emissions file template for that scenario and enter your own emissions"),
-                        tags$li("Upload the new customized emissions file")
-                        ),
-                      p(tags$strong("Do not edit any field names or change the CSV file in any way other than changing the data")),
-                      tags$table(
-                        tags$tr(width = "100%",
-                                tags$td(width = "145", "Baseline Scenario:"),
-                                tags$td(width = "155", selectInput("input_custom_RCP", label = NULL, list("RCP2.6" = "RCP-2.6","RCP 4.5"="RCP-4.5", "RCP 6"="RCP-6.0", "RCP 8.5" = "RCP-8.5"), width=150, selected = "RCP-4.5"))
-                                ),
-                        tags$tr(width = "100%",
-                                tags$td(width = "145", "Custom Scenario Name:"),
-                                tags$td(width = "200",  textInput("input_custom_scenarioName", label = NULL, width=195, value = ""))
-                                )
-                        ),
-                      div(
-                        conditionalPanel(
-                          condition = "input.input_custom_RCP == 'RCP-2.6'",
-                          a(h6("Download RCP 2.6 Emissions File Template"), href="input/emissions/RCP26_custom_template.csv")
-                          ),
-                        conditionalPanel(
-                          condition = "input.input_custom_RCP == 'RCP-4.5'",
-                          a(h6("Download RCP 4.5 Emissions File Template"), href="input/emissions/RCP45_custom_template.csv")
-                          ),
-                        conditionalPanel(
-                          condition = "input.input_custom_RCP == 'RCP-6.0'",
-                          a(h6("Download RCP 6.0 Emissions File Template"), href="input/emissions/RCP6_custom_template.csv")
-                          ),
-                        conditionalPanel(
-                          condition = "input.input_custom_RCP == 'RCP-8.5'",
-                          a(h6("Download RCP 8.5 Emissions File Template"), href="input/emissions/RCP85_custom_template.csv")
-                          ),
-                        fileInput("input_custom_emissions_file", "Upload Custom Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
-                        div(
-                          class="paramDivs", actionButton(inputId="input_load_emissions", label="Create Scenario"))
-                        )
-                      ) # End Div
-                    ) # End Custom Scenarios Tab Panel
-                  ) # End Tabset
-                ), # End Sidebar Panel
-
-              # Right hand content panel - Main panel that is used for output
-              mainPanel
-              ( width = 9,
-                tabsetPanel
-                (
-                  # Graphs Tab
-                  tabPanel
-                  (fixed = TRUE,
-                    p(icon("chart-line","fa-2x"), "Scenario Output", value="outputTab"),
-                    h5("Graphs"), tags$hr(class="hrNav"),
-                    tags$table
-                    (
-                      tags$tr
-                      (
-                        tags$td
-                        (
-                          selectInput
-                          ("capabilities",  "Choose Output Variables (up to 4):",
-                            list('Carbon Cycle' = list("Atmospheric CO2"="cc_co2", "Atmospheric Carbon Pool"="cc_acp", "FFI Emissions"="cc_ffi", "LUC Emissions"="cc_luc"),
-                                 'Concentrations' = list("Amospheric N2O"='c_an20'),
-                                 'Emissions' = list("Black Carbon Emissions" = 'e_bc', "Organic Carbon Emissions"='e_oc'), #"RF - H2O"='f_h2o', "RF - Ozone"='f_oz',
-                                 'Forcings' = list("RF - Total"='f_rft', "RF - Albedo"='f_alb', "RF - CO2"='f_co2', "RF - N2O"='f_n2o',  "RF - Black Carbon"='f_bc',
-                                                   "RF - Organic Carbon"='f_oc', "RF - SO2 Direct"='f_so2d', "RF - SO2 Indirect"='f_so2i', "RF - SO2 Total"='f_so2t', "RF - Volcanic Activity"='f_va', "RF - CH4"='f_ch4'),
-                                 # 'Halocarbon Emissions' = list("CF4 Emissions"='he_cf4', "C2F6 Emissions"='he_c2f6', "HFC-23 Emissions"='he_hfc23', "HFC-32 Emissions"='he_hfc32', "HFC-4310 Emissions"= 'he_hfc4310', "HFC-125 Emissions"='he_hfc125', "HFC-134a Emissions"='he_hfc134a', "HFC-143a Emissions"='he_hfc143a', "HFC-227ea Emissions"='he_hfc227ea',
-                                 #                               "HFC-245fa Emissions"='he_hfc245fa', "SF6 Emissions"='he_sf6', "CFC-11 Emissions"='he_cfc11', "CFC-12 Emissions"='he_cfc12', "CFC-113 Emissions"='he_cfc113',"CFC-114 Emissions"='he_cfc114',"CFC-115 Emissions"='he_cfc115',"CCl4 Emissions"='he_ccl4', "CH3CCl3 Emissions"='he_ch3ccl3',
-                                 #                               "HCFC-22 Emissions"='he_hcfc22', "HCFC-141b Emissions"='he_hcfc141b', "HCFC-142b Emissions"='he_hcfc142b', "Halon-1211 Emissions"='he_halon1211', "Halon-1301 Emissions"='he_halon1301', "Halon-2402 Emissions"='he_halon2402', "CH3Cl Emissions"='he_ch3cl', "CH3Br Emissions"='he_ch3br'),
-                                 'Halocarbon Forcings' = list("CF4 Forcing"='hf_cf4', "C2F6 Forcing"='hf_c2f6', "HFC-23 Forcing"='hf_hfc23', "HFC-4310 Forcing"='hf_hfc4310', "HFC-125 Forcing"='hf_hfc125',  "HFC-143a Forcing"='hf_hfc143a',
-                                                              "HFC-254fa Forcing"='hf_hfc245fa', "SF6 Forcing"='hf_hfcsf6', "CFC-11 Forcing"='hf_cfc11', "CFC-12 Forcing"='hf_cfc12', "CFC-113 Forcing"='hf_cfc113',"CFC-114 Forcing"='hf_cfc114',"CFC-115 Forcing"='hf_cfc115',"CCl4 Forcing"='hf_ccl4', "CH3CCl3 Forcing"='hf_ch3ccl3',
-                                                              "Halon-1211 Forcing"='hf_halon1211', "Halon-1301 Forcing"='hf_halon1301', "Halon-2402 Forcing"='hf_halon2402', "CH3Cl Forcing"='hf_ch3cl', "CH3Br Forcing"='hf_ch3br'), #"HCFC-22 Forcing"='hf_hcfc22', "HCFC-141b Forcing"='hf_hcfc141b', "HCFC-142b Forcing"='hf_hcfc142b',
-                                 'Methane' = list("Atmospheric CH4"='m_a_ch4',  "Emissions CH4"='m_e_ch4'),
-                                 # 'Ocean' = list("Ocean Carbon Flux"='o_cf', "Ocean Total Carbon"='o_tc', "Ocean Surface High-Lat Carbon"='o_os_hlc', "Ocean Surface Low-Lat Carbon"='o_os_llc', "Ocean Intermediate Carbon"='o_ic', "Ocean Deep Carbon"='o_dc', "Thermohaline Overturning"='o_to',
-                                 #                "High-Lat Overturning"='o_hl_o', "Warm-Intermediate Exchange"='o_wie', "Intermediate-Deep Exchange"='o_ide', "High Latitude Ph"='o_hl_ph', "Low Latitude Ph"='o_ll_ph', "Atmosphere-Ocean Flux - High Lat"='o_hl_aof', "Atmosphere-Ocean Flux - Low Lat"='o_ll_aof',
-                                 #                "Partial Pressure CO2 - High Lat"='o_hl_pp_co2',"Partial Pressure CO2 - Low Lat"='o_ll_pp_co2',"Dissolved Inorganic C - High Lat"='o_hl_dic', "Dissolved Inorganic C - Low Lat"='o_ll_dic', "Ocean Temperature - High Lat"='o_hl_t', "Ocean Temperature - Low Lat"='o_ll_t',
-                                 #                "Carbonate Concentration - High Lat"='o_hl_cc', "Carbonate Concentration - Low Lat"='o_ll_cc'), #  "Land Temp Anomaly"="t_lta",
-                                 'SO2' = list( "Anthropogenic SO2"='so2_a', "Natural CH4 Emissions"='so2_n_ch4', "Volcanic SO2"='so2_v'),
-                                 'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')),
-                            multiple = T, width=320, selected = "t_gmt")
-                          ),
-                        tags$td(style="padding-left: 5px;",
-                                selectInput(inputId = "set_theme", width=150, label="Output Theme:", choices = c("Chalk", "Dust", "Earth",  "Flat", "Flat Dark", "Fresh", "Grape", "Greyscale",
-                                                                                                                 "Light", "Pale",  "Sky", "Solarized"), selected = "Dust")
-                                )
+                                  and is one of a class of models heavily used for for emulating complex climate models and uncertainty analyses.", style = "float:left"),
+                  p("This interactive version is built upon previous work by developers at the ",
+                    a("Joint Global Change Research Institute (JGCRI)", href="http://globalchange.umd.edu/", target="blank"),
+                    " including the development of the initial C++ version of Hector, and the follow up R Package, \"Hector R\"."),
+                  style = "float: left"
+                       )),
+                       column(6, div(
+                           br(),
+                           shinyWidgets::actionBttn(inputId = "launch_scenario",
+                                                    label = "Launch Scenarios",
+                                                    style = "material-flat",
+                                                    color = "primary",
+                                                    size = "lg"),
+                           br(),
+                           br(),
+                           shinyWidgets::actionBttn(inputId = "guides",
+                                                    label = "Guides",
+                                                    style = "material-flat",
+                                                    color = "primary",
+                                                    size = "lg"),
+                           align = "center"
+                       ))
                        )
-                    ),
-                    actionButton(inputId="loadGraphs", label="Load Graphs", width = 200),
-                    downloadButton("downloadData", label="Download Raw Data"),
-                    uiOutput("plots", class = "customPlot")
-                  ), # end Graphs Tab
-
-                  # Maps Tab
-                  tabPanel
-                  ( fixed = TRUE,
-                    p(icon("globe-americas","fa-2x"), "Downscaled Maps", value="outputTab"),
-                    h5("Maps"), tags$hr(class="hrNav"),
-                    p("Please note that some map model patterns are rather large and can take several seconds to load. Due to this, maps will need to be refreshed manually after any changes."),
-                    tags$table(
-                      tags$tr(
-                        tags$td(
-                          selectInput(inputId = "mapPattern", label = "Choose Model:", width = 180,
-                                      choices = c("CanESM2" = "CanESM2",
-                                                  "CESM1-BGC" = "CESM1-BGC",
-                                                  "GFDL-ESM2G" = "GFDL-ESM2G",
-                                                  "MIROC-ESM" = "MIROC-ESM",
-                                                  "MPI-ESM-LR" = "MPI-ESM-LR",
-                                                  "MRI-ESM1" = "MRI-ESM1"))
-                        ),
-                        tags$td(style="padding-left: 5px;",
-                                selectInput(inputId = "mapVar", label = "Choose Variable:", selected = "tas",
-                                            choices = c("Temperature" = "tas", "Precipitation" = "pr"), multiple = F, width = 120)
-                        ),
-                        tags$td(style="padding-left: 5px;",
-                                selectInput(inputId = "mapYear", label = "Choose Year:", selected = 2100,
-                                            choices = c(2000:2100), multiple = F, width = 120)
-                        ),
-                        tags$td(style="padding-left: 5px;",
-                                uiOutput("coreMapping")
-                        )
-                      )
-                    ),
-                    tags$table(
-                      tags$tr(width = "100%",
-                              tags$td(width = "20", align="left", class="tdPushTop",
-                                      popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Enable Comparative Differences",
-                                             content = "This will change the temperature output on the map to show the difference between the computed temperature of the selected year and the temperature from the year 1900.",
-                                             placement = "top")),
-                              tags$td(shinyWidgets::prettyCheckbox(inputId = "input_map_compare", label = "Show as comparison to year 1900", value = FALSE,  inline = FALSE, icon = icon("check")))
-                      )
-                    ),
-                    tags$table(
-                      tags$tr(width = "100%",
-                              tags$td(width = "20", align="left", class="tdPushTop",
-                                      popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Filter by Lat/Lon",
-                                             content = "Choosing this option will allow you to zoom in to a specific lat/lon region and have the map rescale to the regional data.",
-                                             placement = "top")),
-                              tags$td(shinyWidgets::prettyCheckbox(inputId = "input_map_filter", label = "Filter by Lat/Lon", value = FALSE,  inline = TRUE, icon = icon("check"))
-                              )
-                      ),
-                    ),
-                    conditionalPanel(condition = "input.input_map_filter == true",
-                                     tags$table(
-                                       tags$tr(width = "100%",
-                                               tags$td(align = "left", shiny::textInput(inputId = "input_lat_min", label = "Lat Min:", width = 65, value = 13)),
-                                               tags$td(width = 15),
-                                               tags$td(align = "left", shiny::textInput(inputId = "input_lat_max", label = "Lat Max:",  width = 65, value = 57)),
-                                               tags$td(width = 15),
-                                               tags$td(align = "left", shiny::textInput(inputId = "input_lon_min", label = "Lon Min:", width = 65, value = -135)),
-                                               tags$td(width = 15),
-                                               tags$td(align = "left", shiny::textInput(inputId = "input_lon_max", label = "Lon Max:", width = 65, value = -55)),
-                                               tags$td()
-                                        )
+            ),
+              # Main panel for the interactive section of the application
+              tabPanel(
+                  "Run Scenario",
+                  mainPanel (
+                      width = 4,
+                      tabsetPanel(
+                          tabPanel(
+                              p( "Standard Scenarios", value="infoTab"),
+                              div(
+                                  br(),
+                                  h5("Emission Scenarios"),
+                                  tags$hr(class="hrNav"),
+                                  # shinyWidgets::awesomeCheckboxGroup(inputId = "input_RCP", label = "",
+                                  #                                    choices = c("2.6", "4.5", "6.0", "8.5"), inline = TRUE, status = "info"),
+                                  shinyWidgets::prettyCheckbox(inputId = "input_RCP_2.6", label = "2.6", value = FALSE, width = 45,
+                                                               inline = TRUE, icon = icon("check"), animation = "pulse", status = "primary"),
+                                  shinyWidgets::prettyCheckbox(inputId = "input_RCP_4.5", label = "4.5", value = TRUE, width = 45,
+                                                               inline = TRUE, icon = icon("check"), animation = "pulse", status = "success"),
+                                  shinyWidgets::prettyCheckbox(inputId = "input_RCP_6.0", label = "6.0", value = FALSE, width = 45,
+                                                               inline = TRUE, icon = icon("check"), animation = "pulse", status = "warning"),
+                                  shinyWidgets::prettyCheckbox(inputId = "input_RCP_8.5", label = "8.5", value = FALSE, width = 45,
+                                                               inline = TRUE, icon = icon("check"), animation = "pulse", status = "danger"),
+                                  div(id="myapp",
+                                      h5("Model Parameters"),
+                                      tags$hr(class="hrNav"),
+                                      tags$table(
+                                          tags$tr(width = "100%",
+                                                  tags$td(width = "8%", align = "center",
+                                                          popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters",
+                                                                 content = "Choosing a model will load a unique set of parameters that correspond to that model for emulation in Hector.", placement = "top" )),
+                                                  tags$td(width = "34%", div("Model Emulation:")),
+                                                  tags$td(width = "58%", class="tdPushBottom",
+                                                          selectInput("input_paramToggle", label = NULL,
+                                                                      choices =  list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
+                                                                                      "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 190)
+                                                  )
+                                          )
                                       ),
-                    ),
-                    actionButton(inputId="loadMaps", label="Load Map", width = 150),
-                    downloadButton("downloadMap", label="Save Hi-Res Map", width = 150),
-                    uiOutput("maps", class = "customPlot")
-                  ) # End Maps Tab
-                ) # End tabset panel
-              ) # End mainpanel
-            ), # End tabpanel
+                                      tags$table(
+                                          tags$tr(width = "100%",
+                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor",
+                                                                                                 content = "Setting this value will change the Aerosol Forcing Factor for any active Hector cores.", placement = "top" )),
+                                                  tags$td(width = "68%", div("Aerosol forcing scaling factor (unitless)")),
+                                                  tags$td(width = "24%", numericInput("input_aero", width = 80, label = NULL, value = NA, step = 0.01))
+                                          ),
+                                          tags$tr(width = "100%",
+                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor",
+                                                                                                 content = "Setting this value will change the CO2 Forcing Factor for any active Hector cores.", placement = "top" )),
+                                                  tags$td(width = "68%", div("CO2 fertilization factor (unitless)")),
+                                                  tags$td(width = "24%", numericInput("input_beta", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01))
+                                          ),
+                                          tags$tr(width = "100%",
+                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity",
+                                                                                                 content = "Setting this value will change the Ocean Heat Diffusivity for any active Hector cores.", placement = "top" )),
+                                                  tags$td(width = "68%", div("Ocean heat diffusivity (cm2/s)")),
+                                                  tags$td(width = "24%", numericInput("input_diff", width = 80, label = NULL, value = NA, step = 0.01))
+                                          ),
+                                          tags$tr(width = "100%",
+                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity",
+                                                                                                 content = "Setting this value will change the Equilibrium climate sensitivity for any active Hector cores.", placement = "top" )),
+                                                  tags$td(width = "68%", div("Equilibrium climate sensitivity (degC)")),
+                                                  tags$td(width = "24%", numericInput("input_ecs", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01, max = 25))
+                                          ),
+                                          tags$tr(width = "100%",
+                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ",
+                                                                                                 content = "Setting this value will change the Preindustrial CO2 concentration for any active Hector cores.", placement = "top" )),
+                                                  tags$td(width = "68%", div("Preindustrial CO2 conc. (ppmv CO2)")),
+                                                  tags$td(width = "24%", numericInput("input_pco2", width = 80, label = NULL, value = NA, step = 0.01, min = 250, max = 350))
+                                          ),
+                                          tags$tr(width = "100%",
+                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)",
+                                                                                                 content = "Setting this value will change the Temperature sensitivity factor for any active Hector cores.", placement = "top" )),
+                                                  tags$td(width = "68%", div("Temp. sensitivity factor (Q10) (unitless)")),
+                                                  tags$td(width = "24%", numericInput("input_q10", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01))
+                                          ),
+                                          tags$tr(width = "100%",
+                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor",
+                                                                                                 content = "Setting this value will change the Volcanic forcing scaling factor for any active Hector cores.", placement = "top" )),
+                                                  tags$td(width = "68%", div("Volcanic forcing scaling factor (unitless)")),
+                                                  tags$td(width = "24%", numericInput("input_volc", width = 80, label = NULL, value = NA, step = 0.01))
+                                          )
+                                      ),
+                                      div(class="paramDivs",
+                                          actionButton(inputId="set_Params", label="Set Parameters"),
+                                          actionButton(inputId="reset_Params", label="Reset Parameters"),
+                                          popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Parameters",
+                                                 content = "This will reset any/all parameters for each active Hector core, overwriting any custom parameter changes. Custom emissions will remain.", placement = "top" )
+                                      )
+                                  ),
+                                  # Divider that holds the custom emissions options/controls
+                                  div(h5("Custom Emissions"),
+                                      tags$hr(class="hrNav"),
+                                      p("Note: Custom emissions are only applicable to standard scenarios (not custom created scenarios)"),
+                                      tags$table(
+                                          tags$tr(width = "100%",
+                                                  tags$td(width="25%", "Emissions:"),
+                                                  tags$td(shiny::selectInput(inputId = "input_custom_emissions", label = NULL, width = 200, multiple = F,
+                                                                             choices = list('Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'))))
+                                          )
+                                      ),
+                                      tags$table(
+                                          tags$tr(width = "100%",
+                                                  tags$td(align = "left", shiny::textInput(inputId = "input_custom_start", label = "Start Year:", width = 65)),
+                                                  tags$td(width = 15),
+                                                  tags$td(align = "left", shiny::textInput(inputId = "input_custom_end", label = "End Year:",  width = 65)),
+                                                  tags$td(width = 15),
+                                                  tags$td(align = "left", shiny::textInput(inputId = "input_emissions_value", label = "Value (Tg):", width = 65)),
+                                                  tags$td()
+                                          )
+                                      ),
+                                      tags$table(
+                                          tags$tr(width = "100%",
+                                                  tags$td(width = "15%", align="left", class="tdPushTop",
+                                                          popify(div(class="paramDivsPushTop", icon("info-circle", "fa-1x")), title = "Sloping Emissions",
+                                                                 content = "Choosing this option will create a smooth slope from the starting years value to the specified value at the end year.", placement = "top" )),
+                                                  tags$td(width = "85%",shinyWidgets::prettyCheckbox(animation = "pulse", inputId = "input_slope_emissions", label = "Slope Emissions", value = FALSE,  inline = TRUE, icon = icon("check")))
+                                          )
+                                      ),
+                                      div(
+                                          actionButton(inputId="input_set_custom_emissions", label="Set Emissions"),
+                                          actionButton(inputId="input_reset_custom_emissions", label="Reset All Emissions"),
+                                          popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions",
+                                                 content = "This will reset all active Standard Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
+                                      )
+                                  )# ) Collapsible comment
+                                  # )
+                              )
+                          ),
+                          # Custom Scenarios Tab Panel
+                          tabPanel
+                          (
+                              p(icon("edit", "fa-1x"), "Custom Scenarios - BETA", value="infoTab"),
+                              div
+                              (
+                                  h5("Custom Emissions Pathway"),
+                                  tags$hr(class="hrNav"),
+                                  p("Steps to run your own scenario with custom emissions:"),
+                                  tags$ol(
+                                      tags$li("Choose a baseline RCP scenario as your starting point"),
+                                      tags$li("Give your new custom scenario a name"),
+                                      tags$li("Download the emissions file template for that scenario and enter your own emissions"),
+                                      tags$li("Upload the new customized emissions file")
+                                  ),
+                                  p(tags$strong("Do not edit any field names or change the CSV file in any way other than changing the data")),
+                                  tags$table(
+                                      tags$tr(width = "100%",
+                                              tags$td(width = "145", "Baseline Scenario:"),
+                                              tags$td(width = "155", selectInput("input_custom_RCP", label = NULL, list("RCP2.6" = "RCP-2.6","RCP 4.5"="RCP-4.5", "RCP 6"="RCP-6.0", "RCP 8.5" = "RCP-8.5"), width=150, selected = "RCP-4.5"))
+                                      ),
+                                      tags$tr(width = "100%",
+                                              tags$td(width = "145", "Custom Scenario Name:"),
+                                              tags$td(width = "200",  textInput("input_custom_scenarioName", label = NULL, width=195, value = ""))
+                                      )
+                                  ),
+                                  div(
+                                      conditionalPanel(
+                                          condition = "input.input_custom_RCP == 'RCP-2.6'",
+                                          a(h6("Download RCP 2.6 Emissions File Template"), href="input/emissions/RCP26_custom_template.csv")
+                                      ),
+                                      conditionalPanel(
+                                          condition = "input.input_custom_RCP == 'RCP-4.5'",
+                                          a(h6("Download RCP 4.5 Emissions File Template"), href="input/emissions/RCP45_custom_template.csv")
+                                      ),
+                                      conditionalPanel(
+                                          condition = "input.input_custom_RCP == 'RCP-6.0'",
+                                          a(h6("Download RCP 6.0 Emissions File Template"), href="input/emissions/RCP6_custom_template.csv")
+                                      ),
+                                      conditionalPanel(
+                                          condition = "input.input_custom_RCP == 'RCP-8.5'",
+                                          a(h6("Download RCP 8.5 Emissions File Template"), href="input/emissions/RCP85_custom_template.csv")
+                                      ),
+                                      fileInput("input_custom_emissions_file", "Upload Custom Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
+                                      div(
+                                          class="paramDivs", actionButton(inputId="input_load_emissions", label="Create Scenario"))
+                                  )
+                              ) # End Div
+                          ) # End Custom Scenarios Tab Panel
+                      )
+                  ),
+                  # Right hand content panel - Main panel that is used for output
+                  mainPanel
+                  ( width = 8,
+                      tabsetPanel
+                      (
+                          # Graphs Tab
+                          tabPanel
+                          (fixed = TRUE,
+                              p(icon("chart-line","fa-2x"), "Scenario Output", value="outputTab"),
+                              h5("Graphs"), tags$hr(class="hrNav"),
+                              tags$table
+                              (
+                                  tags$tr
+                                  (
+                                      tags$td
+                                      (
+                                          selectInput
+                                          ("capabilities",  "Choose Output Variables (up to 4):",
+                                              list('Carbon Cycle' = list("Atmospheric CO2"="cc_co2", "Atmospheric Carbon Pool"="cc_acp", "FFI Emissions"="cc_ffi", "LUC Emissions"="cc_luc"),
+                                                   'Concentrations' = list("Amospheric N2O"='c_an20'),
+                                                   'Emissions' = list("Black Carbon Emissions" = 'e_bc', "Organic Carbon Emissions"='e_oc'), #"RF - H2O"='f_h2o', "RF - Ozone"='f_oz',
+                                                   'Forcings' = list("RF - Total"='f_rft', "RF - Albedo"='f_alb', "RF - CO2"='f_co2', "RF - N2O"='f_n2o',  "RF - Black Carbon"='f_bc',
+                                                                     "RF - Organic Carbon"='f_oc', "RF - SO2 Direct"='f_so2d', "RF - SO2 Indirect"='f_so2i', "RF - SO2 Total"='f_so2t', "RF - Volcanic Activity"='f_va', "RF - CH4"='f_ch4'),
+                                                   # 'Halocarbon Emissions' = list("CF4 Emissions"='he_cf4', "C2F6 Emissions"='he_c2f6', "HFC-23 Emissions"='he_hfc23', "HFC-32 Emissions"='he_hfc32', "HFC-4310 Emissions"= 'he_hfc4310', "HFC-125 Emissions"='he_hfc125', "HFC-134a Emissions"='he_hfc134a', "HFC-143a Emissions"='he_hfc143a', "HFC-227ea Emissions"='he_hfc227ea',
+                                                   #                               "HFC-245fa Emissions"='he_hfc245fa', "SF6 Emissions"='he_sf6', "CFC-11 Emissions"='he_cfc11', "CFC-12 Emissions"='he_cfc12', "CFC-113 Emissions"='he_cfc113',"CFC-114 Emissions"='he_cfc114',"CFC-115 Emissions"='he_cfc115',"CCl4 Emissions"='he_ccl4', "CH3CCl3 Emissions"='he_ch3ccl3',
+                                                   #                               "HCFC-22 Emissions"='he_hcfc22', "HCFC-141b Emissions"='he_hcfc141b', "HCFC-142b Emissions"='he_hcfc142b', "Halon-1211 Emissions"='he_halon1211', "Halon-1301 Emissions"='he_halon1301', "Halon-2402 Emissions"='he_halon2402', "CH3Cl Emissions"='he_ch3cl', "CH3Br Emissions"='he_ch3br'),
+                                                   'Halocarbon Forcings' = list("CF4 Forcing"='hf_cf4', "C2F6 Forcing"='hf_c2f6', "HFC-23 Forcing"='hf_hfc23', "HFC-4310 Forcing"='hf_hfc4310', "HFC-125 Forcing"='hf_hfc125',  "HFC-143a Forcing"='hf_hfc143a',
+                                                                                "HFC-254fa Forcing"='hf_hfc245fa', "SF6 Forcing"='hf_hfcsf6', "CFC-11 Forcing"='hf_cfc11', "CFC-12 Forcing"='hf_cfc12', "CFC-113 Forcing"='hf_cfc113',"CFC-114 Forcing"='hf_cfc114',"CFC-115 Forcing"='hf_cfc115',"CCl4 Forcing"='hf_ccl4', "CH3CCl3 Forcing"='hf_ch3ccl3',
+                                                                                "Halon-1211 Forcing"='hf_halon1211', "Halon-1301 Forcing"='hf_halon1301', "Halon-2402 Forcing"='hf_halon2402', "CH3Cl Forcing"='hf_ch3cl', "CH3Br Forcing"='hf_ch3br'), #"HCFC-22 Forcing"='hf_hcfc22', "HCFC-141b Forcing"='hf_hcfc141b', "HCFC-142b Forcing"='hf_hcfc142b',
+                                                   'Methane' = list("Atmospheric CH4"='m_a_ch4',  "Emissions CH4"='m_e_ch4'),
+                                                   # 'Ocean' = list("Ocean Carbon Flux"='o_cf', "Ocean Total Carbon"='o_tc', "Ocean Surface High-Lat Carbon"='o_os_hlc', "Ocean Surface Low-Lat Carbon"='o_os_llc', "Ocean Intermediate Carbon"='o_ic', "Ocean Deep Carbon"='o_dc', "Thermohaline Overturning"='o_to',
+                                                   #                "High-Lat Overturning"='o_hl_o', "Warm-Intermediate Exchange"='o_wie', "Intermediate-Deep Exchange"='o_ide', "High Latitude Ph"='o_hl_ph', "Low Latitude Ph"='o_ll_ph', "Atmosphere-Ocean Flux - High Lat"='o_hl_aof', "Atmosphere-Ocean Flux - Low Lat"='o_ll_aof',
+                                                   #                "Partial Pressure CO2 - High Lat"='o_hl_pp_co2',"Partial Pressure CO2 - Low Lat"='o_ll_pp_co2',"Dissolved Inorganic C - High Lat"='o_hl_dic', "Dissolved Inorganic C - Low Lat"='o_ll_dic', "Ocean Temperature - High Lat"='o_hl_t', "Ocean Temperature - Low Lat"='o_ll_t',
+                                                   #                "Carbonate Concentration - High Lat"='o_hl_cc', "Carbonate Concentration - Low Lat"='o_ll_cc'), #  "Land Temp Anomaly"="t_lta",
+                                                   'SO2' = list( "Anthropogenic SO2"='so2_a', "Natural CH4 Emissions"='so2_n_ch4', "Volcanic SO2"='so2_v'),
+                                                   'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')),
+                                              multiple = T, width=320, selected = "t_gmt")
+                                      ),
+                                      tags$td(style="padding-left: 5px;",
+                                              selectInput(inputId = "set_theme", width=150, label="Output Theme:", choices = c("Chalk", "Dust", "Earth",  "Flat", "Flat Dark", "Fresh", "Grape", "Greyscale",
+                                                                                                                               "Light", "Pale",  "Sky", "Solarized"), selected = "Dust")
+                                      )
+                                  )
+                              ),
+                              actionButton(inputId="loadGraphs", label="Load Graphs", width = 200),
+                              downloadButton("downloadData", label="Download Raw Data"),
+                              uiOutput("plots", class = "customPlot")
+                          ), # end Graphs Tab
+
+                          # Maps Tab
+                          tabPanel
+                          ( fixed = TRUE,
+                              p(icon("globe-americas","fa-2x"), "Downscaled Maps", value="outputTab"),
+                              h5("Maps"), tags$hr(class="hrNav"),
+                              p("Please note that some map model patterns are rather large and can take several seconds to load. Due to this, maps will need to be refreshed manually after any changes."),
+                              tags$table(
+                                  tags$tr(
+                                      tags$td(
+                                          selectInput(inputId = "mapPattern", label = "Choose Model:", width = 180,
+                                                      choices = c("CanESM2" = "CanESM2",
+                                                                  "CESM1-BGC" = "CESM1-BGC",
+                                                                  "GFDL-ESM2G" = "GFDL-ESM2G",
+                                                                  "MIROC-ESM" = "MIROC-ESM",
+                                                                  "MPI-ESM-LR" = "MPI-ESM-LR",
+                                                                  "MRI-ESM1" = "MRI-ESM1"))
+                                      ),
+                                      tags$td(style="padding-left: 5px;",
+                                              selectInput(inputId = "mapVar", label = "Choose Variable:", selected = "tas",
+                                                          choices = c("Temperature" = "tas", "Precipitation" = "pr"), multiple = F, width = 120)
+                                      ),
+                                      tags$td(style="padding-left: 5px;",
+                                              selectInput(inputId = "mapYear", label = "Choose Year:", selected = 2100,
+                                                          choices = c(2000:2100), multiple = F, width = 120)
+                                      ),
+                                      tags$td(style="padding-left: 5px;",
+                                              uiOutput("coreMapping")
+                                      )
+                                  )
+                              ),
+                              tags$table(
+                                  tags$tr(width = "100%",
+                                          tags$td(width = "20", align="left", class="tdPushTop",
+                                                  popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Enable Comparative Differences",
+                                                         content = "This will change the temperature output on the map to show the difference between the computed temperature of the selected year and the temperature from the year 1900.",
+                                                         placement = "top")),
+                                          tags$td(shinyWidgets::prettyCheckbox(inputId = "input_map_compare", label = "Show as comparison to year 1900", value = FALSE,  inline = FALSE, icon = icon("check")))
+                                  )
+                              ),
+                              tags$table(
+                                  tags$tr(width = "100%",
+                                          tags$td(width = "20", align="left", class="tdPushTop",
+                                                  popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Filter by Lat/Lon",
+                                                         content = "Choosing this option will allow you to zoom in to a specific lat/lon region and have the map rescale to the regional data.",
+                                                         placement = "top")),
+                                          tags$td(shinyWidgets::prettyCheckbox(inputId = "input_map_filter", label = "Filter by Lat/Lon", value = FALSE,  inline = TRUE, icon = icon("check"))
+                                          )
+                                  ),
+                              ),
+                              conditionalPanel(condition = "input.input_map_filter == true",
+                                               tags$table(
+                                                   tags$tr(width = "100%",
+                                                           tags$td(align = "left", shiny::textInput(inputId = "input_lat_min", label = "Lat Min:", width = 65, value = 13)),
+                                                           tags$td(width = 15),
+                                                           tags$td(align = "left", shiny::textInput(inputId = "input_lat_max", label = "Lat Max:",  width = 65, value = 57)),
+                                                           tags$td(width = 15),
+                                                           tags$td(align = "left", shiny::textInput(inputId = "input_lon_min", label = "Lon Min:", width = 65, value = -135)),
+                                                           tags$td(width = 15),
+                                                           tags$td(align = "left", shiny::textInput(inputId = "input_lon_max", label = "Lon Max:", width = 65, value = -55)),
+                                                           tags$td()
+                                                   )
+                                               ),
+                              ),
+                              actionButton(inputId="loadMaps", label="Load Map", width = 150),
+                              downloadButton("downloadMap", label="Save Hi-Res Map", width = 150),
+                              uiOutput("maps", class = "customPlot")
+                          ) # End Maps Tab
+                      ) # End tabset panel
+                  ) # End mainpanel
+              ),
               tabPanel(
                   "Guides",
                   mainPanel(
@@ -376,16 +381,16 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                                   tags$tr(
                                       tags$td(width = "50%",
                                               h3("The Hector Product Family", style="text-align: center"),
-                                              img(src="images/Hector-sm.png")
+                                              img(src="images/Hector-sm.png"),
                                       ),
-                                      tags$td(tags$figure(
-                                          tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results"),
-                                          img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',
-                                              height="330",
-                                              class="zenodo")
-                                      ), style="text-align: center"
-                                      )
                                   )
+                              ),
+                              br(),
+                              tags$td(tags$figure(
+                                  tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results"),
+                                  img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',
+                                      class="zenodo")
+                              ), style="text-align: center"
                               ),
                               br(),
                               h5("Documentation/Downloads"),
@@ -512,7 +517,24 @@ fluidPage(theme = shinythemes::shinytheme("darkly"),
                           )
                       )
                   )
-              )
-          ) # End navbarpage
+              ),
+              tags$style(HTML(".navbar-nav {
+                                float:none;
+                                margin:0 auto;
+                                display: block;
+                                text-align: center;
+                            }
+
+                            .navbar-nav > li {
+                                display: inline-block;
+                                float:none;
+                            }"))
+               ), # End navbarpage
+          hr(),
+          p("This research was supported in part by the U.S. Department of Energy, Office of Science, as
+            part of research in Multi Sector Dynamics, Earth and Environmental System Modeling Program.
+            The Pacific Northwest National Laboratory is operated for DOE by Battelle Memorial Institute.
+            The authors also received support for this research through the U.S. Environmental Protection Agency.",
+            class = "sticky_footer", style = "font-size:12px;")
 ) # End of everything.
 
