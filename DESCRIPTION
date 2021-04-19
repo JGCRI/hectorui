@@ -2,12 +2,13 @@ Package: hectorui
 Type: Package
 Title: A web-based interactive scenario builder and visualization application for the Hector climate model
 Version: 1.1.4
-Authors@R: c(person("Jason", "Evanoff", email = "jason.evanoff@pnnl.gov", role = c("aut", "cre")),
+Authors@R: c(person("Stephanie", "Pennington", email = "stephanie.pennington@pnnl.gov", role = c("aut", "cre")),
          person("Chris", "Vernon", email = "chris.vernon@pnnl.gov", role = "aut"),
          person("Stephanie", "Waldhoff", email = "stephanie.waldhoff@pnnl.gov", role = "aut"),
          person("Abigail", "Snyder", email = "abigail.snyder@pnnl.gov", role = "aut"),
+         person("Jason", "Evanoff", email = "jason.evanoff@pnnl.gov", role = "aut"),
 	     person("Corinne", "Hartin", email = "corinne.hartin@pnnl.gov", role = "aut"))
-Maintainer: Jason Evanoff <jason.evanoff@pnnl.gov>
+Maintainer: Stephanie Pennington <stephanie.pennington@pnnl.gov>
 Description: Provides a simple visual, interactive web interface for the simple climate model Hector from JGCRI. 
 License: GPL-3
 Encoding: UTF-8
@@ -26,7 +27,8 @@ Imports:
     shinythemes,
     shinyWidgets,
     stringr,
-    shinycustomloader
+    shinycustomloader,
+    markdown
 Depends:
     R (>= 3.6.0),
     hector,
