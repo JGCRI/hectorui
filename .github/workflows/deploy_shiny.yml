@@ -20,7 +20,7 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
-       - name: Push to shiny.io
-       - run: |
+      - name: Push to shiny.io
+      - run: |
           Rscript -e "rsconnect::setAccountInfo(name='jgcri', token=${{secrets.SHINYAPPS_TOKEN}}, secret=${{secrets.SHINYAPPS_SECRET}})"
           Rscript -e "rsconnect::deployApp(appName = 'HectorUI')"
