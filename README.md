@@ -10,7 +10,7 @@ Just getting started with `hectorui`?  We have constructed a tutorial to examine
 
 To navigate directly to the `hectorui` app **CLICK the following image**:
 
-[![`hectorui` map scenario interface](https://raw.githubusercontent.com/JGCRI/hectorui/master/paper/figure1.png)](https://jgcri.shinyapps.io/HectorUI/)
+[![`hectorui` map scenario interface](https://raw.githubusercontent.com/JGCRI/hectorui/master/paper/HectorUIv2.0_HomePage.png)](https://jgcri.shinyapps.io/HectorUI/)
 
 ## Installing Locally
 
