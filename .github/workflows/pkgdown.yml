@@ -3,6 +3,9 @@ on:
     branches:
       - main
       - master
+  pull_request:
+      - main
+      - master
 
 name: docs
 
