@@ -15,6 +15,11 @@ h2
     font-size:2vw;
 }
 
+.about-info
+{
+    font-size: 12px;
+}
+
 .c-emissions
 {
     font-size: 14px;
@@ -47,9 +52,9 @@ h2
     font-size: 50px;
 }
 
-.about-info
+.maps
 {
-    font-size: 12px;
+    font-size: 16px;
 }
 
 .nav-tabs

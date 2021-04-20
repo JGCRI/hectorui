@@ -62,7 +62,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                   mainPanel (
                       width = 4,
                       tabsetPanel(
-                          tabPanel(
+                          tabPanel(class = "params",
                               p( "Standard Scenarios", value="infoTab"),
                               div(
                                   br(),
@@ -187,7 +187,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                           ),
                           # Custom Scenarios Tab Panel
                           tabPanel
-                          (
+                          (class = "params",
                               p(icon("edit", "fa-1x"), "Custom Scenarios - BETA", value="infoTab"),
                               div
                               (
@@ -290,12 +290,12 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
 
                           # Maps Tab
                           tabPanel
-                          ( fixed = TRUE,
+                          ( fixed = TRUE, class = "maps",
                               p(icon("globe-americas","fa-2x"), "Downscaled Maps", value="outputTab"),
                               h5("Maps"), tags$hr(class="hrNav"),
                               p("Please note that some map model patterns are rather large and can take several seconds to load. Due to this, maps will need to be refreshed manually after any changes."),
                               tags$table(
-                                  tags$tr(
+                                  tags$tr(class = "maps",
                                       tags$td(
                                           selectInput(inputId = "mapPattern", label = "Choose Model:", width = 180,
                                                       choices = c("CanESM2" = "CanESM2",
@@ -397,7 +397,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                   tags$figure(
                                   tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results"),
                                   img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',
-                                      height="330",
+                                      height="260px",
                                       class="hector-fig")
                               ), style="text-align: center"
                               ),
