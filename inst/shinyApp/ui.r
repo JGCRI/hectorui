@@ -6,16 +6,23 @@ library(shinyBS)
 # Using Shiny Fixed layout
 fluidPage(theme = shinythemes::shinytheme("readable"),
           shinyalert::useShinyalert(),
-          title = "HectorUI",
+          title = "HectorUI: An Interactive Climate Model",
 
           # Code that gets called on first load of application to load in any themes/css etc
           # Loads the custom.css file that contains custom styles and overwrites some built in styles
           tags$head
           (
-            tags$link(rel = "stylesheet", type = "text/css", href = "test.css")
+            tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
           ),
           shinyjs::useShinyjs(),
 
+          tags$div(class = "container",
+                   tags$img(src = "images/earth-header.png", width = "100%", class = "earth", alt = "Earth's atmosphere"),
+                   tags$div(class = "header-text",
+                            h1("HectorUI",  class = "text-center"),
+                            h2("An Interactive Climate Model", class = "text-center", style = "font-weight:normal;")),
+          ),
+          br(),
           # Main component from which all other components fall under, navbarPage, a multi-page user-interface that includes a navigation bar
           navbarPage
           (
@@ -25,10 +32,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
             # Main navigation
             tabPanel(
               "Home",
-              h1("HectorUI", class = "title"),
-              h2("An Interactive Climate Model", class = "text-center"),
-              br(),
-              fluidRow(column(6, div(
+              fluidRow(column(7, div(class = "home-text",
                   p("Welcome to the user interface for",
                     tags$b("Hector:"),
                     " an open source, object-oriented, and interactive simple global climate carbon-cycle model.
@@ -39,27 +43,22 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                     " including the development of the initial C++ version of Hector, and the follow up R Package, \"Hector R\"."),
                   style = "float: left"
                        )),
-                       column(6, div(
-                           br(),
-                           shinyWidgets::actionBttn(inputId = "launch_scenario",
-                                                    label = "Launch Scenarios",
-                                                    style = "material-flat",
-                                                    color = "primary",
-                                                    size = "lg"),
+                       column(4, div(
                            br(),
                            br(),
-                           shinyWidgets::actionBttn(inputId = "guides",
-                                                    label = "Guides",
-                                                    style = "material-flat",
-                                                    color = "primary",
-                                                    size = "lg"),
+
+                           actionButton(inputId = "launch_scenario",
+                                                    label = "Explore Hector",
+                                                    style = "background: #4174C3; color: white;
+                                                             font-size: 24px; padding: 32px 24px;
+                                                             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);"),
                            align = "center"
                        ))
                        )
             ),
               # Main panel for the interactive section of the application
               tabPanel(
-                  "Run Scenario",
+                  "Explore Hector",
                   mainPanel (
                       width = 4,
                       tabsetPanel(
@@ -67,7 +66,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                               p( "Standard Scenarios", value="infoTab"),
                               div(
                                   br(),
-                                  h5("Emission Scenarios"),
+                                  h5("Representative Concentration Pathways (RCPs)"),
                                   tags$hr(class="hrNav"),
                                   # shinyWidgets::awesomeCheckboxGroup(inputId = "input_RCP", label = "",
                                   #                                    choices = c("2.6", "4.5", "6.0", "8.5"), inline = TRUE, status = "info"),
@@ -82,7 +81,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                   div(id="myapp",
                                       h5("Model Parameters"),
                                       tags$hr(class="hrNav"),
-                                      tags$table(
+                                      tags$table(class = "params",
                                           tags$tr(width = "100%",
                                                   tags$td(width = "8%", align = "center",
                                                           popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters",
@@ -95,7 +94,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                                   )
                                           )
                                       ),
-                                      tags$table(
+                                      tags$table(class = "params",
                                           tags$tr(width = "100%",
                                                   tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor",
                                                                                                  content = "Setting this value will change the Aerosol Forcing Factor for any active Hector cores.", placement = "top" )),
@@ -140,14 +139,15 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                           )
                                       ),
                                       div(class="paramDivs",
-                                          actionButton(inputId="set_Params", label="Set Parameters"),
-                                          actionButton(inputId="reset_Params", label="Reset Parameters"),
+                                          actionButton(inputId="set_Params", label="Set Parameters", style = "background: #4174C3; color: white;"),
+                                          actionButton(inputId="reset_Params", label="Reset Parameters", style = "background: #4174C3; color: white;"),
                                           popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Parameters",
                                                  content = "This will reset any/all parameters for each active Hector core, overwriting any custom parameter changes. Custom emissions will remain.", placement = "top" )
                                       )
                                   ),
                                   # Divider that holds the custom emissions options/controls
-                                  div(h5("Custom Emissions"),
+                                  div(class = "c-emissions",
+                                      h5("Custom Emissions"),
                                       tags$hr(class="hrNav"),
                                       p("Note: Custom emissions are only applicable to standard scenarios (not custom created scenarios)"),
                                       tags$table(
@@ -176,8 +176,8 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                           )
                                       ),
                                       div(
-                                          actionButton(inputId="input_set_custom_emissions", label="Set Emissions"),
-                                          actionButton(inputId="input_reset_custom_emissions", label="Reset All Emissions"),
+                                          actionButton(inputId="input_set_custom_emissions", label="Set Emissions", style = "background: #4174C3; color: white;"),
+                                          actionButton(inputId="input_reset_custom_emissions", label="Reset All Emissions", style = "background: #4174C3; color: white;"),
                                           popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions",
                                                  content = "This will reset all active Standard Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
                                       )
@@ -245,11 +245,13 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                           tabPanel
                           (fixed = TRUE,
                               p(icon("chart-line","fa-2x"), "Scenario Output", value="outputTab"),
+                              div(
+                              br(),
                               h5("Graphs"), tags$hr(class="hrNav"),
                               tags$table
                               (
                                   tags$tr
-                                  (
+                                  (class = "output-vars",
                                       tags$td
                                       (
                                           selectInput
@@ -272,7 +274,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                                    #                "Carbonate Concentration - High Lat"='o_hl_cc', "Carbonate Concentration - Low Lat"='o_ll_cc'), #  "Land Temp Anomaly"="t_lta",
                                                    'SO2' = list( "Anthropogenic SO2"='so2_a', "Natural CH4 Emissions"='so2_n_ch4', "Volcanic SO2"='so2_v'),
                                                    'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')),
-                                              multiple = T, width=320, selected = "t_gmt")
+                                              multiple = T, selected = "t_gmt")
                                       ),
                                       tags$td(style="padding-left: 5px;",
                                               selectInput(inputId = "set_theme", width=150, label="Output Theme:", choices = c("Chalk", "Dust", "Earth",  "Flat", "Flat Dark", "Fresh", "Grape", "Greyscale",
@@ -280,10 +282,11 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                       )
                                   )
                               ),
-                              actionButton(inputId="loadGraphs", label="Load Graphs", width = 200),
-                              downloadButton("downloadData", label="Download Raw Data"),
+                              actionButton(inputId="loadGraphs", label="Load Graphs", width = 200, style = "background: #0B3F8F; color: white;"),
+                              downloadButton("downloadData", label="Download Raw Data", style = "background: #0B3F8F; color: white;"),
                               uiOutput("plots", class = "customPlot")
-                          ), # end Graphs Tab
+                              )
+                              ), # end Graphs Tab
 
                           # Maps Tab
                           tabPanel
@@ -352,15 +355,18 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                               downloadButton("downloadMap", label="Save Hi-Res Map", width = 150),
                               uiOutput("maps", class = "customPlot")
                           ) # End Maps Tab
-                      ) # End tabset panel
+
+                              ) # End tabset panel
                   ) # End mainpanel
               ),
               tabPanel(
                   "Guides",
                   mainPanel(
                       style="vertical-align: middle;",
-                      h6("Ready to get started? ",
+                      h5("Ready to get started?",
                          tags$a("View the Guide/Tutorial", href="https://jgcri.github.io/hectorui/articles/Tutorial.html", target="blank")),
+                      br(),
+                      p("Coming soon...video tutorials!")
                   )
               ),
               tabPanel
@@ -370,6 +376,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                   mainPanel
                   (
                       width = 9,
+                      class = "about-info",
                       tabsetPanel
                       (
                           # Information Tab Panel
@@ -380,16 +387,18 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                               tags$table(
                                   tags$tr(
                                       tags$td(width = "50%",
-                                              h3("The Hector Product Family", style="text-align: center"),
-                                              img(src="images/Hector-sm.png"),
+                                              h5("Explore the Hector Product Family", style="text-align: left"),
+                                              a(img(src="images/Github-logo.png", height = "100"), href = "https://github.com/JGCRI/hector"),
                                       ),
                                   )
                               ),
                               br(),
-                              tags$td(tags$figure(
+                              tags$td(
+                                  tags$figure(
                                   tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results"),
                                   img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',
-                                      class="zenodo")
+                                      height="330",
+                                      class="hector-fig")
                               ), style="text-align: center"
                               ),
                               br(),
@@ -531,10 +540,15 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                             }"))
                ), # End navbarpage
           hr(),
-          p("This research was supported in part by the U.S. Department of Energy, Office of Science, as
-            part of research in Multi Sector Dynamics, Earth and Environmental System Modeling Program.
-            The Pacific Northwest National Laboratory is operated for DOE by Battelle Memorial Institute.
-            The authors also received support for this research through the U.S. Environmental Protection Agency.",
+          p(em("This research was supported in part by the",
+            a(" U.S. Department of Energy,", href = "https://www.energy.gov/"),
+            a(" Office of Science", href = "https://www.energy.gov/science/office-science"),
+            ", as part of research in",
+            a("MultiSector Dynamics, ", href = "https://climatemodeling.science.energy.gov/program/multisector-dynamics"),
+            "Earth and Environmental System Modeling Program.",
+            a("The Pacific Northwest National Laboratory", href = "https://www.pnnl.gov/"),
+            " is operated for DOE by Battelle Memorial Institute.
+            The authors also received support for this research through the U.S. Environmental Protection Agency."),
             class = "sticky_footer", style = "font-size:12px;")
 ) # End of everything.
 
