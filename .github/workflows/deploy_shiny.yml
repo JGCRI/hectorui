@@ -27,11 +27,8 @@ jobs:
             devtools::install_github("JGCRI/hectorui")
         shell: Rscript {0}
 
-    - name: Set working directory to app
-        run: |
-            Rscript -e "setwd('/Users/runner/work/hectorui/inst/shinyApp')"
-
       - name: Push to shiny.io
         run: |
+          Rscript -e "setwd('/Users/runner/work/hectorui/inst/shinyApp')"
           Rscript -e "rsconnect::setAccountInfo(name='jgcri', token= '${{secrets.SHINYAPPS_TOKEN}}' , secret= '${{secrets.SHINYAPPS_SECRET}}')"
           Rscript -e "rsconnect::deployApp(appName = 'HectorUI')"
