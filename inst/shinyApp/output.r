@@ -41,7 +41,6 @@ cleanPlots <- function()
 loadGraph <- function()
 {
   print("in load graph")
-
   # Set up local variables for dealing with output data frames
   hdata <- data.frame()
   df_total <- data.frame()
@@ -73,7 +72,7 @@ loadGraph <- function()
                       scenarioName <- names(hcores)[j]
                       hdata <- hector::fetchvars(core = hcores[[j]], dates = globalVars[['startDate']]:globalVars[['endDate']], vars = outputVariables[i], "\n")
                       if(substr(scenarioName, 1, 8) =="Standard")
-                        seriesname <- paste0("RCP", substr(scenarioName, nchar(scenarioName)-3, nchar(scenarioName)))
+                        seriesname <- paste("RCP", substr(scenarioName, nchar(scenarioName)-2, nchar(scenarioName)))
                       else
                         seriesname <- names(hcores)[j]
                       hdata <- dplyr::mutate(hdata, Scenario = seriesname, Year = year, Value = round(value, 2))
@@ -82,8 +81,10 @@ loadGraph <- function()
                     }
                     # Get the units for graph axis
                     x <- dplyr::distinct(hdata, units)
-                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=Year, y=Value, group=variable, color=Scenario)) + ggplot2::geom_line() +
-                       ggplot2::labs(y=Hmisc::capitalize(x[[1]]), title =  attr(outputVariables[[i]], 'longName')) #+  ggplot2::scale_color_manual(values = globalColorScales)
+                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=Year, y=Value, group=variable, color=Scenario)) +
+                      ggplot2::geom_line() +
+                      ggplot2::labs(y=Hmisc::capitalize(x[[1]]), title =  attr(outputVariables[[i]], 'longName')) +
+                      ggplot2::scale_color_manual(values = globalColorScales)
 
                     #+ ggplot2::scale_color_manual(values=globalScenarioColors) + ggplot2::geom_ribbon(alpha=0.5)
                     # +  ggplot2::guides(color = ggplot2::guide_colorbar(title  = expression(beta)))

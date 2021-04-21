@@ -1,0 +1,73 @@
+
+body
+{
+	font-family:"Barlow Regular", Sans-Serif !important;
+	font-size: 20px;
+}
+
+h1
+{
+    font-size: 4vw;
+}
+
+h2
+{
+    font-size:2vw;
+}
+
+.about-info
+{
+    font-size: 12px;
+}
+
+.c-emissions
+{
+    font-size: 14px;
+}
+
+.container {
+    position: relative;
+    width:100%;
+}
+
+.header-text
+{
+    position: absolute;
+    color: #FFFFFF;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+
+}
+
+.home-text
+{
+    font-size: 16px;
+    padding: 20px;
+}
+
+.hrNav
+{
+    font-size: 50px;
+}
+
+.maps
+{
+    font-size: 16px;
+}
+
+.nav-tabs
+{
+    font-size: 14px
+}
+
+.output-vars
+{
+    font-size: 16px;
+}
+
+.params
+{
+    font-size: 14px;
+}
