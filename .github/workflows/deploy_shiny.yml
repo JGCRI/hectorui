@@ -21,7 +21,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
 
       - name: Install dependencies
-        run: Rscript -e "install.packages(`rsconnect)"
+        run: Rscript -e "install.packages('rsconnect')"
 
       - name: Push to shiny.io
         run: |
