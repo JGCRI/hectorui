@@ -29,5 +29,6 @@ jobs:
 
       - name: Push to shiny.io
         run: |
+          echo
           Rscript -e "rsconnect::setAccountInfo(name='jgcri', token= '${{secrets.SHINYAPPS_TOKEN}}' , secret= '${{secrets.SHINYAPPS_SECRET}}')"
-          Rscript -e "rsconnect::deployApp(appDir = '/Users/runner/work/hectorui/inst/shinyApp', appName = 'HectorUI')"
+          Rscript -e "rsconnect::deployApp(appDir = './inst/shinyApp', appName = 'HectorUI')"
