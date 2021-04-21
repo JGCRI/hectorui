@@ -21,7 +21,11 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
 
       - name: Install dependencies
-        run: Rscript -e "install.packages('rsconnect')"
+        run: |
+            install.packages(c("shiny", "rsconnect", "devtools"), type = "binary")
+            library(devtools)
+            devtools::install_github("JGCRI/hectorui")
+        shell: Rscript {0}
 
       - name: Push to shiny.io
         run: |
