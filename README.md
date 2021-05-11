@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/198255756.svg)](https://zenodo.org/badge/latestdoi/198255756) ![R-CMD](https://github.com/JGCRI/hectorui/workflows/R-CMD/badge.svg) ![build](https://github.com/JGCRI/hectorui/workflows/build/badge.svg) [![codecov](https://codecov.io/gh/JGCRI/hectorui/branch/master/graph/badge.svg?token=aOWN2ELixv)](https://codecov.io/gh/JGCRI/hectorui) [![DOI](https://joss.theoj.org/papers/10.21105/joss.02782/status.svg)](https://doi.org/10.21105/joss.02782)
+[![DOI](https://zenodo.org/badge/198255756.svg)](https://zenodo.org/badge/latestdoi/198255756) ![R-CMD](https://github.com/JGCRI/hectorui/workflows/R-CMD/badge.svg) ![build](https://github.com/JGCRI/hectorui/workflows/build/badge.svg) [![codecov](https://codecov.io/gh/JGCRI/hectorui/branch/main/graph/badge.svg?token=aOWN2ELixv)](https://codecov.io/gh/JGCRI/hectorui) [![DOI](https://joss.theoj.org/papers/10.21105/joss.02782/status.svg)](https://doi.org/10.21105/joss.02782)
 [![docs](https://github.com/JGCRI/hectorui/actions/workflows/pkgdown.yml/badge.svg)](https://github.com/JGCRI/hectorui/actions/workflows/pkgdown.yml)
 
 #  hectorui
@@ -11,7 +11,7 @@ Just getting started with `hectorui`?  We have constructed a tutorial to examine
 
 To navigate directly to the `hectorui` app **CLICK the following image**:
 
-[![`hectorui` map scenario interface](https://raw.githubusercontent.com/JGCRI/hectorui/master/paper/HectorUIv2.0_HomePage.png)](https://jgcri.shinyapps.io/HectorUI/)
+[![`hectorui` map scenario interface](https://raw.githubusercontent.com/JGCRI/hectorui/main/paper/HectorUIv2.0_HomePage.png)](https://jgcri.shinyapps.io/HectorUI/)
 
 ## Installing Locally
 
