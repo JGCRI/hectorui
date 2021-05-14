@@ -18,9 +18,11 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
 
           tags$div(class = "container",
                    tags$img(src = "images/earth-header.png", width = "100%", class = "earth", alt = "Earth's atmosphere"),
-                   tags$div(class = "header-text",
-                            h1("HectorUI",  class = "text-center"),
-                            h2("An Interactive Climate Model", class = "text-center", style = "font-weight:normal;")),
+                   tags$div(
+                            a(img(src = "images/GCIMS_logo_alt.svg", class = "logo"), href = "https://gcims.pnnl.gov/", target = "_blank"),
+                            h1("HectorUI", class = "header-text-title"),
+                            h2("An Interactive Climate Model", class = "header-text-sub", style = "font-weight:normal;"),
+                            ),
           ),
           br(),
           # Main component from which all other components fall under, navbarPage, a multi-page user-interface that includes a navigation bar
@@ -363,10 +365,8 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                   "Guides",
                   mainPanel(
                       style="vertical-align: middle;",
-                      h5("Ready to get started?",
-                         tags$a("View the Guide/Tutorial", href="https://jgcri.github.io/hectorui/articles/Tutorial.html", target="blank")),
-                      br(),
-                      p("Coming soon...video tutorials!")
+                      h3("Ready to get started?",
+                         tags$a("View the Guide/Tutorial", href="https://jgcri.github.io/hectorui/articles/Tutorial.html", target="blank"))
                   )
               ),
               tabPanel
@@ -388,17 +388,19 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                   tags$tr(
                                       tags$td(width = "50%",
                                               h5("Explore the Hector Product Family", style="text-align: left"),
-                                              a(img(src="images/Github-logo.png", height = "100"), href = "https://github.com/JGCRI/hector"),
+                                              br(),
+                                              h6("Source code and contribution is available on the ",
+                                                a("HectorUI Github page", href = "https://github.com/JGCRI/hector", target = "_blank")),
                                       ),
                                   )
                               ),
                               br(),
                               tags$td(
                                   tags$figure(
-                                  tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results"),
                                   img(src='https://github.com/JGCRI/hector/wiki/rcp85.png',
                                       height="260px",
-                                      class="hector-fig")
+                                      class="hector-fig"),
+                                  tags$figcaption("Hector's global temperature rise for RCP 8.5 scenario, compared to observations and other model results")
                               ), style="text-align: center"
                               ),
                               br(),
@@ -532,11 +534,13 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                 margin:0 auto;
                                 display: block;
                                 text-align: center;
+                                color: #000000;
                             }
 
                             .navbar-nav > li {
                                 display: inline-block;
                                 float:none;
+                                color: #000000;
                             }"))
                ), # End navbarpage
           hr(),
