@@ -30,15 +30,24 @@ h2
     width:100%;
 }
 
-.header-text
+.header-text-title
 {
     position: absolute;
     color: #FFFFFF;
-    top: 50%;
+    top: 40%;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%)
+}
 
+.header-text-sub
+{
+    position: absolute;
+    color: #FFFFFF;
+    top: 60%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
 }
 
 .home-text
@@ -52,6 +61,16 @@ h2
     font-size: 50px;
 }
 
+.logo
+{
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    width: 8vw;
+}
+
 .maps
 {
     font-size: 16px;
@@ -59,7 +78,7 @@ h2
 
 .nav-tabs
 {
-    font-size: 14px
+    font-size: 14px;
 }
 
 .output-vars
