@@ -278,10 +278,6 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                                    'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')),
                                               multiple = T, selected = "t_gmt")
                                       ),
-                                      tags$td(style="padding-left: 5px;",
-                                              selectInput(inputId = "set_theme", width=150, label="Output Theme:", choices = c("Chalk", "Dust", "Earth",  "Flat", "Flat Dark", "Fresh", "Grape", "Greyscale",
-                                                                                                                               "Light", "Pale",  "Sky", "Solarized"), selected = "Dust")
-                                      )
                                   )
                               ),
                               actionButton(inputId="loadGraphs", label="Load Graphs", width = 200, style = "background: #0B3F8F; color: white;"),

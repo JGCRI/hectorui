@@ -153,7 +153,6 @@ server <- function(input, output, session)
   hcores <- list()
   totalActivePlots <- 0
   customLoaded <- FALSE
-  ggthemr::ggthemr('dust', type = "outer")
   selectedIndex <<- 1
   ggplotSave <<- ggplot2::ggplot()
 
@@ -244,7 +243,6 @@ server <- function(input, output, session)
   observeEvent(input$input_enableCustom, toggleCustom(), suspended = TRUE)
   observeEvent(input$input_set_custom_emissions, setCustomEmissions(), ignoreInit = TRUE)
   observeEvent(input$input_reset_custom_emissions, resetCustomEmissions(), ignoreInit = TRUE)
-  observeEvent(input$set_theme, changeTheme(), ignoreInit = TRUE)
   observeEvent(input$loadMaps, loadMap(), ignoreInit = TRUE)
   observeEvent(input$input_submit_feedback, sendFeedback(), ignoreInit = TRUE)
   observeEvent(input$mapCore, updateIndex(), ignoreInit = TRUE)

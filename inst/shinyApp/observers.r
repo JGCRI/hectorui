@@ -304,22 +304,6 @@ openPage <- function(url) {
 
 }
 
-
-#' Change visual theme
-#'
-#' This function changes the RColorBrewer theme for the output components (graphs, maps) based on the input dropdown
-#'
-#' @return
-#' @export
-#'
-#' @examples
-changeTheme <- function()
-{
-  ggthemr::ggthemr(stringr::str_to_lower(input$set_theme), type = "outer")
-  loadGraph()
-}
-
-
 #' Update selected index of the downscaled map's available cores
 #'
 #' @return
