@@ -200,18 +200,19 @@ loadMap <- function()
           # Build aesthetics based on if the compare to 1900 was checked
           if(input$input_map_compare)
           {
-            mapFill <- "\u0394 Precip. - g/m2/s"
+            mapFill <- "\u0394 Precip. - mm/day"
             mapVar <- "deltaPrecip"
           }
           else
           {
-            mapFill <- "Precip. - g/m2/s"
+            mapFill <- "Precip. - mm/day"
             mapVar <- "Precip"
           }
           mapDirection <- 1
           mapPalette <- "Purples"
-          combined_data <- dplyr::mutate(coordinates, Precip = round(1000*hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 4),
-                                           deltaPrecip = round(1000*(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1]), 4),
+          browser()
+          combined_data <- dplyr::mutate(coordinates, Precip = round(86400*hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 4),
+                                           deltaPrecip = round(86400*(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1]), 4),
                                            Lon=round(lon, 2), Lat=round(lat,2), Neg = ifelse(deltaPrecip < 0, TRUE, FALSE))
         }
 
