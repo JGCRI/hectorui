@@ -191,9 +191,8 @@ loadMap <- function()
             }
             mapPalette <- "RdYlBu"
             mapDirection <- -1
-            browser()
               combined_data <- dplyr::mutate(coordinates, Temp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 2),
-                                             deltaTemp = round(((hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1]) / hector_annual_gridded_t[, 1]) * 100, 2),
+                                             deltaTemp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1], 2),
                                              Lon=round(lon, 2), Lat=round(lat,2), Neg = ifelse(deltaTemp < 0, TRUE, FALSE))
         }
         else
