@@ -87,7 +87,7 @@ loadModelParameters <- function()
       setCoreParameters(hcores[[i]])
     }
 
-    resetCore()
+    new_core$resetCore()
   }
 
   if(length(hcores) > 0)
@@ -241,7 +241,7 @@ setParameters <- function()
         }
         if(pass_check == TRUE)
         {
-          resetCore()
+          new_core$resetCore()
           if(length(hcores) > 0)
             loadGraph()
         }

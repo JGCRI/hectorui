@@ -142,9 +142,11 @@ server <- function(input, output, session)
 
   # Load other source files
   source("parameters.r", local = TRUE)
-  source("core.r", local = TRUE)
+  #source("core.r", local = TRUE)
   source("output.r", local = TRUE)
   source("observers.r", local = TRUE)
+  source("r6/hector_core_generator.R", local = TRUE)
+  source("global.R", local = TRUE)
 
 #----- Set up non global variables in top level application scope
 
@@ -231,7 +233,7 @@ server <- function(input, output, session)
   observeEvent(input$capabilities, setCapabilities(), ignoreInit = FALSE)
   observeEvent(input$loadGraphs, loadGraph(), ignoreInit = TRUE)
   observeEvent(input$set_Params, setParameters(), ignoreInit = TRUE)
-  observeEvent(input$input_ScenarioFile, loadScenario(), ignoreInit = TRUE)
+  observeEvent(input$input_ScenarioFile, new_core$loadScenario(), ignoreInit = TRUE)
   observeEvent(input$reset_Params, resetParams(), ignoreInit = TRUE)
   observeEvent(input$input_RCP_2.6, setRCP("RCP-2.6"), ignoreInit = TRUE)
   observeEvent(input$input_RCP_4.5, setRCP("RCP-4.5"), ignoreInit = FALSE)

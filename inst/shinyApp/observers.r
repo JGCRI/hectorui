@@ -54,7 +54,7 @@ setRCP <- function(scenarioName)
     {
       withProgress(message = paste('Loading Scenario RCP ', scenarioName, "...\n"), value = 1/2,
       {
-        hcores[[coreName]] <<- loadScenario(scenario =  substr(scenarioName, nchar(scenarioName)-2, nchar(scenarioName)))
+        hcores[[coreName]] <<- new_core$loadScenario(scenario =  substr(scenarioName, nchar(scenarioName)-2, nchar(scenarioName)))
         incProgress(1/1, detail = paste("Load complete."))
         Sys.sleep(0.2)
       })
@@ -261,7 +261,7 @@ setCustomEmissions <- function()
         }
       }
 
-      resetCore()
+      new_core$resetCore()
       loadGraph()
     }
     else
@@ -288,7 +288,7 @@ resetCustomEmissions <- function()
 {
   print("in reset emissions")
   updateSelectInput(session = session, inputId = "input_paramToggle", selected = "default")
-  restartCore()
+  new_core$restartCore()
 }
 
 #' Open URL link
