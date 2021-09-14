@@ -148,6 +148,7 @@ server <- function(input, output, session)
 
 #----- Set up non global variables in top level application scope
 
+  theme_set(theme_minimal())
   outputVariables <- list()
   inifile <- system.file('input/hector_rcp45.ini', package='hector', mustWork=TRUE)
   hcores <- list()
