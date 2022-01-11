@@ -2,6 +2,7 @@
 # This is a Shiny web application UI document. It describes the on screen components that define the visual application.
 
 library(shinyBS)
+library(shinyWidgets)
 
 # Using Shiny Fixed layout
 fluidPage(theme = shinythemes::shinytheme("readable"),
@@ -61,8 +62,8 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
               # Main panel for the interactive section of the application
               tabPanel(
                   "Explore Hector",
-                  mainPanel (
-                      width = 4,
+                  mainPanel(
+                      width = 6,
                       tabsetPanel(
                           tabPanel(class = "params",
                               p( "Standard Scenarios", value="infoTab"),
@@ -80,73 +81,116 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                                                inline = TRUE, icon = icon("check"), animation = "pulse", status = "warning"),
                                   shinyWidgets::prettyCheckbox(inputId = "input_RCP_8.5", label = "8.5", value = FALSE, width = 45,
                                                                inline = TRUE, icon = icon("check"), animation = "pulse", status = "danger"),
-                                  div(id="myapp",
-                                      h5("Model Parameters"),
-                                      tags$hr(class="hrNav"),
-                                      tags$table(class = "params",
-                                          tags$tr(width = "100%",
-                                                  tags$td(width = "8%", align = "center",
-                                                          popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters",
-                                                                 content = "Choosing a model will load a unique set of parameters that correspond to that model for emulation in Hector.", placement = "top" )),
-                                                  tags$td(width = "34%", div("Model Emulation:")),
-                                                  tags$td(width = "58%", class="tdPushBottom",
-                                                          selectInput("input_paramToggle", label = NULL,
-                                                                      choices =  list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
-                                                                                      "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 190)
-                                                  )
-                                          )
-                                      ),
-                                      tags$table(class = "params",
-                                          tags$tr(width = "100%",
-                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor",
-                                                                                                 content = "Setting this value will change the Aerosol Forcing Factor for any active Hector cores.", placement = "top" )),
-                                                  tags$td(width = "68%", div("Aerosol forcing scaling factor (unitless)")),
-                                                  tags$td(width = "24%", numericInput("input_aero", width = 80, label = NULL, value = NA, step = 0.01))
-                                          ),
-                                          tags$tr(width = "100%",
-                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor",
-                                                                                                 content = "Setting this value will change the CO2 Forcing Factor for any active Hector cores.", placement = "top" )),
-                                                  tags$td(width = "68%", div("CO2 fertilization factor (unitless)")),
-                                                  tags$td(width = "24%", numericInput("input_beta", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01))
-                                          ),
-                                          tags$tr(width = "100%",
-                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity",
-                                                                                                 content = "Setting this value will change the Ocean Heat Diffusivity for any active Hector cores.", placement = "top" )),
-                                                  tags$td(width = "68%", div("Ocean heat diffusivity (cm2/s)")),
-                                                  tags$td(width = "24%", numericInput("input_diff", width = 80, label = NULL, value = NA, step = 0.01))
-                                          ),
-                                          tags$tr(width = "100%",
-                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity",
-                                                                                                 content = "Setting this value will change the Equilibrium climate sensitivity for any active Hector cores.", placement = "top" )),
-                                                  tags$td(width = "68%", div("Equilibrium climate sensitivity (degC)")),
-                                                  tags$td(width = "24%", numericInput("input_ecs", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01, max = 25))
-                                          ),
-                                          tags$tr(width = "100%",
-                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ",
-                                                                                                 content = "Setting this value will change the Preindustrial CO2 concentration for any active Hector cores.", placement = "top" )),
-                                                  tags$td(width = "68%", div("Preindustrial CO2 conc. (ppmv CO2)")),
-                                                  tags$td(width = "24%", numericInput("input_pco2", width = 80, label = NULL, value = NA, step = 0.01, min = 250, max = 350))
-                                          ),
-                                          tags$tr(width = "100%",
-                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)",
-                                                                                                 content = "Setting this value will change the Temperature sensitivity factor for any active Hector cores.", placement = "top" )),
-                                                  tags$td(width = "68%", div("Temp. sensitivity factor (Q10) (unitless)")),
-                                                  tags$td(width = "24%", numericInput("input_q10", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01))
-                                          ),
-                                          tags$tr(width = "100%",
-                                                  tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor",
-                                                                                                 content = "Setting this value will change the Volcanic forcing scaling factor for any active Hector cores.", placement = "top" )),
-                                                  tags$td(width = "68%", div("Volcanic forcing scaling factor (unitless)")),
-                                                  tags$td(width = "24%", numericInput("input_volc", width = 80, label = NULL, value = NA, step = 0.01))
-                                          )
-                                      ),
-                                      div(class="paramDivs",
-                                          actionButton(inputId="set_Params", label="Set Parameters", style = "background: #4174C3; color: white;"),
-                                          actionButton(inputId="reset_Params", label="Reset Parameters", style = "background: #4174C3; color: white;"),
-                                          popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Parameters",
-                                                 content = "This will reset any/all parameters for each active Hector core, overwriting any custom parameter changes. Custom emissions will remain.", placement = "top" )
-                                      )
+
+                                  chooseSliderSkin(skin = "Flat", color = "#375a7f"),
+
+                                  h5("Model Parameters"),
+
+                                  fluidRow(
+                                      column(12,
+
+                                             selectInput("input_paramToggle", label = NULL,
+                                                         choices =  list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
+                                                        "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 190),
+
+                                             sliderInput("input_aero", "Aerosol forcing scaling factor", min = 0, max = 1, value = 1),
+                                             sliderInput("input_beta", "CO2 fertilization factor", min = 0, max = 4, value = 0.36, step = 0.01),
+                                             sliderInput("input_diff", "Ocean heat diffusivity", min = 0, max = 5, value = 2.3, step = 0.1),
+                                             sliderInput("input_ecs", "Equilibrium climate sensitivity", min = 1, max = 6, value = 3, step = 0.1),
+                                             #sliderInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", min = 250, max = 300, value = 276.09), #might remove for v3
+                                             sliderInput("input_q10", "Heterotrophic Temperature Sensitivity", min = 1, max = 5, value = 2, step = 0.1),
+                                             sliderInput("input_volc","Volcanic forcing scaling factor", min = 0, max = 1, value = 1),
+
+                                             # Add hover popups with parameter descriptions
+                                             bsPopover("input_aero", "Increasing this means aerosols exert a stronger radiative forcing",
+                                                       placement = "top", trigger = "hover", options = NULL),
+                                             bsPopover("input_beta", "Increasing this means vegetation grows faster as CO2 increases",
+                                                       placement = "top", trigger = "hover", options = NULL),
+                                             bsPopover("input_diff", "Increasing this means heat moves deeper into the ocean quicker",
+                                                       placement = "top", trigger = "hover", options = NULL),
+                                             bsPopover("input_ecs", "Increasing this means a larger temperature rise as CO2 increases",
+                                                       placement = "top", trigger = "hover", options = NULL),
+                                             bsPopover("input_pco2", "Increasing this means a higher atmospheric CO2 as the model starts",
+                                                       placement = "top", trigger = "hover", options = NULL),
+                                             bsPopover("input_q10", "Increasing this means soil microbes respire faster as temperature rises",
+                                                       placement = "top", trigger = "hover", options = NULL),
+                                             bsPopover("input_volc", "Increasing this means that volcanic eruptions exert a stronger radiative forcing",
+                                                       placement = "top", trigger = "hover", options = NULL),
+
+                                            actionButton(inputId="set_Params", label="Set Parameters", style = "background: #4174C3; color: white;"),
+                                            actionButton(inputId="reset_Params", label="Reset Parameters", style = "background: #4174C3; color: white;"),
+                                            popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Parameters",
+                                                                 content = "This will reset any/all parameters for each active Hector core, overwriting any custom parameter changes. Custom emissions will remain.", placement = "top" )
                                   ),
+                                  ),
+
+                                  # div(id="myapp",
+                                  #     h5("Model Parameters"),
+                                  #     tags$hr(class="hrNav"),
+                                  #     tags$table(class = "params",
+                                  #         tags$tr(width = "100%",
+                                  #                 tags$td(width = "8%", align = "center",
+                                  #                         popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "External model parameters",
+                                  #                                content = "Choosing a model will load a unique set of parameters that correspond to that model for emulation in Hector.", placement = "top" )),
+                                  #                 tags$td(width = "34%", div("Model Emulation:")),
+                                  #                 tags$td(width = "58%", class="tdPushBottom",
+                                  #                         selectInput("input_paramToggle", label = NULL,
+                                  #                                     choices =  list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
+                                  #                                                     "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 190)
+                                  #                 )
+                                  #         )
+                                  #     ),
+                                  #     tags$table(class = "params",
+                                  #         tags$tr(width = "100%",
+                                  #                 tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Aerosol Forcing Scaling Factor",
+                                  #                                                                content = "Setting this value will change the Aerosol Forcing Factor for any active Hector cores.", placement = "top" )),
+                                  #                 tags$td(width = "68%", div("Aerosol forcing scaling factor (unitless)")),
+                                  #                 tags$td(width = "24%", numericInput("input_aero", width = 80, label = NULL, value = NA, step = 0.01))
+                                  #         ),
+                                  #         tags$tr(width = "100%",
+                                  #                 tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "CO2 fertilization factor",
+                                  #                                                                content = "Setting this value will change the CO2 Forcing Factor for any active Hector cores.", placement = "top" )),
+                                  #                 tags$td(width = "68%", div("CO2 fertilization factor (unitless)")),
+                                  #                 tags$td(width = "24%", numericInput("input_beta", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01))
+                                  #         ),
+                                  #         tags$tr(width = "100%",
+                                  #                 tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Ocean heat diffusivity",
+                                  #                                                                content = "Setting this value will change the Ocean Heat Diffusivity for any active Hector cores.", placement = "top" )),
+                                  #                 tags$td(width = "68%", div("Ocean heat diffusivity (cm2/s)")),
+                                  #                 tags$td(width = "24%", numericInput("input_diff", width = 80, label = NULL, value = NA, step = 0.01))
+                                  #         ),
+                                  #         tags$tr(width = "100%",
+                                  #                 tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Equilibrium climate sensitivity",
+                                  #                                                                content = "Setting this value will change the Equilibrium climate sensitivity for any active Hector cores.", placement = "top" )),
+                                  #                 tags$td(width = "68%", div("Equilibrium climate sensitivity (degC)")),
+                                  #                 tags$td(width = "24%", numericInput("input_ecs", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01, max = 25))
+                                  #         ),
+                                  #         tags$tr(width = "100%",
+                                  #                 tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Preindustrial CO2 concentration ",
+                                  #                                                                content = "Setting this value will change the Preindustrial CO2 concentration for any active Hector cores.", placement = "top" )),
+                                  #                 tags$td(width = "68%", div("Preindustrial CO2 conc. (ppmv CO2)")),
+                                  #                 tags$td(width = "24%", numericInput("input_pco2", width = 80, label = NULL, value = NA, step = 0.01, min = 250, max = 350))
+                                  #         ),
+                                  #         tags$tr(width = "100%",
+                                  #                 tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Temperature sensitivity factor (Q10)",
+                                  #                                                                content = "Setting this value will change the Temperature sensitivity factor for any active Hector cores.", placement = "top" )),
+                                  #                 tags$td(width = "68%", div("Temp. sensitivity factor (Q10) (unitless)")),
+                                  #                 tags$td(width = "24%", numericInput("input_q10", width = 80, label = NULL, value = NA, step = 0.01, min = 0.01))
+                                  #         ),
+                                  #         tags$tr(width = "100%",
+                                  #                 tags$td(width = "8%", align = "center", popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Volcanic forcing scaling factor",
+                                  #                                                                content = "Setting this value will change the Volcanic forcing scaling factor for any active Hector cores.", placement = "top" )),
+                                  #                 tags$td(width = "68%", div("Volcanic forcing scaling factor (unitless)")),
+                                  #                 tags$td(width = "24%", numericInput("input_volc", width = 80, label = NULL, value = NA, step = 0.01))
+                                  #         )
+                                  #     ),
+                                  #     div(class="paramDivs",
+                                  #         actionButton(inputId="set_Params", label="Set Parameters", style = "background: #4174C3; color: white;"),
+                                  #         actionButton(inputId="reset_Params", label="Reset Parameters", style = "background: #4174C3; color: white;"),
+                                  #         popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Parameters",
+                                  #                content = "This will reset any/all parameters for each active Hector core, overwriting any custom parameter changes. Custom emissions will remain.", placement = "top" )
+                                  #     )
+                                  # ),
                                   # Divider that holds the custom emissions options/controls
                                   div(class = "c-emissions",
                                       h5("Custom Emissions"),
@@ -240,7 +284,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                   ),
                   # Right hand content panel - Main panel that is used for output
                   mainPanel
-                  ( width = 8,
+                  ( width = 7,
                       tabsetPanel
                       (
                           # Graphs Tab
@@ -248,8 +292,6 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                           (fixed = TRUE,
                               p(icon("chart-line","fa-2x"), "Scenario Output", value="outputTab"),
                               div(
-                              br(),
-                              h5("Graphs"), tags$hr(class="hrNav"),
                               tags$table
                               (
                                   tags$tr
@@ -288,33 +330,51 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
 
                           # Maps Tab
                           tabPanel
-                          ( fixed = TRUE, class = "maps",
+                          (class = "maps",
                               p(icon("globe-americas","fa-2x"), "Downscaled Maps", value="outputTab"),
-                              h5("Maps"), tags$hr(class="hrNav"),
                               p("Please note that some map model patterns are rather large and can take several seconds to load. Due to this, maps will need to be refreshed manually after any changes."),
-                              tags$table(
-                                  tags$tr(class = "maps",
-                                      tags$td(
-                                          selectInput(inputId = "mapPattern", label = "Choose Model:", width = 180,
-                                                      choices = c("CanESM2" = "CanESM2",
-                                                                  "CESM1-BGC" = "CESM1-BGC",
-                                                                  "GFDL-ESM2G" = "GFDL-ESM2G",
-                                                                  "MIROC-ESM" = "MIROC-ESM",
-                                                                  "MPI-ESM-LR" = "MPI-ESM-LR",
-                                                                  "MRI-ESM1" = "MRI-ESM1"))
-                                      ),
-                                      tags$td(style="padding-left: 5px;",
-                                              selectInput(inputId = "mapVar", label = "Choose Variable:", selected = "tas",
-                                                          choices = c("Temperature" = "tas", "Precipitation" = "pr"), multiple = F, width = 120)
-                                      ),
-                                      tags$td(style="padding-left: 5px;",
-                                              selectInput(inputId = "mapYear", label = "Choose Year:", selected = 2100,
-                                                          choices = c(2000:2100), multiple = F, width = 120)
-                                      ),
-                                      tags$td(style="padding-left: 5px;",
-                                              uiOutput("coreMapping")
-                                      )
-                                  )
+                              fluidRow(
+                                  column(3, selectInput(inputId = "mapPattern", label = "Choose Model:", width = "100%",
+                                                     choices = c("CanESM2" = "CanESM2",
+                                                                 "CESM1-BGC" = "CESM1-BGC",
+                                                                 "GFDL-ESM2G" = "GFDL-ESM2G",
+                                                                 "MIROC-ESM" = "MIROC-ESM",
+                                                                 "MPI-ESM-LR" = "MPI-ESM-LR",
+                                                                 "MRI-ESM1" = "MRI-ESM1"))
+                                         ),
+                                  column(3, selectInput(inputId = "mapVar", label = "Choose Variable:", selected = "tas", width = "100%",
+                                                     choices = c("Temperature" = "tas", "Precipitation" = "pr"), multiple = F)
+                                         ),
+                                  column(3, selectInput(inputId = "mapYear", label = "Choose Year:", selected = 2100, width = "100%",
+                                                     choices = c(2000:2100), multiple = F)
+                                         ),
+                                  column(3, uiOutput("coreMapping"))
+
+
+
+
+                                  # tags$tr(class = "maps",
+                                  #     tags$td(
+                                  #         selectInput(inputId = "mapPattern", label = "Choose Model:", width = "100%",
+                                  #                     choices = c("CanESM2" = "CanESM2",
+                                  #                                 "CESM1-BGC" = "CESM1-BGC",
+                                  #                                 "GFDL-ESM2G" = "GFDL-ESM2G",
+                                  #                                 "MIROC-ESM" = "MIROC-ESM",
+                                  #                                 "MPI-ESM-LR" = "MPI-ESM-LR",
+                                  #                                 "MRI-ESM1" = "MRI-ESM1"))
+                                  #     ),
+                                  #     tags$td(style="padding-left: 5px;",
+                                  #             selectInput(inputId = "mapVar", label = "Choose Variable:", selected = "tas", width = "100%",
+                                  #                         choices = c("Temperature" = "tas", "Precipitation" = "pr"), multiple = F)
+                                  #     ),
+                                  #     tags$td(style="padding-left: 5px;",
+                                  #             selectInput(inputId = "mapYear", label = "Choose Year:", selected = 2100, width = "100%",
+                                  #                         choices = c(2000:2100), multiple = F)
+                                  #     ),
+                                  #     tags$td(style="padding-left: 5px;", width = "100%",
+                                  #             uiOutput("coreMapping")
+                                  #     )
+                                  # )
                               ),
                               tags$table(
                                   tags$tr(width = "100%",

@@ -280,7 +280,7 @@ server <- function(input, output, session)
   {
     if(!is.na(input$input_beta) && (as.double(input$input_beta) < 0.01 ))
     {
-      updateNumericInput(session = session, inputId = "input_beta", value = 1)
+      updateSliderInput(session = session, inputId = "input_beta", value = 1)
     }
   }
 }
