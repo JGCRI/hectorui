@@ -63,7 +63,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
               tabPanel(
                   "Explore Hector",
                   mainPanel(
-                      width = 6,
+                      width = 4,
                       tabsetPanel(
                           tabPanel(class = "params",
                               p( "Standard Scenarios", value="infoTab"),
@@ -93,13 +93,13 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                                          choices =  list("Hector Default" = "default", "CanESM2" = "canesm2", "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
                                                         "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr", "MRI-ESM1" = "mri-esm1"), width = 190),
 
-                                             sliderInput("input_aero", "Aerosol forcing scaling factor", min = 0, max = 1, value = 1),
-                                             sliderInput("input_beta", "CO2 fertilization factor", min = 0, max = 4, value = 0.36, step = 0.01),
-                                             sliderInput("input_diff", "Ocean heat diffusivity", min = 0, max = 5, value = 2.3, step = 0.1),
-                                             sliderInput("input_ecs", "Equilibrium climate sensitivity", min = 1, max = 6, value = 3, step = 0.1),
+                                             sliderInput("input_aero", "Aerosol forcing scaling factor", min = 0, max = 1, value = 1, width = "90%"),
+                                             sliderInput("input_beta", "CO2 fertilization factor", min = 0, max = 4, value = 0.36, step = 0.01, width = "90%"),
+                                             sliderInput("input_diff", "Ocean heat diffusivity", min = 0, max = 5, value = 2.3, step = 0.1, width = "90%"),
+                                             sliderInput("input_ecs", "Equilibrium climate sensitivity", min = 1, max = 6, value = 3, step = 0.1, width = "90%"),
                                              #sliderInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", min = 250, max = 300, value = 276.09), #might remove for v3
-                                             sliderInput("input_q10", "Heterotrophic Temperature Sensitivity", min = 1, max = 5, value = 2, step = 0.1),
-                                             sliderInput("input_volc","Volcanic forcing scaling factor", min = 0, max = 1, value = 1),
+                                             sliderInput("input_q10", "Heterotrophic Temperature Sensitivity", min = 1, max = 5, value = 2, step = 0.1, width = "90%"),
+                                             sliderInput("input_volc","Volcanic forcing scaling factor", min = 0, max = 1, value = 1, width = "90%"),
 
                                              # Add hover popups with parameter descriptions
                                              bsPopover("input_aero", "Increasing this means aerosols exert a stronger radiative forcing",
@@ -284,7 +284,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                   ),
                   # Right hand content panel - Main panel that is used for output
                   mainPanel
-                  ( width = 7,
+                  ( width = 8,
                       tabsetPanel
                       (
                           # Graphs Tab
