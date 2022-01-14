@@ -95,9 +95,9 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
 
                                              sliderInput("input_aero", "Aerosol forcing scaling factor", min = 0, max = 1, value = 1, width = "90%"),
                                              sliderInput("input_beta", "CO2 fertilization factor", min = 0, max = 4, value = 0.36, step = 0.01, width = "90%"),
-                                             sliderInput("input_diff", "Ocean heat diffusivity", min = 0, max = 5, value = 2.3, step = 0.1, width = "90%"),
-                                             sliderInput("input_ecs", "Equilibrium climate sensitivity", min = 1, max = 6, value = 3, step = 0.1, width = "90%"),
-                                             #sliderInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", min = 250, max = 300, value = 276.09), #might remove for v3
+                                             sliderInput("input_diff", "Ocean heat diffusivity", min = 0, max = 5, value = 2.3, step = 0.1, post = " cm2/s", width = "90%"),
+                                             sliderInput("input_ecs", "Equilibrium climate sensitivity", min = 1, max = 6, value = 3, step = 0.1, post = " °C", width = "90%"),
+                                             #sliderInput("input_pco2", "Preindustrial CO2 conc. (ppmv CO2)", min = 250, max = 300, value = 276.09, post = " ppmv CO2"), #might remove for v3
                                              sliderInput("input_q10", "Heterotrophic Temperature Sensitivity", min = 1, max = 5, value = 2, step = 0.1, width = "90%"),
                                              sliderInput("input_volc","Volcanic forcing scaling factor", min = 0, max = 1, value = 1, width = "90%"),
 
