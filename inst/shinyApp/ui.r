@@ -59,6 +59,16 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                        ))
                        )
             ),
+              tabPanel(
+                  "Guides",
+                  mainPanel(
+                      style="vertical-align: middle;",
+                      h3("Ready to get started?",
+                         tags$a("View the Guide/Tutorial", href="https://jgcri.github.io/hectorui/articles/Tutorial.html", target="blank")),
+                      HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/fBHXS7pjZcI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+
+                  )
+              ),
               # Main panel for the interactive section of the application
               tabPanel(
                   "Explore Hector",
@@ -130,42 +140,42 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                   ),
 
                                   # Divider that holds the custom emissions options/controls
-                                  div(class = "c-emissions",
-                                      h5("Custom Emissions"),
-                                      tags$hr(class="hrNav"),
-                                      p("Note: Custom emissions are only applicable to standard scenarios (not custom created scenarios)"),
-                                      tags$table(
-                                          tags$tr(width = "100%",
-                                                  tags$td(width="25%", "Emissions:"),
-                                                  tags$td(shiny::selectInput(inputId = "input_custom_emissions", label = NULL, width = 200, multiple = F,
-                                                                             choices = list('Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'))))
-                                          )
-                                      ),
-                                      tags$table(
-                                          tags$tr(width = "100%",
-                                                  tags$td(align = "left", shiny::textInput(inputId = "input_custom_start", label = "Start Year:", width = 65)),
-                                                  tags$td(width = 15),
-                                                  tags$td(align = "left", shiny::textInput(inputId = "input_custom_end", label = "End Year:",  width = 65)),
-                                                  tags$td(width = 15),
-                                                  tags$td(align = "left", shiny::textInput(inputId = "input_emissions_value", label = "Value (Tg):", width = 65)),
-                                                  tags$td()
-                                          )
-                                      ),
-                                      tags$table(
-                                          tags$tr(width = "100%",
-                                                  tags$td(width = "15%", align="left", class="tdPushTop",
-                                                          popify(div(class="paramDivsPushTop", icon("info-circle", "fa-1x")), title = "Sloping Emissions",
-                                                                 content = "Choosing this option will create a smooth slope from the starting years value to the specified value at the end year.", placement = "top" )),
-                                                  tags$td(width = "85%",shinyWidgets::prettyCheckbox(animation = "pulse", inputId = "input_slope_emissions", label = "Slope Emissions", value = FALSE,  inline = TRUE, icon = icon("check")))
-                                          )
-                                      ),
-                                      div(
-                                          actionButton(inputId="input_set_custom_emissions", label="Set Emissions", style = "background: #4174C3; color: white;"),
-                                          actionButton(inputId="input_reset_custom_emissions", label="Reset All Emissions", style = "background: #4174C3; color: white;"),
-                                          popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions",
-                                                 content = "This will reset all active Standard Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
-                                      )
-                                  )# ) Collapsible comment
+                                  # div(class = "c-emissions",
+                                  #     h5("Custom Emissions"),
+                                  #     tags$hr(class="hrNav"),
+                                  #     p("Note: Custom emissions are only applicable to standard scenarios (not custom created scenarios)"),
+                                  #     tags$table(
+                                  #         tags$tr(width = "100%",
+                                  #                 tags$td(width="25%", "Emissions:"),
+                                  #                 tags$td(shiny::selectInput(inputId = "input_custom_emissions", label = NULL, width = 200, multiple = F,
+                                  #                                            choices = list('Emissions' = list("Black Carbon Emissions" = 'e_bc',   "Organic Carbon Emissions"='e_oc'))))
+                                  #         )
+                                  #     ),
+                                  #     tags$table(
+                                  #         tags$tr(width = "100%",
+                                  #                 tags$td(align = "left", shiny::textInput(inputId = "input_custom_start", label = "Start Year:", width = 65)),
+                                  #                 tags$td(width = 15),
+                                  #                 tags$td(align = "left", shiny::textInput(inputId = "input_custom_end", label = "End Year:",  width = 65)),
+                                  #                 tags$td(width = 15),
+                                  #                 tags$td(align = "left", shiny::textInput(inputId = "input_emissions_value", label = "Value (Tg):", width = 65)),
+                                  #                 tags$td()
+                                  #         )
+                                  #     ),
+                                  #     tags$table(
+                                  #         tags$tr(width = "100%",
+                                  #                 tags$td(width = "15%", align="left", class="tdPushTop",
+                                  #                         popify(div(class="paramDivsPushTop", icon("info-circle", "fa-1x")), title = "Sloping Emissions",
+                                  #                                content = "Choosing this option will create a smooth slope from the starting years value to the specified value at the end year.", placement = "top" )),
+                                  #                 tags$td(width = "85%",shinyWidgets::prettyCheckbox(animation = "pulse", inputId = "input_slope_emissions", label = "Slope Emissions", value = FALSE,  inline = TRUE, icon = icon("check")))
+                                  #         )
+                                  #     ),
+                                  #     div(
+                                  #         actionButton(inputId="input_set_custom_emissions", label="Set Emissions", style = "background: #4174C3; color: white;"),
+                                  #         actionButton(inputId="input_reset_custom_emissions", label="Reset All Emissions", style = "background: #4174C3; color: white;"),
+                                  #         popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Resetting Emissions",
+                                  #                content = "This will reset all active Standard Hector cores to their default state, overwriting any custom emissions AND parameter changes.", placement = "top" )
+                                  #     )
+                                  # )# ) Collapsible comment
                                   # )
                               )
                           ),
@@ -271,7 +281,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                           # Maps Tab
                           tabPanel
                           (class = "maps",
-                              p(icon("globe-americas","fa-2x"), "Downscaled Maps", value="outputTab"),
+                              p(icon("globe-americas","fa-2x"), "World Maps", value="outputTab"),
                               p("Please note that some map model patterns are rather large and can take several seconds to load. Due to this, maps will need to be refreshed manually after any changes."),
                               fluidRow(
                                   column(3, selectInput(inputId = "mapPattern", label = "Choose Model:", width = "100%",
@@ -356,14 +366,6 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
 
                               ) # End tabset panel
                   ) # End mainpanel
-              ),
-              tabPanel(
-                  "Guides",
-                  mainPanel(
-                      style="vertical-align: middle;",
-                      h3("Ready to get started?",
-                         tags$a("View the Guide/Tutorial", href="https://jgcri.github.io/hectorui/articles/Tutorial.html", target="blank"))
-                  )
               ),
               tabPanel
               (
