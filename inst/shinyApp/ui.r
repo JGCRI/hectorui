@@ -65,6 +65,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                       style="vertical-align: middle;",
                       h3("Ready to get started?",
                          tags$a("View the Guide/Tutorial", href="https://jgcri.github.io/hectorui/articles/Tutorial.html", target="blank")),
+                      br(),
                       HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/fBHXS7pjZcI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
 
                   )
@@ -84,13 +85,13 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                   # shinyWidgets::awesomeCheckboxGroup(inputId = "input_RCP", label = "",
                                   #                                    choices = c("2.6", "4.5", "6.0", "8.5"), inline = TRUE, status = "info"),
                                   shinyWidgets::prettyCheckbox(inputId = "input_RCP_2.6", label = "2.6", value = FALSE, width = 45,
-                                                               inline = TRUE, icon = icon("check"), animation = "pulse", status = "primary"),
+                                                               inline = TRUE, icon = icon("check"), animation = "jelly", status = "info"),
                                   shinyWidgets::prettyCheckbox(inputId = "input_RCP_4.5", label = "4.5", value = TRUE, width = 45,
-                                                               inline = TRUE, icon = icon("check"), animation = "pulse", status = "success"),
+                                                               inline = TRUE, icon = icon("check"), animation = "jelly", status = "success"),
                                   shinyWidgets::prettyCheckbox(inputId = "input_RCP_6.0", label = "6.0", value = FALSE, width = 45,
-                                                               inline = TRUE, icon = icon("check"), animation = "pulse", status = "warning"),
+                                                               inline = TRUE, icon = icon("check"), animation = "jelly", status = "warning"),
                                   shinyWidgets::prettyCheckbox(inputId = "input_RCP_8.5", label = "8.5", value = FALSE, width = 45,
-                                                               inline = TRUE, icon = icon("check"), animation = "pulse", status = "danger"),
+                                                               inline = TRUE, icon = icon("check"), animation = "jelly", status = "danger"),
 
                                   chooseSliderSkin(skin = "Flat", color = "#375a7f"),
 
@@ -282,6 +283,10 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                           tabPanel
                           (class = "maps",
                               p(icon("globe-americas","fa-2x"), "World Maps", value="outputTab"),
+                              br(),
+                              h6("These maps are generated using ",
+                                 a("fldgen,", href = "https://doi.org/10.1371/journal.pone.0223542", target = "_blank"), "a tool used to spatially downscale Hector temperature output onto the Earth System Model grid of your choosing."),
+                              br(),
                               p("Please note that some map model patterns are rather large and can take several seconds to load. Due to this, maps will need to be refreshed manually after any changes."),
                               fluidRow(
                                   column(3, selectInput(inputId = "mapPattern", label = "Choose Model:", width = "100%",
