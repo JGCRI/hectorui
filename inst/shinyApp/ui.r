@@ -366,6 +366,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                               ),
                               actionButton(inputId="loadMaps", label="Load Map", width = 150),
                               downloadButton("downloadMap", label="Save Hi-Res Map", width = 150),
+                              br(),
                               uiOutput("maps", class = "customPlot")
                           ) # End Maps Tab
 

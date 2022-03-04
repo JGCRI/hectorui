@@ -249,14 +249,13 @@ loadMap <- function()
         }
 
         # Create world map borders
-        mapWorld <- ggplot2::borders("world", fill = NA)
+        mapWorld <- ggplot2::borders("world")
         # Construct ggplot map object
         ggplotMap <- ggplot2::ggplot() +
           mapWorld +
           ggplot2::geom_raster(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar),interpolate = TRUE ) +
-          ggplot2::coord_fixed() +
           ggplot2::scale_fill_gradientn(colors = mapPalette) + #, limits = c(-1,1)*max(abs(combined_data[[mapVar]]))) +
-          ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = mapFill) +
+          ggplot2::labs(x="\u00B0 Longitude", y="\u00B0 Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = mapFill) +
           ggplot2::scale_y_continuous(limits=c(lat_min, lat_max), expand = c(0, 0), breaks=seq(-90,90,30))+
           ggplot2::scale_x_continuous(limits=c(lon_min, lon_max), expand = c(0, 0), breaks=seq(-180,180,30))
 
