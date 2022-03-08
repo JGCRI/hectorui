@@ -17,9 +17,8 @@ jobs:
       - uses: r-lib/actions/setup-tinytex@master
       - name: Install dependencies
         env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-        env:
           R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: Rscript -e "install.packages(c('remotes', 'rcmdcheck', 'covr'))" -e "remotes::install_deps(dependencies = TRUE)"
       - name: Check
         run: Rscript -e "rcmdcheck::rcmdcheck(error_on = 'error')"
