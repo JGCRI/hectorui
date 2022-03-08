@@ -148,7 +148,7 @@ server <- function(input, output, session)
 
 #----- Set up non global variables in top level application scope
 
-  theme_set(theme_minimal())
+  ggplot2::theme_set(ggplot2::theme_minimal())
   outputVariables <- list()
   inifile <- system.file('input/hector_rcp45.ini', package='hector', mustWork=TRUE)
   hcores <- list()
@@ -198,10 +198,10 @@ server <- function(input, output, session)
     map_output_list <- lapply(1:1, function(i)
     {
       mapname <- paste("map", i, sep="")
-      map <-  plotly::plotlyOutput(mapname, height = 550, width = 1050)
+      map <-  plotly::plotlyOutput(mapname, width = '100%')
 
       shinyjs::hidden(tags$div(class = "group-output", id = "map-div",
-               shinycustomloader::withLoader(plotly::plotlyOutput(mapname, height = 550, width = 1050), type="text",
+               shinycustomloader::withLoader(map, type="text",
                                              loader = list(shinycustomloader::marquee("Please Wait... Finalizing Raster Output", style="font-size:30px; color:white; text-align:center", scrollamount = 0))))
       )
     })
