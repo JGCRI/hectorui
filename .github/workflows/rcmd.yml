@@ -23,6 +23,8 @@ jobs:
       - uses: r-lib/actions/setup-r@master
 
       - name: Install dependencies
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
           install.packages(c("remotes", "rcmdcheck"), repos = "https://cloud.r-project.org")
           remotes::install_deps(dependencies = TRUE)

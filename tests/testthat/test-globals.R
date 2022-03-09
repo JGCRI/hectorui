@@ -19,7 +19,7 @@ test_that("globals:  color scale", {
 
   globalColorScales <- get_globalColorScales()
 
-  expect_equal(globalColorScales, c("RCP 2.6"="#db735c", "RCP 4.5"="#EFA86E", "RCP 6.0"="#9A8A76", "RCP 8.5"="#7A6752"))
+  expect_equal(globalColorScales, c("RCP 2.6"="#5DBFDE", "RCP 4.5"="#5CB95C", "RCP 6.0"="#FBAB33", "RCP 8.5"="#D7534E"))
 
 })
 
