@@ -9,11 +9,11 @@ Authors@R: c(person("Stephanie", "Pennington", email = "stephanie.pennington@pnn
          person("Jason", "Evanoff", email = "jason.evanoff@pnnl.gov", role = "aut"),
 	     person("Corinne", "Hartin", email = "corinne.hartin@pnnl.gov", role = "aut"))
 Maintainer: Stephanie Pennington <stephanie.pennington@pnnl.gov>
-Description: Provides a simple visual, interactive web interface for the simple climate model Hector from JGCRI. 
+Description: Provides a simple visual, interactive web interface for the simple climate model Hector from JGCRI.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: 
+Imports:
     maps,
     remotes,
     shiny,
@@ -28,8 +28,7 @@ Imports:
     shinyWidgets,
     stringr,
     shinycustomloader,
-    markdown,
-    fldgen
+    markdown
 Depends:
     R (>= 3.6.0),
     hector,
