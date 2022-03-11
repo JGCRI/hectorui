@@ -28,7 +28,8 @@ Imports:
     shinyWidgets,
     stringr,
     shinycustomloader,
-    markdown
+    markdown,
+    fldgen
 Depends:
     R (>= 3.6.0),
     hector,
