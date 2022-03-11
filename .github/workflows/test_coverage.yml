@@ -2,8 +2,6 @@ on: [push, pull_request]
 
 name: build
 
-on: [push]
-
 jobs:
 
   build:
