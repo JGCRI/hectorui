@@ -5,16 +5,6 @@ body
 	font-size: 20px;
 }
 
-h1
-{
-    font-size: 4vw;
-}
-
-h2
-{
-    font-size:2vw;
-}
-
 .about-info
 {
     font-size: 12px;
@@ -36,6 +26,8 @@ h2
     color: #FFFFFF;
     top: 40%;
     left: 50%;
+    text-align: center;!important
+    max-width: 120px;
     margin-right: -50%;
     transform: translate(-50%, -50%)
 }
@@ -44,6 +36,8 @@ h2
 {
     position: absolute;
     color: #FFFFFF;
+    text-align: center;
+    font-size: 100%;
     top: 60%;
     left: 50%;
     margin-right: -50%;
@@ -63,12 +57,13 @@ h2
 
 .logo
 {
+
     position: absolute;
-    top: 10%;
-    left: 10%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    width: 8vw;
+    top: 2rem;
+    left: 2rem;
+    margin:20px;
+  padding:0px 8px;
+  width:5em;
 }
 
 .maps

@@ -18,11 +18,12 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
           shinyjs::useShinyjs(),
 
           tags$div(class = "container",
-                   tags$img(src = "images/earth-header.png", width = "100%", class = "earth", alt = "Earth's atmosphere"),
+                   tags$img(src = "images/earth-header.png", height = "300px", width = "100%", class = "earth", alt = "Earth's atmosphere"),
                    tags$div(
-                            a(img(src = "images/GCIMS_logo_alt.svg", class = "logo"), href = "https://gcims.pnnl.gov/", target = "_blank"),
+                            a(
+                            img(src = "images/GCIMS_logo_alt.svg", class = "logo"), href = "https://gcims.pnnl.gov/", target = "_blank"),
                             h1("HectorUI", class = "header-text-title"),
-                            h2("An Interactive Climate Model", class = "header-text-sub", style = "font-weight:normal;"),
+                            h2("An Interactive Climate Model", class = "header-text-sub", style = "font-weight:normal; "),
                             ),
           ),
           br(),
@@ -202,7 +203,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                               tags$td(width = "155", selectInput("input_custom_RCP", label = NULL, list("RCP2.6" = "RCP-2.6","RCP 4.5"="RCP-4.5", "RCP 6"="RCP-6.0", "RCP 8.5" = "RCP-8.5"), width=150, selected = "RCP-4.5"))
                                       ),
                                       tags$tr(width = "100%",
-                                              tags$td(width = "145", "Custom Scenario Name:"),
+                                              tags$td(width = "145", "Your Scenario Name:"),
                                               tags$td(width = "200",  textInput("input_custom_scenarioName", label = NULL, width=195, value = ""))
                                       )
                                   ),
