@@ -30,7 +30,7 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          install.packages(c("remotes", "rcmdcheck", "covr"), repos = "https://cloud.r-project.org")
+          install.packages(c("remotes", "rcmdcheck"), repos = "https://cloud.r-project.org")
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
 
