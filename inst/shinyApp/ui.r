@@ -74,15 +74,13 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
               # Main panel for the interactive section of the application
               tabPanel(
                   "Explore Hector",
-                  mainPanel(
+                  sidebarPanel(
                       width = 4,
                       tabsetPanel(
                           tabPanel(class = "params",
-                              p( "Standard Scenarios", value="infoTab"),
-                              div(
-                                  br(),
+                                  "Standard Scenarios",
                                   h5("Representative Concentration Pathways (RCPs)"),
-                                  tags$hr(class="hrNav"),
+                                  # tags$hr(class="hrNav"),
                                   # shinyWidgets::awesomeCheckboxGroup(inputId = "input_RCP", label = "",
                                   #                                    choices = c("2.6", "4.5", "6.0", "8.5"), inline = TRUE, status = "info"),
                                   shinyWidgets::prettyCheckbox(inputId = "input_RCP_2.6", label = "2.6", value = FALSE, width = 45,
@@ -103,12 +101,11 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                                          choices =  list("Hector Default" = "default", "CanESM2" = "canesm2",
                                                                          "CESM1-BGC" = "cesm1-bgc", "GFDL-ESM2G" = "gfdl-esm2g",
                                                                          "MIROC-ESM" = "miroc-esm", "MPI-ESM-LR" = "mpi-esm-lr",
-                                                                         "MRI-ESM1" = "mri-esm1"), width = 190)
+                                                                         "MRI-ESM1" = "mri-esm1"))
                                              ),
                                       column(6,
-                                             actionButton(inputId="reset_Params", label="Reset Parameters",
-                                                          style = "background: #4174C3; color: white;")
-
+                                             actionButton(inputId="reset_Params", label="Reset",
+                                                          style = "background: #4174C3; color: white; padding:4px; display:center-align")
                                       ),
                                   ),
                                   fluidRow(
@@ -179,12 +176,12 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                   #     )
                                   # )# ) Collapsible comment
                                   # )
-                              )
+
                           ),
                           # Custom Scenarios Tab Panel
                           tabPanel
                           (class = "params",
-                              p(icon("edit", "fa-1x"), "Custom Scenarios - BETA", value="infoTab"),
+                              "Custom Scenarios",
                               div
                               (
                                   h5("Custom Emissions Pathway"),
@@ -234,13 +231,14 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                   ),
                   # Right hand content panel - Main panel that is used for output
                   mainPanel
-                  ( width = 8,
+                  (width = 8,
                       tabsetPanel
                       (
                           # Graphs Tab
                           tabPanel
                           (fixed = TRUE,
                               p(icon("chart-line","fa-2x"), "Scenario Output", value="outputTab"),
+                              br(),
                               div(
                               tags$table
                               (
@@ -272,8 +270,8 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                       ),
                                   )
                               ),
-                              actionButton(inputId="loadGraphs", label="Load Graphs", width = 200, style = "background: #0B3F8F; color: white;"),
-                              downloadButton("downloadData", label="Download Raw Data", style = "background: #0B3F8F; color: white;"),
+                              actionButton(inputId="loadGraphs", label="Load Graphs", width = '200px', style = "background: #0B3F8F; color: white;"),
+                              downloadButton("downloadData", label="Download Raw Data", style = "background: #0B3F8F; color: white; width: 200px;"),
                               br(),
                               br(),
                               uiOutput("plots", class = "customPlot")
@@ -287,10 +285,9 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                               br(),
                               h6("These maps are generated using ",
                                  a("fldgen,", href = "https://doi.org/10.1371/journal.pone.0223542", target = "_blank"), "a tool used to spatially downscale Hector temperature output onto the Earth System Model grid of your choosing."),
-                              br(),
                               p("Please note that some map model patterns are rather large and can take several seconds to load. Due to this, maps will need to be refreshed manually after any changes."),
                               fluidRow(
-                                  column(3, selectInput(inputId = "mapPattern", label = "Choose Model:", width = "100%",
+                                  column(3, selectInput(inputId = "mapPattern", label = "Choose Model:", width = "400px",
                                                      choices = c("CanESM2" = "CanESM2",
                                                                  "CESM1-BGC" = "CESM1-BGC",
                                                                  "GFDL-ESM2G" = "GFDL-ESM2G",
@@ -298,10 +295,10 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                                                  "MPI-ESM-LR" = "MPI-ESM-LR",
                                                                  "MRI-ESM1" = "MRI-ESM1"))
                                          ),
-                                  column(3, selectInput(inputId = "mapVar", label = "Choose Variable:", selected = "tas", width = "100%",
+                                  column(3, selectInput(inputId = "mapVar", label = "Choose Variable:", selected = "tas", width = "400px",
                                                      choices = c("Temperature" = "tas", "Precipitation" = "pr"), multiple = F)
                                          ),
-                                  column(3, selectInput(inputId = "mapYear", label = "Choose Year:", selected = 2100, width = "100%",
+                                  column(3, selectInput(inputId = "mapYear", label = "Choose Year:", selected = 2100, width = "400px",
                                                      choices = c(2000:2100), multiple = F)
                                          ),
                                   column(3, uiOutput("coreMapping"))
@@ -334,19 +331,19 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                               ),
                               tags$table(
                                   tags$tr(width = "100%",
-                                          tags$td(width = "20", align="left", class="tdPushTop",
-                                                  popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Enable Comparative Differences",
-                                                         content = "This will change the temperature output on the map to show the difference between the computed temperature of the selected year and the temperature from the year 1900.",
-                                                         placement = "top")),
+                                          # tags$td(width = "20", align="left", class="tdPushTop",
+                                          #         popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Enable Comparative Differences",
+                                          #                content = "This will change the temperature output on the map to show the difference between the computed temperature of the selected year and the temperature from the year 1900.",
+                                          #                placement = "top")),
                                           tags$td(shinyWidgets::prettyCheckbox(inputId = "input_map_compare", label = "Show as comparison to year 1900", value = FALSE,  inline = FALSE, icon = icon("check")))
                                   )
                               ),
                               tags$table(
                                   tags$tr(width = "100%",
-                                          tags$td(width = "20", align="left", class="tdPushTop",
-                                                  popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Filter by Lat/Lon",
-                                                         content = "Choosing this option will allow you to zoom in to a specific lat/lon region and have the map rescale to the regional data.",
-                                                         placement = "top")),
+                                          # tags$td(width = "20", align="left", class="tdPushTop",
+                                          #         popify(div(class="paramDivs", icon("info-circle", "fa-1x")), title = "Filter by Lat/Lon",
+                                          #                content = "Choosing this option will allow you to zoom in to a specific lat/lon region and have the map rescale to the regional data.",
+                                          #                placement = "top")),
                                           tags$td(shinyWidgets::prettyCheckbox(inputId = "input_map_filter", label = "Filter by Lat/Lon", value = FALSE,  inline = TRUE, icon = icon("check"))
                                           )
                                   ),
@@ -365,7 +362,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                                    )
                                                ),
                               ),
-                              actionButton(inputId="loadMaps", label="Load Map", width = 150),
+                              actionButton(inputId="loadMaps", label="Load Map", width = 150, style = "background: #0B3F8F; color: white;"),
                               downloadButton("downloadMap", label="Save Hi-Res Map", width = 150),
                               br(),
                               uiOutput("maps", class = "customPlot")

@@ -47,7 +47,6 @@ body
 .home-text
 {
     font-size: 16px;
-    padding: 20px;
 }
 
 .hrNav
@@ -85,3 +84,9 @@ body
 {
     font-size: 14px;
 }
+
+/* .selectize-input
+{
+    height: 60px;
+    width: 300px;
+} */
