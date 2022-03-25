@@ -80,8 +80,9 @@ loadGraph <- function()
 
                     }
                     # Get the units for graph axis
+
                     x <- dplyr::distinct(hdata, units)
-                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=Year, y=Value, group=variable, color=Scenario)) +
+                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=Year, y=Value, group=Scenario, color=Scenario)) +
                       ggplot2::geom_line() +
                       ggplot2::labs(y=Hmisc::capitalize(x[[1]]), title =  attr(outputVariables[[i]], 'longName')) +
                       ggplot2::scale_color_manual(values = globalColorScales)
