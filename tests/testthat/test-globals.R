@@ -50,7 +50,7 @@ test_that("globals:  scenario color scheme", {
 
   globalScenarioColors <- get_globalScenarioColors()
 
-  expect_equal(globalScenarioColors, c("RCP 2.6" = "#99cc33", "RCP 4.5" = "#FFFF00", "RCP 6.0" = "#ff9900", "RCP 8.5" = "#ff3333"))
+  expect_equal(globalScenarioColors, c("RCP 2.6" = "#5DBFDE", "RCP 4.5" = "#5CB95C", "RCP 6.0" = "#FBAB33", "RCP 8.5" ="#D7534E"))
 
 })
 
