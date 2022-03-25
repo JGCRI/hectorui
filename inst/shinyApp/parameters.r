@@ -208,16 +208,16 @@ setParameters <- function()
             shinyalert::shinyalert("Input Error:", "ECS value out of bounds. Please use (1,6) as limits.", type = "error")
             pass_check <- FALSE
           }
-          if(!is.na(input$input_pco2) && input$input_pco2 >= 250 && input$input_pco2 <= 300)
-          {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['pco2'], values = c(as.double(input$input_pco2)), unit = "ppmv CO2")
-            paramsList['C'] <<- as.double(input$input_aero)
-          }
-          else
-          {
-            shinyalert::shinyalert("Input Error:", "Preindustrial CO2 value out of bounds. Please use (250, 300) as limits.", type = "error")
-            pass_check <- FALSE
-          }
+          # if(!is.na(input$input_pco2) && input$input_pco2 >= 250 && input$input_pco2 <= 300)
+          # {
+          #   hector::setvar(hcores[[i]], dates = NA, var = globalParameters['pco2'], values = c(as.double(input$input_pco2)), unit = "ppmv CO2")
+          #   paramsList['C'] <<- as.double(input$input_aero)
+          # }
+          # else
+          # {
+          #   shinyalert::shinyalert("Input Error:", "Preindustrial CO2 value out of bounds. Please use (250, 300) as limits.", type = "error")
+          #   pass_check <- FALSE
+          # }
           if(!is.na(input$input_q10) && input$input_q10 > 0 && input$input_q10 <= 10)
           {
             hector::setvar(hcores[[i]], dates = NA, var = globalParameters['q10'],  values = c(as.double(input$input_q10)), unit = NA)
