@@ -624,10 +624,6 @@ get_globalCapabilities <- function() {
     globalCapabilities[['so2_a']] <- hector::EMISSIONS_SO2()
     attr(globalCapabilities[['so2_a']], 'longName') <- "Anthropogenic SO2"
 
-    # "Natural CH4 Emissions"
-    globalCapabilities[['so2_n_ch4']] <- hector::EMISSIONS_CH4()
-    attr(globalCapabilities[['so2_n_ch4']], 'longName') <- "Natural CH4 Emissions"
-
     # "Volcanic SO2"
     globalCapabilities[['so2_v']] <- hector::VOLCANIC_SO2()
     attr(globalCapabilities[['so2_v']], 'longName') <- "Volcanic SO2"

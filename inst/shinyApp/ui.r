@@ -197,7 +197,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                   tags$table(
                                       tags$tr(width = "100%",
                                               tags$td(width = "145", "Baseline Scenario:"),
-                                              tags$td(width = "155", selectInput("input_custom_RCP", label = NULL, list("RCP2.6" = "RCP-2.6","RCP 4.5"="RCP-4.5", "RCP 6"="RCP-6.0", "RCP 8.5" = "RCP-8.5"), width=150, selected = "RCP-4.5"))
+                                              tags$td(width = "155", selectInput("input_custom_RCP", label = NULL, list("RCP 2.6" = "RCP-2.6","RCP 4.5"="RCP-4.5", "RCP 6.0"="RCP-6.0", "RCP 8.5" = "RCP-8.5"), width=150, selected = "RCP-4.5"))
                                       ),
                                       tags$tr(width = "100%",
                                               tags$td(width = "145", "Your Scenario Name:"),
@@ -264,7 +264,7 @@ fluidPage(theme = shinythemes::shinytheme("readable"),
                                                    #                "High-Lat Overturning"='o_hl_o', "Warm-Intermediate Exchange"='o_wie', "Intermediate-Deep Exchange"='o_ide', "High Latitude Ph"='o_hl_ph', "Low Latitude Ph"='o_ll_ph', "Atmosphere-Ocean Flux - High Lat"='o_hl_aof', "Atmosphere-Ocean Flux - Low Lat"='o_ll_aof',
                                                    #                "Partial Pressure CO2 - High Lat"='o_hl_pp_co2',"Partial Pressure CO2 - Low Lat"='o_ll_pp_co2',"Dissolved Inorganic C - High Lat"='o_hl_dic', "Dissolved Inorganic C - Low Lat"='o_ll_dic', "Ocean Temperature - High Lat"='o_hl_t', "Ocean Temperature - Low Lat"='o_ll_t',
                                                    #                "Carbonate Concentration - High Lat"='o_hl_cc', "Carbonate Concentration - Low Lat"='o_ll_cc'), #  "Land Temp Anomaly"="t_lta",
-                                                   'SO2' = list( "Anthropogenic SO2"='so2_a', "Natural CH4 Emissions"='so2_n_ch4', "Volcanic SO2"='so2_v'),
+                                                   'SO2' = list( "Anthropogenic SO2"='so2_a', "Volcanic SO2"='so2_v'),
                                                    'Temperature' = list("Global Mean Temp"='t_gmt', "Equilibrium Global Temp"='t_egt', "Ocean Surface Temp"='t_ost', "Ocean Air Temp"='t_oat', "Heat Flux - Mixed Layer Ocean"='t_hf_mlo', "Heat Flux - Interior Layer Ocean"='t_hf_ilo', "Total Heat Flux - Ocean"='t_hf_t')),
                                               multiple = T, selected = "t_gmt")
                                       ),

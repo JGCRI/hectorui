@@ -358,8 +358,6 @@ test_that("globals:  output parameters", {
   expect_equal(globalCapabilities[['so2_y2k']][1] , hector::Y2000_SO2())
   # "Anthropogenic SO2"
   expect_equal(globalCapabilities[['so2_a']][1] , hector::EMISSIONS_SO2())
-  # "Natural CH4 Emissions"
-  expect_equal(globalCapabilities[['so2_n_ch4']][1] , hector::EMISSIONS_CH4())
   # "Volcanic SO2"
   expect_equal(globalCapabilities[['so2_v']][1] , hector::VOLCANIC_SO2())
 
