@@ -19,7 +19,7 @@ test_that("globals:  color scale", {
 
   globalColorScales <- get_globalColorScales()
 
-  expect_equal(globalColorScales, c("RCP 2.6"="#db735c", "RCP 4.5"="#EFA86E", "RCP 6.0"="#9A8A76", "RCP 8.5"="#7A6752"))
+  expect_equal(globalColorScales, c("RCP 2.6"="#5DBFDE", "RCP 4.5"="#5CB95C", "RCP 6.0"="#FBAB33", "RCP 8.5"="#D7534E"))
 
 })
 
@@ -50,7 +50,7 @@ test_that("globals:  scenario color scheme", {
 
   globalScenarioColors <- get_globalScenarioColors()
 
-  expect_equal(globalScenarioColors, c("RCP 2.6" = "#99cc33", "RCP 4.5" = "#FFFF00", "RCP 6.0" = "#ff9900", "RCP 8.5" = "#ff3333"))
+  expect_equal(globalScenarioColors, c("RCP 2.6" = "#5DBFDE", "RCP 4.5" = "#5CB95C", "RCP 6.0" = "#FBAB33", "RCP 8.5" ="#D7534E"))
 
 })
 
@@ -358,8 +358,6 @@ test_that("globals:  output parameters", {
   expect_equal(globalCapabilities[['so2_y2k']][1] , hector::Y2000_SO2())
   # "Anthropogenic SO2"
   expect_equal(globalCapabilities[['so2_a']][1] , hector::EMISSIONS_SO2())
-  # "Natural CH4 Emissions"
-  expect_equal(globalCapabilities[['so2_n_ch4']][1] , hector::EMISSIONS_CH4())
   # "Volcanic SO2"
   expect_equal(globalCapabilities[['so2_v']][1] , hector::VOLCANIC_SO2())
 

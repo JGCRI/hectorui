@@ -148,6 +148,7 @@ server <- function(input, output, session)
 
 #----- Set up non global variables in top level application scope
 
+  ggplot2::theme_set(ggplot2::theme_minimal())
   outputVariables <- list()
   inifile <- system.file('input/hector_rcp45.ini', package='hector', mustWork=TRUE)
   hcores <- list()
@@ -180,10 +181,10 @@ server <- function(input, output, session)
     plot_output_list <- lapply(1:4, function(i)
     {
       plotname <- paste("plot", i, sep="")
-      plot <-  plotly::plotlyOutput(plotname, height = 255, width = 510)
+      plot <-  plotly::plotlyOutput(plotname, height = '100%', width = '100%')
 
       tags$div(class = "group-output",
-               plotly::plotlyOutput(plotname, height = 255, width = 510)
+               plotly::plotlyOutput(plotname, height = '100%', width = '100%')
       )
     })
 
@@ -197,10 +198,10 @@ server <- function(input, output, session)
     map_output_list <- lapply(1:1, function(i)
     {
       mapname <- paste("map", i, sep="")
-      map <-  plotly::plotlyOutput(mapname, height = 550, width = 1050)
+      map <-  plotly::plotlyOutput(mapname, width = '100%')
 
       shinyjs::hidden(tags$div(class = "group-output", id = "map-div",
-               shinycustomloader::withLoader(plotly::plotlyOutput(mapname, height = 550, width = 1050), type="text",
+               shinycustomloader::withLoader(map, type="text",
                                              loader = list(shinycustomloader::marquee("Please Wait... Finalizing Raster Output", style="font-size:30px; color:white; text-align:center", scrollamount = 0))))
       )
     })
@@ -228,8 +229,8 @@ server <- function(input, output, session)
 
   observeEvent(input$launch_scenario, updateTabsetPanel(session, "nav", selected = "Explore Hector"), ignoreInit = TRUE)
   observeEvent(input$capabilities, setCapabilities(), ignoreInit = FALSE)
-  observeEvent(input$loadGraphs, loadGraph(), ignoreInit = TRUE)
-  observeEvent(input$set_Params, setParameters(), ignoreInit = TRUE)
+  observeEvent(input$loadGraphs, {setParameters(); loadGraph()}, ignoreInit = TRUE)
+  # observeEvent(input$set_Params, setParameters(), ignoreInit = TRUE)
   observeEvent(input$input_ScenarioFile, loadScenario(), ignoreInit = TRUE)
   observeEvent(input$reset_Params, resetParams(), ignoreInit = TRUE)
   observeEvent(input$input_RCP_2.6, setRCP("RCP-2.6"), ignoreInit = TRUE)
@@ -247,6 +248,9 @@ server <- function(input, output, session)
   observeEvent(input$input_submit_feedback, sendFeedback(), ignoreInit = TRUE)
   observeEvent(input$mapCore, updateIndex(), ignoreInit = TRUE)
   observeEvent(input$saveMap, saveMap(), ignoreInit = TRUE)
+
+
+function()
 
   # This is a group Observer block for all of the params fields because they all respond the same way
   observe({
@@ -279,7 +283,7 @@ server <- function(input, output, session)
   {
     if(!is.na(input$input_beta) && (as.double(input$input_beta) < 0.01 ))
     {
-      updateNumericInput(session = session, inputId = "input_beta", value = 1)
+      updateSliderInput(session = session, inputId = "input_beta", value = 1)
     }
   }
 }

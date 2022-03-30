@@ -16,7 +16,8 @@ get_globalVars <- function() {
 get_globalColorScales <- function() {
 
     globalColorScales <- vector()
-    globalColorScales <- c("RCP 2.6"="#db735c", "RCP 4.5"="#EFA86E", "RCP 6.0"="#9A8A76", "RCP 8.5"="#7A6752")
+    globalColorScales <- c("RCP 2.6" = "#5DBFDE", "RCP 4.5" = "#5CB95C", "RCP 6.0" = "#FBAB33", "RCP 8.5" ="#D7534E")
+
 
     return(globalColorScales)
 }
@@ -50,7 +51,7 @@ get_globalScenarios <- function() {
 #' @export
 get_globalScenarioColors <- function() {
 
-    return(c("RCP 2.6" = "#99cc33", "RCP 4.5" = "#FFFF00", "RCP 6.0" = "#ff9900", "RCP 8.5" = "#ff3333"))
+    return(c("RCP 2.6" = "#5DBFDE", "RCP 4.5" = "#5CB95C", "RCP 6.0" = "#FBAB33", "RCP 8.5" = "#D7534E"))
 }
 
 
@@ -622,10 +623,6 @@ get_globalCapabilities <- function() {
     # "Anthropogenic SO2"
     globalCapabilities[['so2_a']] <- hector::EMISSIONS_SO2()
     attr(globalCapabilities[['so2_a']], 'longName') <- "Anthropogenic SO2"
-
-    # "Natural CH4 Emissions"
-    globalCapabilities[['so2_n_ch4']] <- hector::EMISSIONS_CH4()
-    attr(globalCapabilities[['so2_n_ch4']], 'longName') <- "Natural CH4 Emissions"
 
     # "Volcanic SO2"
     globalCapabilities[['so2_v']] <- hector::VOLCANIC_SO2()
