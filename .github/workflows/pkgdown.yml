@@ -21,8 +21,6 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
 
       - name: Query dependencies
-        env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
           install.packages('remotes')
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
