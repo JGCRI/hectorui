@@ -39,7 +39,7 @@ Suggests:
     rmarkdown,
     pkgdown
 Remotes:
-    github::JGCRI/hector@v2.5.0,
+    github::JGCRI/hector@rcmip-tier1,
     github::JGCRI/fldgen@v2.0.0
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
