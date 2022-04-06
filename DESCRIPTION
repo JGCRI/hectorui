@@ -1,7 +1,7 @@
 Package: hectorui
 Type: Package
 Title: A web-based interactive scenario builder and visualization application for the Hector climate model
-Version: 1.1.4
+Version: 2.0
 Authors@R: c(person("Stephanie", "Pennington", email = "stephanie.pennington@pnnl.gov", role = c("aut", "cre")),
          person("Chris", "Vernon", email = "chris.vernon@pnnl.gov", role = "aut"),
          person("Stephanie", "Waldhoff", email = "stephanie.waldhoff@pnnl.gov", role = "aut"),
