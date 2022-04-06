@@ -38,7 +38,6 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          install.packages("remotes", repos = "https://cloud.r-project.org")
           remotes::install_deps(dependencies = TRUE)
           install.packages("pkgdown", type = "binary")
         shell: Rscript {0}
