@@ -1,0 +1,26 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: HectorUI
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - family-names: Pennington
+    given-names: Stephanie
+    email: stephanie.pennington@pnnl.gov
+    affiliation: Pacific Northwest National Laboratory
+    orcid: 'https://orcid.org/0000-0003-2685-1092'
+  - given-names: Chris R
+    family-names: Vernon
+    email: Chris.Vernon@pnnl.gov
+    affiliation: Pacific Northwest National Laboratory
+    orcid: 'https://orcid.org/0000-0002-3406-6214'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.3603215
+license: GPL-3.0
+version: '2.0'
+date-released: '2022-04-01'
