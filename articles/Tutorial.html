@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">hectorui</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -74,9 +70,9 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>
 <code>hectorui</code>: The Hector User Interface - Guide and Tutorial</h1>
-                        <h4 class="author">Jason Evanoff</h4>
+                        <h4 data-toc-skip class="author">Jason Evanoff</h4>
             
-            <h4 class="date">2020-09-02</h4>
+            <h4 data-toc-skip class="date">2020-09-02</h4>
       
       
       <div class="hidden name"><code>Tutorial.Rmd</code></div>
@@ -85,46 +81,46 @@
 
     
     
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>The Hector user interface was built to extend Hector, a simple, fast running global climate carbon-cycle mode into a web based interactive application. This vignette outlines the basics for interacting with the Hector user interface and includes a tutorial on how to use the Hector user interface to answer a simple science question: <em>What is the projected temperature change over time for a specific region?</em> The tools and features in this package will be able to show you the projected change in average temperature for a specific region compared to 1900 temperatures.</p>
-<p>To run this vignette, you will need to access the <code>hectorui</code> online application at <a href="https://jgcri.shinyapps.io/HectorUI/" class="uri">https://jgcri.shinyapps.io/HectorUI/</a> or install and setup the package locally.</p>
+<p>To run this vignette, you will need to access the <code>hectorui</code> online application at <a href="https://jgcri.shinyapps.io/HectorUI/" class="external-link uri">https://jgcri.shinyapps.io/HectorUI/</a> or install and setup the package locally.</p>
 </div>
-<div id="setup" class="section level2">
-<h2 class="hasAnchor">
-<a href="#setup" class="anchor"></a>Setup</h2>
-<p>Simply access the application here: <a href="https://jgcri.shinyapps.io/HectorUI/" class="uri">https://jgcri.shinyapps.io/HectorUI/</a>. To access the code or contribute, clone or fork hectorui here: <a href="https://github.com/JGCRI/hectorui" class="uri">https://github.com/JGCRI/hectorui</a>.</p>
+<div class="section level2">
+<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+</h2>
+<p>Simply access the application here: <a href="https://jgcri.shinyapps.io/HectorUI/" class="external-link uri">https://jgcri.shinyapps.io/HectorUI/</a>. To access the code or contribute, clone or fork hectorui here: <a href="https://github.com/JGCRI/hectorui" class="external-link uri">https://github.com/JGCRI/hectorui</a>.</p>
 </div>
-<div id="interface-guide" class="section level2">
-<h2 class="hasAnchor">
-<a href="#interface-guide" class="anchor"></a>Interface Guide</h2>
+<div class="section level2">
+<h2 id="interface-guide">Interface Guide<a class="anchor" aria-label="anchor" href="#interface-guide"></a>
+</h2>
 <p>Once you have the web page loaded or set up the package locally, you will see the application home page, which contains some background information on Hector, links to code and other resources, and information on how to cite this application. There are two main sections to the application: ‘System Information’ and ‘Run Scenario’ located on the Navigation bar at the top. Within each section are subsections that access information and functionality.</p>
 <p>The main interface is also divided into two sections: a left-hand control panel that contains preconfigured scenarios and user adjustable model parameters, and the main output panel on the right for viewing model outputs. Hector is run through “scenarios”, which are a set of emissions and model parameters that drive the model. Built into the package are four Representative Concentration Pathways (RCP) which are greenhouse gas concentration (not emissions) trajectories adopted by the IPCC. The default scenario, RCP 4.5, will be “checked” and you should see the Global Mean Temperature graph in the output section. Each scenario loaded creates a new, unique Hector core object with those parameters and emissions.</p>
-<div id="scenarios" class="section level3">
-<h3 class="hasAnchor">
-<a href="#scenarios" class="anchor"></a>Scenarios</h3>
+<div class="section level3">
+<h3 id="scenarios">Scenarios<a class="anchor" aria-label="anchor" href="#scenarios"></a>
+</h3>
 <p>Scenarios are the main source of input for Hector. They contain emissions and parameters calibrated to represent different RCP scenarios. The default selected RCP 4.5 scenario represents a “middle of the road” projection for emissions and global mitigation. To add additional scenarios for comparison, you can check any combination of the 4 RCP scenarios and they will be represented as their own series in the output graphs. Try checking the 8.5 scenario. You should see a new series appear in the Global Temperature graph where the temperature rises faster than the 4.5 scenario. The 8.5 scenario represents somewhat of a “worst case” scenario. To view projections of other outputs choose some more variables (up to 4) in the graphs section and you should see additional graphs representing Hector’s projections of those outputs.</p>
 </div>
-<div id="parameters" class="section level3">
-<h3 class="hasAnchor">
-<a href="#parameters" class="anchor"></a>Parameters</h3>
+<div class="section level3">
+<h3 id="parameters">Parameters<a class="anchor" aria-label="anchor" href="#parameters"></a>
+</h3>
 <p>To further configure Hector, you can adjust the input parameters manually in the left hand nav or choose a global climate model to emulate and it will load up parameters that are calibrated to emulate that model. Try choosing one of the models and note how the input parameters change and the graphs are automatically updated to reflect Hector’s projection being run using those parameters. At any point you can also manually adjust any of the input parameters and set them by clicking the “Set Parameters” button.</p>
 </div>
-<div id="custom-scenarios" class="section level3">
-<h3 class="hasAnchor">
-<a href="#custom-scenarios" class="anchor"></a>Custom Scenarios</h3>
+<div class="section level3">
+<h3 id="custom-scenarios">Custom Scenarios<a class="anchor" aria-label="anchor" href="#custom-scenarios"></a>
+</h3>
 <p>The Hector user interface allows advanced users to customize their own scenarios via the “Custom Scenarios” tab in the left hand nav. The custom scenarios use the RCP scenarios as a starting point and allow you to edit the complete time series of emissions. To create a custom scenario you will need to download the excel scenario template file that you want to use as a starting point, edit the emissions within the file, and reupload it to the system. Once done, you will see your scenario’s output in the graphs on the right, just like one of the preconfigured scenarios.</p>
 </div>
-<div id="other-outputs" class="section level3">
-<h3 class="hasAnchor">
-<a href="#other-outputs" class="anchor"></a>Other Outputs</h3>
+<div class="section level3">
+<h3 id="other-outputs">Other Outputs<a class="anchor" aria-label="anchor" href="#other-outputs"></a>
+</h3>
 <p>In addition to the main graph interface, Hector also has a few other outputs. On the graph tab, there is a “Download Raw Data” button which will download the complete time series output for all of the scenarios and output variables that you have chosen. Clicking the “Downscaled Maps” tab in the output section allows you to view cell based global data for temperature and precipitation using pattern generation techniques. This is discussed more in the tutorial.</p>
 </div>
 </div>
-<div id="tutorial-scenario-determining-the-projected-temperature-change-over-time-for-a-specific-region" class="section level2">
-<h2 class="hasAnchor">
-<a href="#tutorial-scenario-determining-the-projected-temperature-change-over-time-for-a-specific-region" class="anchor"></a>Tutorial Scenario: Determining the projected temperature change over time for a specific region</h2>
+<div class="section level2">
+<h2 id="tutorial-scenario-determining-the-projected-temperature-change-over-time-for-a-specific-region">Tutorial Scenario: Determining the projected temperature change over time for a specific region<a class="anchor" aria-label="anchor" href="#tutorial-scenario-determining-the-projected-temperature-change-over-time-for-a-specific-region"></a>
+</h2>
 <table class="table">
 <colgroup>
 <col width="68%">
@@ -252,9 +248,9 @@
 </tr></tbody>
 </table>
 </div>
-<div id="conclusion" class="section level2">
-<h2 class="hasAnchor">
-<a href="#conclusion" class="anchor"></a>Conclusion</h2>
+<div class="section level2">
+<h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+</h2>
 <p>This concludes the tutorial and interface guide. After completing this, you should have a basic understanding of how the interface works, how the different pieces interact, and how to create meaningful output. For more detailed information on Hector, check the “About” section for links to the formal model description paper, the source code for Hector, and other related links and information. Feel free to examine and explore as much as you want.</p>
 </div>
   </div>
@@ -270,11 +266,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Stephanie Pennington, Chris Vernon, Stephanie Waldhoff, Abigail Snyder, Jason Evanoff, Corinne Hartin.</p>
+  <p></p>
+<p>Developed by Stephanie Pennington, Chris Vernon, Stephanie Waldhoff, Abigail Snyder, Jason Evanoff, Corinne Hartin.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -282,6 +280,8 @@
 
   
 
+
+  
 
   </body>
 </html>
