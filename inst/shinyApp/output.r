@@ -80,8 +80,9 @@ loadGraph <- function()
 
                     }
                     # Get the units for graph axis
+
                     x <- dplyr::distinct(hdata, units)
-                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=Year, y=Value, group=variable, color=Scenario)) +
+                    ggplotGraph <- ggplot2::ggplot(data=df_total, ggplot2::aes(x=Year, y=Value, group=Scenario, color=Scenario)) +
                       ggplot2::geom_line() +
                       ggplot2::labs(y=Hmisc::capitalize(x[[1]]), title =  attr(outputVariables[[i]], 'longName')) +
                       ggplot2::scale_color_manual(values = globalColorScales)
@@ -183,13 +184,15 @@ loadMap <- function()
             {
               mapFill <- "\u0394 Temperature \u00B0C"
               mapVar <- "deltaTemp"
+              mapPalette <- c("#fff7ec", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000")
             }
             else
             {
               mapFill <- "Temperature \u00B0C"
               mapVar <- "Temp"
+              mapPalette <-  c( "#4575b4", "#74add1", "#abd9e9","#e0f3f8", "#ffffbf",  "#fee090", "#fdae61", "#d73027")
             }
-            mapPalette <- "RdYlBu"
+
             mapDirection <- -1
               combined_data <- dplyr::mutate(coordinates, Temp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 2),
                                              deltaTemp = round(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1], 2),
@@ -200,18 +203,19 @@ loadMap <- function()
           # Build aesthetics based on if the compare to 1900 was checked
           if(input$input_map_compare)
           {
-            mapFill <- "\u0394 Precip. - g/m2/s"
+            mapFill <- "\u0394 Precip. - mm/day"
             mapVar <- "deltaPrecip"
+            mapPalette <- c("#bf812d", "#dfc27d", "white",  "#80cdc1", "#35978f", "#01665e", "#003c30")
           }
           else
           {
-            mapFill <- "Precip. - g/m2/s"
+            mapFill <- "Precip. - mm/day"
             mapVar <- "Precip"
+            mapPalette <- c("#fff7fb", "#67a9cf","#3690c0", "#02818a", "#016c59", "#014636")
           }
           mapDirection <- 1
-          mapPalette <- "Purples"
-          combined_data <- dplyr::mutate(coordinates, Precip = round(1000*hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 4),
-                                           deltaPrecip = round(1000*(hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1]), 4),
+          combined_data <- dplyr::mutate(coordinates, Precip = round(86400*hector_annual_gridded_t[, as.numeric(input$mapYear)-1899], 4),
+                                           deltaPrecip = round(((hector_annual_gridded_t[, as.numeric(input$mapYear)-1899] - hector_annual_gridded_t[, 1]) / hector_annual_gridded_t[, 1]) * 100 , 2),
                                            Lon=round(lon, 2), Lat=round(lat,2), Neg = ifelse(deltaPrecip < 0, TRUE, FALSE))
         }
 
@@ -246,15 +250,13 @@ loadMap <- function()
         }
 
         # Create world map borders
-        mapWorld <- ggplot2::borders("world", fill = NA)
-
+        mapWorld <- ggplot2::borders("world")
         # Construct ggplot map object
         ggplotMap <- ggplot2::ggplot() +
           mapWorld +
           ggplot2::geom_raster(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar),interpolate = TRUE ) +
-          ggplot2::coord_fixed() +
-          ggplot2::scale_fill_distiller(palette = mapPalette,type = "div", direction = mapDirection, na.value = "Gray") + #, limits = c(-1,1)*max(abs(combined_data[[mapVar]]))) +
-          ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = mapFill) +
+          ggplot2::scale_fill_gradientn(colors = mapPalette) + #, limits = c(-1,1)*max(abs(combined_data[[mapVar]]))) +
+          ggplot2::labs(x="\u00B0 Longitude", y="\u00B0 Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = mapFill) +
           ggplot2::scale_y_continuous(limits=c(lat_min, lat_max), expand = c(0, 0), breaks=seq(-90,90,30))+
           ggplot2::scale_x_continuous(limits=c(lon_min, lon_max), expand = c(0, 0), breaks=seq(-180,180,30))
 

@@ -8,13 +8,13 @@
 #' @examples
 setCoreParameters <- function(hcore)
 {
-  hector::setvar(hcore, dates = NA, var = globalParameters['aero'], values = c(as.double(paramsList[['alpha']])), unit = "unitless")
-  hector::setvar(hcore, dates = NA, var = globalParameters['beta'], values = c(as.double(paramsList[['beta']])), unit = "unitless")
+  hector::setvar(hcore, dates = NA, var = globalParameters['aero'], values = c(as.double(paramsList[['alpha']])), unit = NA)
+  hector::setvar(hcore, dates = NA, var = globalParameters['beta'], values = c(as.double(paramsList[['beta']])), unit = NA)
   hector::setvar(hcore, dates = NA, var = globalParameters['diff'], values = c(as.double(paramsList[['diff']])), unit = "cm2/s")
   hector::setvar(hcore, dates = NA, var = globalParameters['ecs'],  values = c(as.double(paramsList[['S']])), unit = "degC")
   hector::setvar(hcore, dates = NA, var = globalParameters['pco2'], values = c(as.double(paramsList[['C']])), unit = "ppmv CO2")
-  hector::setvar(hcore, dates = NA, var = globalParameters['q10'],  values = c(as.double(paramsList[['q10_rh']])), unit = "unitless")
-  hector::setvar(hcore, dates = NA, var = globalParameters['volc'], values = c(as.double(paramsList[['volscl']])), unit = "unitless")
+  hector::setvar(hcore, dates = NA, var = globalParameters['q10'],  values = c(as.double(paramsList[['q10_rh']])), unit = NA)
+  hector::setvar(hcore, dates = NA, var = globalParameters['volc'], values = c(as.double(paramsList[['volscl']])), unit = NA)
 }
 
 #' Assign Parameters from parameter model values into numeric input components
@@ -28,13 +28,13 @@ assignParameters <- function()
   # Update the on screen input components for parameters with the associated values from the chosen parameter group
   # Note - with the current code the parameters need to be in correct order or would have to switch to named calls
   print('in assign params')
-  updateNumericInput(session, "input_aero", value=paramsList[['alpha']])
-  updateNumericInput(session, "input_beta", value=paramsList[['beta']])
-  updateNumericInput(session, "input_diff", value=paramsList[['diff']])
-  updateNumericInput(session, "input_ecs",  value=paramsList[['S']])
-  updateNumericInput(session, "input_pco2", value=paramsList[['C']])
-  updateNumericInput(session, "input_q10",  value=paramsList[['q10_rh']])
-  updateNumericInput(session, "input_volc", value=paramsList[['volscl']])
+  updateSliderInput(session, "input_aero", value=paramsList[['alpha']])
+  updateSliderInput(session, "input_beta", value=paramsList[['beta']])
+  updateSliderInput(session, "input_diff", value=paramsList[['diff']])
+  updateSliderInput(session, "input_ecs",  value=paramsList[['S']])
+  #updateSliderInput(session, "input_pco2", value=paramsList[['C']])
+  updateSliderInput(session, "input_q10",  value=paramsList[['q10_rh']])
+  updateSliderInput(session, "input_volc", value=paramsList[['volscl']])
 }
 
 #' Restore Parameters after changing model state
@@ -128,13 +128,13 @@ loadParameters <- function()
   }
 
   # Update the on screen input components for parameters with the associated values stored in hector core
-  updateNumericInput(session, "input_aero", value=round(hdata[which(hdata$variable == "alpha"), 4], 2))
-  updateNumericInput(session, "input_beta", value=round(hdata[which(hdata$variable == "beta"), 4], 2))
-  updateNumericInput(session, "input_diff", value=round(hdata[which(hdata$variable == "diff"), 4], 2))
-  updateNumericInput(session, "input_ecs",  value=round(hdata[which(hdata$variable == "S"), 4], 2))
-  updateNumericInput(session, "input_pco2", value=round(hdata[which(hdata$variable == "C0"), 4], 2))
-  updateNumericInput(session, "input_q10",  value=round(hdata[which(hdata$variable == "q10_rh"), 4], 2))
-  updateNumericInput(session, "input_volc", value=round(hdata[which(hdata$variable == "volscl"), 4], 2))
+  updateSliderInput(session, "input_aero", value=round(hdata[which(hdata$variable == "alpha"), 4], 2))
+  updateSliderInput(session, "input_beta", value=round(hdata[which(hdata$variable == "beta"), 4], 2))
+  updateSliderInput(session, "input_diff", value=round(hdata[which(hdata$variable == "diff"), 4], 2))
+  updateSliderInput(session, "input_ecs",  value=round(hdata[which(hdata$variable == "S"), 4], 2))
+  #updateSliderInput(session, "input_pco2", value=round(hdata[which(hdata$variable == "C0"), 4], 2))
+  updateSliderInput(session, "input_q10",  value=round(hdata[which(hdata$variable == "q10_rh"), 4], 2))
+  updateSliderInput(session, "input_volc", value=round(hdata[which(hdata$variable == "volscl"), 4], 2))
 
   # Store params in the top level variable paramsList for persistence
   paramsList['alpha']   <<- hdata[which(hdata$variable == "alpha"), 4]
@@ -170,7 +170,7 @@ setParameters <- function()
         {
           if(!is.na(input$input_aero) && input$input_aero <= 1 && input$input_aero > 0)
           {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['aero'], values = c(as.double(input$input_aero)), unit = "unitless")
+            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['aero'], values = c(as.double(input$input_aero)), unit = NA)
             paramsList['alpha'] <<- as.double(input$input_aero)
           }
           else
@@ -180,7 +180,7 @@ setParameters <- function()
           }
           if(!is.na(input$input_beta) && input$input_beta > 0 && input$input_beta <= 5)
           {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['beta'], values = c(as.double(input$input_beta)), unit = "unitless")
+            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['beta'], values = c(as.double(input$input_beta)), unit = NA)
             paramsList['beta'] <<- as.double(input$input_aero)
           }
           else
@@ -208,19 +208,19 @@ setParameters <- function()
             shinyalert::shinyalert("Input Error:", "ECS value out of bounds. Please use (1,6) as limits.", type = "error")
             pass_check <- FALSE
           }
-          if(!is.na(input$input_pco2) && input$input_pco2 >= 250 && input$input_pco2 <= 300)
-          {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['pco2'], values = c(as.double(input$input_pco2)), unit = "ppmv CO2")
-            paramsList['C'] <<- as.double(input$input_aero)
-          }
-          else
-          {
-            shinyalert::shinyalert("Input Error:", "Preindustrial CO2 value out of bounds. Please use (250, 300) as limits.", type = "error")
-            pass_check <- FALSE
-          }
+          # if(!is.na(input$input_pco2) && input$input_pco2 >= 250 && input$input_pco2 <= 300)
+          # {
+          #   hector::setvar(hcores[[i]], dates = NA, var = globalParameters['pco2'], values = c(as.double(input$input_pco2)), unit = "ppmv CO2")
+          #   paramsList['C'] <<- as.double(input$input_aero)
+          # }
+          # else
+          # {
+          #   shinyalert::shinyalert("Input Error:", "Preindustrial CO2 value out of bounds. Please use (250, 300) as limits.", type = "error")
+          #   pass_check <- FALSE
+          # }
           if(!is.na(input$input_q10) && input$input_q10 > 0 && input$input_q10 <= 10)
           {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['q10'],  values = c(as.double(input$input_q10)), unit = "unitless")
+            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['q10'],  values = c(as.double(input$input_q10)), unit = NA)
             paramsList['q10_rh'] <<- as.double(input$input_aero)
           }
           else
@@ -230,7 +230,7 @@ setParameters <- function()
           }
           if(!is.na(input$input_volc) && input$input_volc > 0 && input$input_volc <= 1)
           {
-            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['volc'], values = c(as.double(input$input_volc)), unit = "unitless")
+            hector::setvar(hcores[[i]], dates = NA, var = globalParameters['volc'], values = c(as.double(input$input_volc)), unit = NA)
             paramsList['volscl'] <<- as.double(input$input_aero)
           }
           else
