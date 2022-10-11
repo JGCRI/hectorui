@@ -261,14 +261,7 @@ loadMap <- function()
           ggplot2::scale_x_continuous(limits=c(lon_min, lon_max), expand = c(0, 0), breaks=seq(-180,180,30))
 
         # Separate save plot fixes missing shape layer when saving
-        ggplotSave <<- ggplot2::ggplot() +
-          ggplot2::geom_raster(data = combined_data, ggplot2::aes_string(x="Lon", y = "Lat", fill=mapVar),interpolate = TRUE ) +
-          mapWorld +
-          ggplot2::coord_equal(clip = "off",expand = FALSE) +
-          ggplot2::scale_fill_distiller(palette = mapPalette,type = "div", direction = mapDirection, na.value = "Gray") + #, limits = c(-1,1)*max(abs(combined_data[[mapVar]]))) +
-          ggplot2::labs(x="\u00B0Longitude", y="\u00B0Latitude", title = paste0(input$mapCore, " - ", input$mapYear), fill = mapFill) +
-          ggplot2::scale_y_continuous(limits=c(lat_min, lat_max), expand = c(0, 0), breaks=seq(-90,90,30))+
-          ggplot2::scale_x_continuous(limits=c(lon_min, lon_max), expand = c(0, 0), breaks=seq(-180,180,30))
+        ggplotSave <<- ggplotMap
 
         localPlot <- plotly::ggplotly(p = ggplotMap  )
         plotly::layout(p=localPlot, yaxis = list(tickformat = "\u00B0C", dtick = 10, showgrid=FALSE))
