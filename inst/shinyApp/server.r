@@ -233,10 +233,10 @@ server <- function(input, output, session)
   # observeEvent(input$set_Params, setParameters(), ignoreInit = TRUE)
   observeEvent(input$input_ScenarioFile, loadScenario(), ignoreInit = TRUE)
   observeEvent(input$reset_Params, resetParams(), ignoreInit = TRUE)
-  observeEvent(input$input_RCP_2.6, setRCP("RCP-2.6"), ignoreInit = TRUE)
-  observeEvent(input$input_RCP_4.5, setRCP("RCP-4.5"), ignoreInit = FALSE)
-  observeEvent(input$input_RCP_6.0, setRCP("RCP-6.0"), ignoreInit = TRUE)
-  observeEvent(input$input_RCP_8.5, setRCP("RCP-8.5"), ignoreInit = TRUE)
+  observeEvent(input$input_RCP_2.6, {setRCP("RCP-2.6"); setParameters(); loadGraph()}, ignoreInit = TRUE)
+  observeEvent(input$input_RCP_4.5, {setRCP("RCP-4.5"); setParameters(); loadGraph()}, ignoreInit = FALSE)
+  observeEvent(input$input_RCP_6.0, {setRCP("RCP-6.0"); setParameters(); loadGraph()}, ignoreInit = TRUE)
+  observeEvent(input$input_RCP_8.5, {setRCP("RCP-8.5"); setParameters(); loadGraph()}, ignoreInit = TRUE)
   observeEvent(input$input_enableCustom, setRCP("Custom"), ignoreInit = TRUE)
   observeEvent(input$input_load_custom, loadCustomScenario(), ignoreInit = TRUE)
   observeEvent(input$input_load_emissions, loadCustomEmissions(), ignoreInit = TRUE)
@@ -249,19 +249,29 @@ server <- function(input, output, session)
   observeEvent(input$mapCore, updateIndex(), ignoreInit = TRUE)
   observeEvent(input$saveMap, saveMap(), ignoreInit = TRUE)
 
+  # Observe param changes
+  #observeEvent(input$input_pco2, loadGraph(), ignoreInit = FALSE)
+  observeEvent(input$input_q10, {setParameters(); loadGraph()}, ignoreInit = FALSE)
+  observeEvent(input$input_volc, {setParameters(); loadGraph()}, ignoreInit = FALSE)
+  observeEvent(input$input_aero, {setParameters(); loadGraph()}, ignoreInit = FALSE)
+  observeEvent(input$input_beta, {setParameters(); loadGraph()}, ignoreInit = FALSE)
+  observeEvent(input$input_diff, {setParameters(); loadGraph()}, ignoreInit = FALSE)
+  observeEvent(input$input_ecs, {setParameters(); loadGraph()}, ignoreInit = FALSE)
 
-function()
+
+#function()
 
   # This is a group Observer block for all of the params fields because they all respond the same way
-  observe({
-    input$input_pco2
-    input$input_q10
-    input$input_volc
-    input$input_aero
-    input$input_beta
-    input$input_diff
-    input$input_ecs
-  })
+  #observe({
+    #input$input_pco2
+    #input$input_q10
+    #input$input_volc
+    #input$input_aero
+    #input$input_beta
+    #input$input_diff
+    #input$input_ecs
+  #})
+  # ^^ replaced by observeEvent functions above
 
 #----- End observer function setup
 
