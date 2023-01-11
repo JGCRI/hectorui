@@ -637,6 +637,7 @@ get_globalCapabilities <- function() {
     globalCapabilities[['t_egt']] <- hector::GLOBAL_TEMPEQ()
     attr(globalCapabilities[['t_egt']], 'longName') <- "Equilibrium Global Temperature"
 
+
     # "Ocean Surface Temp"
     globalCapabilities[['t_ost']] <- hector::OCEAN_SURFACE_TEMP()
     attr(globalCapabilities[['t_ost']], 'longName') <- "Ocean Surface Temperature"
