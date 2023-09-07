@@ -9,17 +9,11 @@ ui <- fluidPage(
         tabPanel(title = "Guides",
             ),
         tabPanel(title = "Explore Hector",
-            # sidebarPanel(
-            #   run_ui("run_1"), # buttons and sliders
-            #   width = 4
-            # ),
-            # h4("Summary"),
-            # summary_ui("summary_1"), # print summary
-            # graph_ui("graph_1") # plot
             fluidRow(
-              column(4,
+              column(2,
                      wellPanel(
-                       run_ui("run_1")
+                       run_ui("run_1"),
+                       download_ui("download_1")
                      )
               ),
               column(4,
@@ -37,11 +31,13 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   
-    r6 <- HectorInputs$new()
+    r6 <- HectorInputs$new() # r6 class
+    i <- reactiveVal(1) # set up pseudo loop
     
-    run_server("run_1", r6=r6)
-    summary_server("summary_1", r6=r6)
-    graph_server("graph_1", r6=r6)
+    run_server("run_1", r6=r6, i=i)
+    summary_server("summary_1", r6=r6, i=i)
+    graph_server("graph_1", r6=r6, i=i)
+    download_server("download_1", r6=r6)
 }
 
 # Run the application

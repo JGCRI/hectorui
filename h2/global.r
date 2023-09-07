@@ -4,10 +4,12 @@ library(hector)
 library(dplyr)
 library(ggplot2)
 library(shinycssloaders)
+library(plotly)
 
 source("./components/modules/mod_graph.r")
 source("./components/modules/mod_run.r")
 source("./components/modules/mod_summary.r")
+source("./components/modules/mod_download.r")
 
 # Define R6 class
 HectorInputs <- R6Class(
@@ -23,6 +25,7 @@ HectorInputs <- R6Class(
       self$ini_file <- ini_file
       self$start <- start
       self$end <- end
+      self$output <- list()
       stopifnot(end>start) #gotta have the start year before the end year
     }
   )

@@ -11,10 +11,10 @@ summary_ui <- function(id) {
   )
 }
 
-summary_server <- function(id,r6) {
+summary_server <- function(id, r6, i) {
   moduleServer(id, function(input, output, session) {
     observe({
-      output$summary <- renderTable({r6$output})
+      output$summary <- renderTable({r6$output[[i()-1]]}) #i increases at end of mod_run so output is i-1
     }) %>%
       bindEvent(input$print) # run when Print button is clicked
     

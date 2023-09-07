@@ -23,8 +23,9 @@ run_ui <- function(id) {
   )
 }
 
-run_server <- function(id, r6) {
+run_server <- function(id, r6, i) {
   moduleServer(id, function(input, output, session) {
+    
     observe({
       # store inputs in r6 class
       r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
@@ -32,13 +33,16 @@ run_server <- function(id, r6) {
       r6$end <- reactive({input$end})
       
       # run hector using inputs
-      #output$done <- renderPrint({"Running..."}) # how to show this, then be replaced by "Done" ?
       print("Running...") # in command line
       core <- newcore(r6$ini_file())
       run(core)
-      r6$output <- fetchvars(core,r6$start():r6$end())
-      output$done <- renderPrint({"Done"})
+      r6$output[[i()]] <- fetchvars(core,r6$start():r6$end())
+      output$done <- renderPrint({as.character(i()-1)}) #print run number
       print("Done") # in command line
+      
+      i(i() + 1) # add 1 to i. like a pseudo loop for storing output
+      #print(r6$output)
+      #print(i())
     }) %>%
       bindEvent(input$run) # triggers when "Run Model" is clicked
   })
