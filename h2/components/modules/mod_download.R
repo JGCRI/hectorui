@@ -3,9 +3,7 @@
 download_ui <- function(id) {
   ns <- NS(id)
   
-  tagList(
-    downloadButton(ns("download"), "Download Outputs")
-  )
+  tagList(downloadButton(ns("download"), "Download Outputs"))
 }
 
 download_server <- function(id, r6) {
@@ -13,7 +11,7 @@ download_server <- function(id, r6) {
     output$download <- downloadHandler(
       filename = "hectorUI_output.csv",
       content = function(file) {
-        write.csv(r6$output,file)
+        write.csv(bind_rows(r6$output), file)
       }
       
     )

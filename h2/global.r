@@ -19,14 +19,15 @@ HectorInputs <- R6Class(
     start = NA,
     end = NA,
     output = NULL,
-    initialize = function(ini_file=system.file("input/hector_ssp245.ini",
-                                          package="hector"),
-                          start=2000,end=2300) {
+    initialize = function(ini_file = system.file("input/hector_ssp245.ini",
+                                                 package = "hector"),
+                          start = 2000,
+                          end = 2300) {
       self$ini_file <- ini_file
       self$start <- start
       self$end <- end
       self$output <- list()
-      stopifnot(end>start) #gotta have the start year before the end year
+      stopifnot(end > start) #gotta have the start year before the end year
     }
   )
 )
