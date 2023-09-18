@@ -5,6 +5,7 @@ library(dplyr)
 library(ggplot2)
 library(shinycssloaders)
 library(plotly)
+library(shinyalert)
 
 source("./components/modules/mod_graph.r")
 source("./components/modules/mod_run.r")

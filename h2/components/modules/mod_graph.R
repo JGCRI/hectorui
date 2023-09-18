@@ -14,6 +14,7 @@ graph_server <- function(id, r6, i) {
     observe({
       filtered_output <-
         filter(r6$output[[i() - 1]], variable == "CO2_concentration") #i increases at end of mod_run so output is i-1
+        #filter(bind_rows(r6$output), variable == "CO2_concentration")
       output$graph <- renderPlotly({
         plot_ly(
           filtered_output,

@@ -6,17 +6,15 @@
 summary_ui <- function(id) {
   ns <- NS(id)
   fluidRow(actionButton(ns("print"), "Print"),
-           tableOutput(ns("summary")))
+           dataTableOutput(ns("summary")))
 }
 
 summary_server <- function(id, r6, i) {
   moduleServer(id, function(input, output, session) {
     observe({
-      hectoroutput <-
-        r6$output[[i() - 1]] #i increases at end of mod_run so output is i-1
-      output$summary <- renderTable({
-        hectoroutput
-      })
+      #browser()
+      hectoroutput <- r6$output[[i()-1]]
+      output$summary <- renderDataTable({hectoroutput})
     }) %>%
       bindEvent(input$print) # run when Print button is clicked
     
