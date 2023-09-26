@@ -11,7 +11,7 @@ ui <- fluidPage(
     tabPanel(title = "Guides",),
     tabPanel(title = "Explore Hector",
              fluidRow(
-               column(2,
+               column(3,
                       wellPanel(
                         run_ui("run_1"),
                         download_ui("download_1")
@@ -27,7 +27,6 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   r6 <- HectorInputs$new() # r6 class
-  i <- reactiveVal(1) # set up pseudo loop
   
   run_server("run_1", r6 = r6, i = i)
   summary_server("summary_1", r6 = r6, i = i)

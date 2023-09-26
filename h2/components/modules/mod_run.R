@@ -4,6 +4,7 @@ run_ui <- function(id) {
   ns <- NS(id)
   
   tagList(
+    textInput(ns("core_name"), "Input name for core:", placeholder="Unnamed Hector core"),
     selectInput(ns("ssp_path"), label="Select SSP:",
                 choices = list("SSP 1-1.9"="input/hector_ssp119.ini",
                                "SSP 1-2.6"="input/hector_ssp126.ini",
@@ -18,8 +19,19 @@ run_ui <- function(id) {
                 min = 1750, max = 2300, value = 2000, sep=""),
     sliderInput(ns("end"), "Select end date:",
                 min = 1750, max = 2300, value = 2300, sep=""),
-    actionButton(ns("run"),"Run Model"),
-    verbatimTextOutput(ns("done"))
+    radioButtons(ns("run_number"), label="Select run number:",
+                 choices = list("1" = 1,
+                                "2" = 2,
+                                "3" = 3,
+                                "4" = 4,
+                                "5" = 5,
+                                "6" = 6,
+                                "7" = 7,
+                                "8" = 8),
+                 selected = "1", inline=TRUE),
+    actionButton(ns("run"),"Run Model")
+    #verbatimTextOutput(ns("done")),
+    #actionButton(ns("stop"),"show warning")
   )
 }
 
@@ -31,19 +43,42 @@ run_server <- function(id, r6, i) {
       r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
       r6$start <- reactive({input$start})
       r6$end <- reactive({input$end})
+      r6$i <- reactive({as.integer(input$run_number)})
       
       # run hector using inputs
       print("Running...") # in command line
-      core <- newcore(r6$ini_file())
-      run(core)
-      r6$output[[i()]] <- fetchvars(core,r6$start():r6$end()) %>% mutate(run=i())
-      output$done <- renderPrint({as.character(i()-1)}) #print run number
+      core <- reactive({newcore(r6$ini_file(),name=input$core_name)})
+      run(core())
+      r6$output[[r6$i()]] <- fetchvars(core(),r6$start():r6$end()) %>% mutate(run=r6$i())
+      output$done <- renderPrint({r6$i()}) #print run number
       print("Done") # in command line
       
-      i(i() + 1) # add 1 to i. like a pseudo loop for storing output
+      #i(i() + 1) # add 1 to i. like a pseudo loop for storing output
       print(r6$output)
       #print(i())
+      
+      if (length(r6$output) == 8 &&
+          identical(
+            lapply(r6$output, is.null),
+            list(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE)
+          ))
+        shinyalert(title = "Run Limit Reached",
+                   text = "You have completed eight runs. Select a run to replace.",
+                   type = "input",
+                   inputType = "number")
     }) %>%
       bindEvent(input$run) # triggers when "Run Model" is clicked
+    
+    # observe({
+    #   shinyalert(title = "Run Limit Reached",
+    #              text = "You have completed five runs. Select a run to replace.",
+    #              type = "warning")
+    # }) %>%
+    #   bindEvent(input$stop)
+    
+    # showModal(modalDialog(
+    #   title="Run Limit Reached",
+    #   "You have reached the limit of 5 runs. Select a run to replace."
+    # )) # how to make it appear after 5 runs?
   })
 }

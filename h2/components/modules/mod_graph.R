@@ -13,8 +13,8 @@ graph_server <- function(id, r6, i) {
   moduleServer(id, function(input, output, session) {
     observe({
       filtered_output <-
-        filter(r6$output[[i() - 1]], variable == "CO2_concentration") #i increases at end of mod_run so output is i-1
-        #filter(bind_rows(r6$output), variable == "CO2_concentration")
+        filter(r6$output[[r6$i()]], variable == "global_tas")
+        #filter(bind_rows(r6$output), variable == "global_tas")
       output$graph <- renderPlotly({
         plot_ly(
           filtered_output,
@@ -30,9 +30,10 @@ graph_server <- function(id, r6, i) {
         ) %>%
           layout(
             xaxis = list(title = "Year"),
-            yaxis = list(title = "CO2 Concentration (ppmv)"),
-            title = "CO2 Concentration"
+            yaxis = list(title = "Global Temperature (C)"),
+            title = "Global Temperature at Surface"
           )
+        #ggplot(filtered_output, aes(x=year,y=value))
       })
     }) %>%
       bindEvent(input$plot)

@@ -13,7 +13,6 @@ download_server <- function(id, r6) {
       content = function(file) {
         write.csv(bind_rows(r6$output), file)
       }
-      
     )
   })
 }
