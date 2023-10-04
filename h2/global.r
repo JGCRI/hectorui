@@ -5,7 +5,7 @@ library(dplyr)
 library(ggplot2)
 library(shinycssloaders)
 library(plotly)
-library(shinyalert) # don't need if we have shinyWidgets?
+#library(shinyalert) # don't need if we have shinyWidgets?
 library(DT)
 library(shinyWidgets)
 
@@ -22,7 +22,9 @@ HectorInputs <- R6Class(
     start = NA,
     end = NA,
     output = NULL,
+    no_save = NULL,
     i = NA,
+    save = NULL,
     initialize = function(ini_file = system.file("input/hector_ssp245.ini",
                                                  package = "hector"),
                           start = 2000,
@@ -31,7 +33,9 @@ HectorInputs <- R6Class(
       self$start <- start
       self$end <- end
       self$output <- list()
+      #self$no_save <- NULL
       self$i <- 1
+      #self$savetoggle <- FALSE
       stopifnot(end > start) #gotta have the start year before the end year
     }
   )

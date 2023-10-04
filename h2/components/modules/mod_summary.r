@@ -12,9 +12,14 @@ summary_ui <- function(id) {
 summary_server <- function(id, r6, i) {
   moduleServer(id, function(input, output, session) {
     observe({
-      #browser()
-      hectoroutput <- r6$output[[r6$i()]]
-      output$summary <- renderDT({datatable(hectoroutput,editable=TRUE)})
+      if (r6$save == TRUE) {
+        hectoroutput <- r6$output[[r6$i()]]
+        output$summary <- renderDT({datatable(hectoroutput)})
+      }
+      if (r6$save == FALSE) {
+        hectoroutput <- r6$no_save
+        output$summary <- renderDT({datatable(hectoroutput)})
+      }
     }) %>%
       bindEvent(input$print) # run when Print button is clicked
     
