@@ -2,7 +2,7 @@
 
 run_ui <- function(id) {
   ns <- NS(id)
-  
+
   tagList(
     textInput(ns("core_name"), "Input name for core:", placeholder="Unnamed Hector core"),
     selectInput(ns("ssp_path"), label="Select SSP:",
@@ -30,7 +30,7 @@ run_ui <- function(id) {
     #                             "8" = 8),
     #              selected = "1", inline=TRUE),
     #actionButton(ns("runsave"),"Run and Save"),
-    materialSwitch(ns("savetoggle"),"Save Run"),
+    materialSwitch(ns("savetoggle"),"Save Run", value = FALSE),
     actionButton(ns("run"),"Run") #not actually hooked up to anything yet lol
     #verbatimTextOutput(ns("done")),
     #actionButton(ns("stop"),"show warning")
@@ -39,14 +39,14 @@ run_ui <- function(id) {
 
 run_server <- function(id, r6, i) {
   moduleServer(id, function(input, output, session) {
-    
+
     # observe({
     #   # store inputs in r6 class
     #   r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
     #   r6$start <- reactive({input$start})
     #   r6$end <- reactive({input$end})
     #   r6$i <- reactive({as.integer(input$run_number)})
-    # 
+    #
     #   # sendSweetAlert(session = session,
     #   #                html = TRUE,
     #   #                text = tagList(
@@ -54,7 +54,7 @@ run_server <- function(id, r6, i) {
     #              # ))
     #   #browser()
     #   r6$i <- reactive({as.integer(input$run_number)})
-    #   
+    #
     #   # run hector using inputs
     #   print("Running...") # in command line
     #   core <- reactive({newcore(r6$ini_file(),name=input$core_name)})
@@ -63,11 +63,11 @@ run_server <- function(id, r6, i) {
     #   r6$output[[r6$i()]] <- fetchvars(core(),r6$start():r6$end()) %>% mutate(run=r6$i())
     #   output$done <- renderPrint({r6$i()}) #print run number
     #   print("Done") # in command line
-    #   
+    #
     #   #i(i() + 1) # add 1 to i. like a pseudo loop for storing output
     #   print(r6$output)
     #   #print(i())
-    #   
+    #
     #   # if (length(r6$output) == 8 &&
     #   #     identical(
     #   #       lapply(r6$output, is.null),
@@ -79,56 +79,48 @@ run_server <- function(id, r6, i) {
     #   #              inputType = "number")
     # }) %>%
     #   bindEvent(input$run) # triggers when "Run Model" is clicked
-    
+
+      observe({
+              shinyalert(
+                  html = TRUE,
+                  type = "input",
+                  inputType = "text",
+                  inputPlaceholder = "run name",
+                  showConfirmButton = TRUE,
+                  confirmButtonText = "OK",
+                  showCancelButton = TRUE,
+                  cancelButtonText = "Cancel",
+                  closeOnClickOutside = TRUE
+              )
+
+              r6$i <- reactive({input$shinyalert})
+
+      }) %>%
+          bindEvent(c(input$savetoggle == TRUE), ignoreInit = TRUE, ignoreNULL = FALSE)
+
     observe({
-      if (input$savetoggle == TRUE) {
-        # store inputs in r6 class
+
         r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
         r6$start <- reactive({input$start})
         r6$end <- reactive({input$end})
-        #r6$i <- reactive({as.integer(input$run_number)})
-        
-        sendSweetAlert(session = session,
-                       html = TRUE,
-                       text = tagList(
-                         radioButtons("run_number", label="Select run number:",
-                                      choices = list("1" = 1,
-                                                     "2" = 2,
-                                                     "3" = 3,
-                                                     "4" = 4,
-                                                     "5" = 5,
-                                                     "6" = 6,
-                                                     "7" = 7,
-                                                     "8" = 8),
-                                      selected = "1", inline=TRUE),
-        ))
-        
-        # run hector using inputs
-        browser()
-        r6$i <- reactive({input$run_number})
+
         print("Running...") # in command line
         core <- reactive({newcore(r6$ini_file(),name=input$core_name)})
         run(core())
-        #browser()
-        r6$output[[r6$i()]] <- fetchvars(core(),r6$start():r6$end()) %>% mutate(run=r6$i())
-        output$done <- renderPrint({r6$i()}) #print run number
-        print("Done") # in command line
-        r6$save <- TRUE
-      }
-      if (input$savetoggle == FALSE) {
-        r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
-        r6$start <- reactive({input$start})
-        r6$end <- reactive({input$end})
-        
-        print("Running...") # in command line
-        core <- reactive({newcore(r6$ini_file(),name=input$core_name)})
-        run(core())
-        
-        r6$no_save <- fetchvars(core(),r6$start():r6$end())
+
+        if(input$savetoggle == TRUE) {
+
+            r6$output[[r6$i()]] <- fetchvars(core(),r6$start():r6$end()) %>% mutate(run=r6$i())
+            output$done <- renderPrint({r6$i()}) #print run number
+            r6$save <- TRUE
+        } else {
+            r6$no_save <- fetchvars(core(),r6$start():r6$end())
+            r6$save <- FALSE
+        }
         print("Done")
-        r6$save <- FALSE
-      }
-    }) %>%
-      bindEvent(input$run)
+
+        #updateMaterialSwitch(session = i, inputId = "savetoggle", value = FALSE) #not working right now
+      }) %>%
+        bindEvent(input$run, ignoreInit = TRUE)
   })
 }
