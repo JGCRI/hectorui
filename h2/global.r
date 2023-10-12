@@ -5,9 +5,11 @@ library(dplyr)
 library(ggplot2)
 library(shinycssloaders)
 library(plotly)
-#library(shinyalert) # don't need if we have shinyWidgets?
+library(shinyalert) # don't need if we have shinyWidgets?
 library(DT)
 library(shinyWidgets)
+
+#setwd("~/GitHub/hectorui/h2")
 
 source("./components/modules/mod_graph.r")
 source("./components/modules/mod_run.r")

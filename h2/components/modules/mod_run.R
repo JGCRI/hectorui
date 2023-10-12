@@ -31,7 +31,7 @@ run_ui <- function(id) {
     #              selected = "1", inline=TRUE),
     #actionButton(ns("runsave"),"Run and Save"),
     materialSwitch(ns("savetoggle"),"Save Run", value = FALSE),
-    actionButton(ns("run"),"Run") #not actually hooked up to anything yet lol
+    actionButton(ns("run"),"Run")
     #verbatimTextOutput(ns("done")),
     #actionButton(ns("stop"),"show warning")
   )
@@ -79,48 +79,99 @@ run_server <- function(id, r6, i) {
     #   #              inputType = "number")
     # }) %>%
     #   bindEvent(input$run) # triggers when "Run Model" is clicked
-
-      observe({
-              shinyalert(
-                  html = TRUE,
-                  type = "input",
-                  inputType = "text",
-                  inputPlaceholder = "run name",
-                  showConfirmButton = TRUE,
-                  confirmButtonText = "OK",
-                  showCancelButton = TRUE,
-                  cancelButtonText = "Cancel",
-                  closeOnClickOutside = TRUE
-              )
-
-              r6$i <- reactive({input$shinyalert})
-
-      }) %>%
-          bindEvent(c(input$savetoggle == TRUE), ignoreInit = TRUE, ignoreNULL = FALSE)
+    
+# a thought about having you pick a run in a pop up -- how do you go back to a previous run if you want?
+# we don't have it pull up your previous selections when you go to a past run anyway though
+    
+      # observe({
+      #         shinyalert(
+      #             html = TRUE,
+      #             type = "input",
+      #             inputType = "text",
+      #             inputPlaceholder = "run name",
+      #             showConfirmButton = TRUE,
+      #             confirmButtonText = "OK",
+      #             showCancelButton = TRUE,
+      #             cancelButtonText = "Cancel",
+      #             closeOnClickOutside = TRUE
+      #         )
+      # 
+      #         r6$i <- reactive({input$shinyalert})
+      # 
+      # }) %>%
+      #     bindEvent(c(input$savetoggle == TRUE), ignoreInit = TRUE, ignoreNULL = FALSE)
 
     observe({
-
+      
+      if (input$savetoggle == TRUE) {
+        shinyalert(
+          html = TRUE,
+          type = "input",
+          inputType = "text",
+          inputPlaceholder = "run name",
+          showConfirmButton = TRUE,
+          confirmButtonText = "OK",
+          showCancelButton = TRUE,
+          cancelButtonText = "Cancel",
+          closeOnClickOutside = TRUE
+        )
+        
+        Sys.sleep(5)
+        
+        r6$i <- reactive({input$shinyalert})
+        
         r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
         r6$start <- reactive({input$start})
         r6$end <- reactive({input$end})
-
+        
         print("Running...") # in command line
         core <- reactive({newcore(r6$ini_file(),name=input$core_name)})
         run(core())
-
-        if(input$savetoggle == TRUE) {
-
-            r6$output[[r6$i()]] <- fetchvars(core(),r6$start():r6$end()) %>% mutate(run=r6$i())
-            output$done <- renderPrint({r6$i()}) #print run number
-            r6$save <- TRUE
-        } else {
-            r6$no_save <- fetchvars(core(),r6$start():r6$end())
-            r6$save <- FALSE
-        }
-        print("Done")
-
-        #updateMaterialSwitch(session = i, inputId = "savetoggle", value = FALSE) #not working right now
-      }) %>%
-        bindEvent(input$run, ignoreInit = TRUE)
+        
+        r6$output[[r6$i()]] <- fetchvars(core(),r6$start():r6$end()) %>% mutate(run=r6$i())
+        output$done <- renderPrint({r6$i()}) #print run number
+        r6$save <- TRUE
+        
+      } else {
+        
+        r6$i <- reactive({input$shinyalert})
+        
+        r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
+        r6$start <- reactive({input$start})
+        r6$end <- reactive({input$end})
+        
+        print("Running...") # in command line
+        core <- reactive({newcore(r6$ini_file(),name=input$core_name)})
+        run(core())
+        
+        r6$no_save <- fetchvars(core(),r6$start():r6$end())
+        r6$save <- FALSE
+        
+      }
+      # 
+      # r6$i <- reactive({input$shinyalert})
+      # 
+      # r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
+      # r6$start <- reactive({input$start})
+      # r6$end <- reactive({input$end})
+      # 
+      # print("Running...") # in command line
+      # core <- reactive({newcore(r6$ini_file(),name=input$core_name)})
+      # run(core())
+      # 
+      # if(input$savetoggle == TRUE) {
+      #   
+      #   r6$output[[r6$i()]] <- fetchvars(core(),r6$start():r6$end()) %>% mutate(run=r6$i())
+      #   output$done <- renderPrint({r6$i()}) #print run number
+      #   r6$save <- TRUE
+      # } else {
+      #   r6$no_save <- fetchvars(core(),r6$start():r6$end())
+      #   r6$save <- FALSE
+      # }
+      print("Done")
+      
+      #updateMaterialSwitch(session = i, inputId = "savetoggle", value = FALSE) #not working right now
+    }) %>%
+      bindEvent(input$run, ignoreInit = TRUE)
   })
 }
