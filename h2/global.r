@@ -9,7 +9,7 @@ library(shinyalert) # don't need if we have shinyWidgets?
 library(DT)
 library(shinyWidgets)
 
-#setwd("~/GitHub/hectorui/h2")
+setwd("~/GitHub/hectorui/h2")
 
 source("./components/modules/mod_graph.r")
 source("./components/modules/mod_run.r")
@@ -27,6 +27,7 @@ HectorInputs <- R6Class(
     no_save = NULL,
     i = NA,
     save = NULL,
+    inputs = NULL,
     initialize = function(ini_file = system.file("input/hector_ssp245.ini",
                                                  package = "hector"),
                           start = 2000,
@@ -37,6 +38,7 @@ HectorInputs <- R6Class(
       self$output <- list()
       #self$no_save <- NULL
       self$i <- 1
+      self$inputs <- list()
       #self$savetoggle <- FALSE
       stopifnot(end > start) #gotta have the start year before the end year
     }
