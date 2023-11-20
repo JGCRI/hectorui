@@ -18,7 +18,7 @@ run_ui <- function(id) {
                 selected = "input/hector_ssp245.ini", inline=TRUE,
                 shape = "square", width = "80%"),
     sliderInput(ns("start"), label="Select dates:",
-                min = 1750, max = 2300, value = c(2000,2300), sep="", width = "90%", step=5),
+                min = 1750, max = 2300, value = c(1900,2100), sep="", width = "90%", step=5),
     # sliderInput(ns("end"), "Select end date:",
     #             min = 1750, max = 2300, value = 2300, sep="", width = "90%"),
     br(),
@@ -108,6 +108,6 @@ run_server <- function(id, r6, i) {
       
       #updateMaterialSwitch(session = i, inputId = "savetoggle", value = FALSE) #not working right now
     }) %>%
-      bindEvent(input$run, ignoreInit = TRUE)
+      bindEvent(input$run, ignoreNULL = FALSE, ignoreInit = FALSE) # runs when app opens
   })
 }
