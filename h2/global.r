@@ -28,10 +28,12 @@ HectorInputs <- R6Class(
     i = NA,
     save = NULL,
     inputs = NULL,
+    selected_var = NULL,
     initialize = function(ini_file = system.file("input/hector_ssp245.ini",
                                                  package = "hector"),
                           start = 2000,
-                          end = 2300) {
+                          end = 2300,
+                          selected_var = "global_tas") {
       self$ini_file <- ini_file
       self$start <- start
       self$end <- end
@@ -39,7 +41,7 @@ HectorInputs <- R6Class(
       #self$no_save <- NULL
       self$i <- 1
       self$inputs <- list()
-      #self$savetoggle <- FALSE
+      self$selected_var <- selected_var
       stopifnot(end > start) #gotta have the start year before the end year
     }
   )

@@ -9,7 +9,7 @@ summary_ui <- function(id) {
            DTOutput(ns("summary")))
 }
 
-summary_server <- function(id, r6, i) {
+summary_server <- function(id, r6) {
   moduleServer(id, function(input, output, session) {
     observe({
       if (r6$save == TRUE) {
@@ -21,7 +21,7 @@ summary_server <- function(id, r6, i) {
         output$summary <- renderDT({datatable(hectoroutput)})
       }
     }) %>%
-      bindEvent(input$print) # run when Print button is clicked
+      bindEvent(input$print, ignoreNULL = TRUE, ignoreInit = FALSE) # run when Print button is clicked
     
   })
 }

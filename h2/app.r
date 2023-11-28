@@ -16,8 +16,8 @@ ui <- fluidPage(
                         run_ui("run_1"),
                         download_ui("download_1")
                       )),
-               # column(4,
-               #        summary_ui("summary_1")),
+               column(4,
+                      summary_ui("summary_1")),
                column(4,
                       graph_ui("graph_1"))
              )),
@@ -28,9 +28,9 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   r6 <- HectorInputs$new() # r6 class
   
-  run_server("run_1", r6 = r6, i = i)
-  # summary_server("summary_1", r6 = r6, i = i)
-  graph_server("graph_1", r6 = r6, i = i)
+  run_server("run_1", r6 = r6)
+  summary_server("summary_1", r6 = r6)
+  graph_server("graph_1", r6 = r6)
   download_server("download_1", r6 = r6)
 }
 

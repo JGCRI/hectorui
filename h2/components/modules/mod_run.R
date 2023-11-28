@@ -19,8 +19,6 @@ run_ui <- function(id) {
                 shape = "square", width = "80%"),
     sliderInput(ns("start"), label="Select dates:",
                 min = 1750, max = 2300, value = c(1900,2100), sep="", width = "90%", step=5),
-    # sliderInput(ns("end"), "Select end date:",
-    #             min = 1750, max = 2300, value = 2300, sep="", width = "90%"),
     br(),
     h5("Model Parameters"),
     sliderInput(ns("alpha"), label="Aerosol forcing scaling factor", # AERO_SCALE()
@@ -40,7 +38,7 @@ run_ui <- function(id) {
   )
 }
 
-run_server <- function(id, r6, i) {
+run_server <- function(id, r6) {
   moduleServer(id, function(input, output, session) {
     observe({
       
@@ -97,9 +95,9 @@ run_server <- function(id, r6, i) {
         # Run core
         reset(core())
         run(core())
-        
+        #browser()
         # Output results
-        r6$no_save <- fetchvars(core(),r6$start():r6$end())
+        r6$no_save <- fetchvars(core(),r6$start():r6$end(),vars=list(CONCENTRATIONS_CO2(),FFI_EMISSIONS(),LUC_EMISSIONS(),CONCENTRATIONS_N2O(),EMISSIONS_BC(),EMISSIONS_OC(),RF_TOTAL(),RF_ALBEDO(),RF_N2O(),RF_CO2(),RF_BC(),RF_OC(),RF_SO2(),RF_CH4(),RF_VOL()))
         r6$save <- FALSE
         
       }
@@ -111,3 +109,9 @@ run_server <- function(id, r6, i) {
       bindEvent(input$run, ignoreNULL = FALSE, ignoreInit = FALSE) # runs when app opens
   })
 }
+
+# might be worth it to just run the core with all selectable variables. how much time would that add?
+# issue seems to be that mod_run goes first, so input$variable just doesn't exist yet... maybe having
+# that module containing all choices is a good idea
+
+# fetchvars(core,1745:2300,vars=list(CONCENTRATIONS_CO2(),FFI_EMISSIONS(),LUC_EMISSIONS(),CONCENTRATIONS_N2O,EMISSIONS_BC(),EMISSIONS_OC(),RF_TOTAL(),RF_ALBEDO(),RF_N2O(),RF_CO2(),RF_BC(),RF_OC(),RF_SO2(),RF_CH4(),RF_VOL()))
