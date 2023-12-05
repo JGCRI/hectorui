@@ -18,6 +18,9 @@ summary_server <- function(id, r6) {
       }
       if (r6$save == FALSE) {
         hectoroutput <- r6$no_save
+        #filtered_output <-
+        #  filter(r6$no_save, variable == r6$selected_var())
+        
         output$summary <- renderDT({datatable(hectoroutput)})
       }
     }) %>%

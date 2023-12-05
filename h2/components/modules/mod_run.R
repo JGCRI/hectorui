@@ -40,78 +40,154 @@ run_ui <- function(id) {
 
 run_server <- function(id, r6) {
   moduleServer(id, function(input, output, session) {
+    ns <- NS(id)
+    
     observe({
+    
+      toggle <- reactive({input$savetoggle})
       
-      if (input$savetoggle == TRUE) {
-        shinyalert(
-          html = TRUE,
-          type = "input",
-          inputType = "text",
-          inputPlaceholder = "run name",
-          showConfirmButton = TRUE,
-          confirmButtonText = "OK",
-          showCancelButton = TRUE,
-          cancelButtonText = "Cancel",
-          closeOnClickOutside = TRUE
-        )
+      if (toggle() == TRUE) {
+        # shinyalert(
+        #   text = tagList(
+        #     textInput("run_name,","Input run name:",placeholder="run name"),
+        #     actionButton("OK","OK")
+        #   ),
+        #   html = TRUE,
+        #   #type = "input",
+        #   #inputType = "text",
+        #   #inputPlaceholder = "run name",
+        #   showConfirmButton = TRUE,
+        #   confirmButtonText = "OK",
+        #   showCancelButton = TRUE,
+        #   cancelButtonText = "Cancel",
+        #   closeOnClickOutside = FALSE
+        # )
         
-        Sys.sleep(5)
+        observe({
+          showModal(modalDialog(
+            textInput(ns("run_name"),"Enter run name:",value="run name"),
+            easyClose=TRUE,
+            footer=tagList(
+              actionButton(ns("ok"), "OK"),
+              modalButton("Cancel")
+            )
+          ))
+        }) %>%
+          bindEvent(input$run, ignoreNULL = TRUE, ignoreInit = TRUE)
         
-        r6$i <- reactive({input$shinyalert})
+        observe({
+          # Close input modal
+          removeModal()
+          
+          #browser()
+          
+          r6$i <- reactive({input$run_name})
+          
+          r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
+          r6$start <- reactive({input$start[1]})
+          r6$end <- reactive({input$start[2]})
+          
+          print("Running...") # in command line
+          
+          # Create core
+          core <- reactive({newcore(r6$ini_file(),name=input$core_name)})
+          
+          # Set parameters using inputs (function to only call setvar once in final version)
+          setvar(core(),NA,AERO_SCALE(),input$alpha,"(unitless)")
+          setvar(core(),NA,BETA(),input$beta,"(unitless)")
+          setvar(core(),NA,DIFFUSIVITY(),input$diff,"cm2/s")
+          setvar(core(),NA,ECS(),input$S,"degC")
+          setvar(core(),NA,Q10_RH(),input$q10_rh,"(unitless)")
+          setvar(core(),NA,VOLCANIC_SCALE(),input$volscl,"(unitless)")
+          
+          # Run core
+          reset(core())
+          run(core())
+          
+          r6$output[[r6$i()]] <- fetchvars(core(),r6$start():r6$end(),vars=
+                                             list(CONCENTRATIONS_CO2(),FFI_EMISSIONS(),
+                                                  LUC_EMISSIONS(),CONCENTRATIONS_N2O(),
+                                                  EMISSIONS_BC(),EMISSIONS_OC(),RF_TOTAL(),
+                                                  RF_ALBEDO(),RF_N2O(),RF_CO2(),RF_BC(),
+                                                  RF_OC(),RF_SO2(),RF_CH4(),RF_VOL(),
+                                                  RF_CF4(),RF_C2F6(),RF_HFC23(), 
+                                                  RF_HFC4310(),RF_HFC125(),RF_HFC143A(),
+                                                  RF_HFC245FA(),RF_SF6(),RF_CFC11(), 
+                                                  RF_CFC12(),RF_CFC113(),RF_CFC114(),
+                                                  RF_CFC115(),RF_CCL4(),RF_CH3CCL3(),
+                                                  RF_HALON1211(),RF_HALON1301(), 
+                                                  RF_HALON2402(),RF_CH3CL(),RF_CH3BR(),
+                                                  CONCENTRATIONS_CH4(),EMISSIONS_CH4(),
+                                                  EMISSIONS_SO2(),VOLCANIC_SO2(),
+                                                  GLOBAL_TAS(),SST(),OCEAN_TAS(),
+                                                  FLUX_MIXED(),FLUX_INTERIOR(),HEAT_FLUX(),
+                                                  ATMOSPHERIC_CO2(),GMST()
+                                             )) %>% 
+            mutate(run=r6$i())
+          
+          #output$done <- renderPrint({r6$i()})
+          r6$save <- TRUE
+          
+          print("Done") # in console
+          
+        }) %>%
+          bindEvent(input$ok)
         
-        r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
-        r6$start <- reactive({input$start})
-        r6$end <- reactive({input$end})
+      } else if (toggle() == FALSE) {
         
-        print("Running...") # in command line
-        core <- reactive({newcore(r6$ini_file(),name=input$core_name)})
-        run(core())
-        
-        r6$output[[r6$i()]] <- fetchvars(core(),r6$start():r6$end()) %>% mutate(run=r6$i())
-        output$done <- renderPrint({r6$i()}) #print run number
-        r6$save <- TRUE
-        
-      } else {
-        
-        r6$i <- reactive({input$shinyalert})
-        
-        r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
-        r6$start <- reactive({input$start[1]})
-        r6$end <- reactive({input$start[2]})
-        
-        print("Running...") # in command line
-        
-        # Create core
-        core <- reactive({newcore(r6$ini_file(),name=input$core_name)})
-        
-        # Set parameters using inputs (function to only call setvar once in final version)
-        setvar(core(),NA,AERO_SCALE(),input$alpha,"(unitless)")
-        setvar(core(),NA,BETA(),input$beta,"(unitless)")
-        setvar(core(),NA,DIFFUSIVITY(),input$diff,"cm2/s")
-        setvar(core(),NA,ECS(),input$S,"degC")
-        setvar(core(),NA,Q10_RH(),input$q10_rh,"(unitless)")
-        setvar(core(),NA,VOLCANIC_SCALE(),input$volscl,"(unitless)")
-        
-        # Run core
-        reset(core())
-        run(core())
-        #browser()
-        # Output results
-        r6$no_save <- fetchvars(core(),r6$start():r6$end(),vars=list(CONCENTRATIONS_CO2(),FFI_EMISSIONS(),LUC_EMISSIONS(),CONCENTRATIONS_N2O(),EMISSIONS_BC(),EMISSIONS_OC(),RF_TOTAL(),RF_ALBEDO(),RF_N2O(),RF_CO2(),RF_BC(),RF_OC(),RF_SO2(),RF_CH4(),RF_VOL()))
-        r6$save <- FALSE
+        observe({
+          browser()
+          r6$i <- reactive({input$run_name})
+
+          r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
+          r6$start <- reactive({input$start[1]})
+          r6$end <- reactive({input$start[2]})
+
+          print("Running...") # in console
+
+          # Create core
+          core <- reactive({newcore(r6$ini_file(),name=input$core_name)})
+
+          # Set parameters using inputs (function to only call setvar once in final version)
+          setvar(core(),NA,AERO_SCALE(),input$alpha,"(unitless)")
+          setvar(core(),NA,BETA(),input$beta,"(unitless)")
+          setvar(core(),NA,DIFFUSIVITY(),input$diff,"cm2/s")
+          setvar(core(),NA,ECS(),input$S,"degC")
+          setvar(core(),NA,Q10_RH(),input$q10_rh,"(unitless)")
+          setvar(core(),NA,VOLCANIC_SCALE(),input$volscl,"(unitless)")
+
+          # Run core
+          reset(core())
+          run(core())
+
+          # Output results
+          r6$no_save <- fetchvars(core(),r6$start():r6$end(),vars=
+                                    list(CONCENTRATIONS_CO2(),FFI_EMISSIONS(),
+                                         LUC_EMISSIONS(),CONCENTRATIONS_N2O(),
+                                         EMISSIONS_BC(),EMISSIONS_OC(),RF_TOTAL(),
+                                         RF_ALBEDO(),RF_N2O(),RF_CO2(),RF_BC(),
+                                         RF_OC(),RF_SO2(),RF_CH4(),RF_VOL(),
+                                         RF_CF4(),RF_C2F6(),RF_HFC23(),
+                                         RF_HFC4310(),RF_HFC125(),RF_HFC143A(),
+                                         RF_HFC245FA(),RF_SF6(),RF_CFC11(),
+                                         RF_CFC12(),RF_CFC113(),RF_CFC114(),
+                                         RF_CFC115(),RF_CCL4(),RF_CH3CCL3(),
+                                         RF_HALON1211(),RF_HALON1301(),
+                                         RF_HALON2402(),RF_CH3CL(),RF_CH3BR(),
+                                         CONCENTRATIONS_CH4(),EMISSIONS_CH4(),
+                                         EMISSIONS_SO2(),VOLCANIC_SO2(),
+                                         GLOBAL_TAS(),SST(),OCEAN_TAS(),
+                                         FLUX_MIXED(),FLUX_INTERIOR(),HEAT_FLUX(),
+                                         ATMOSPHERIC_CO2(),GMST()
+                                    ))
+          r6$save <- FALSE
+
+          print("Done") # in console
+        }) %>%
+          bindEvent(input$run, ignoreNULL = TRUE, ignoreInit = FALSE)
         
       }
-
-      print("Done")
       
-      #updateMaterialSwitch(session = i, inputId = "savetoggle", value = FALSE) #not working right now
-    }) %>%
-      bindEvent(input$run, ignoreNULL = FALSE, ignoreInit = FALSE) # runs when app opens
+    })
   })
 }
-
-# might be worth it to just run the core with all selectable variables. how much time would that add?
-# issue seems to be that mod_run goes first, so input$variable just doesn't exist yet... maybe having
-# that module containing all choices is a good idea
-
-# fetchvars(core,1745:2300,vars=list(CONCENTRATIONS_CO2(),FFI_EMISSIONS(),LUC_EMISSIONS(),CONCENTRATIONS_N2O,EMISSIONS_BC(),EMISSIONS_OC(),RF_TOTAL(),RF_ALBEDO(),RF_N2O(),RF_CO2(),RF_BC(),RF_OC(),RF_SO2(),RF_CH4(),RF_VOL()))
