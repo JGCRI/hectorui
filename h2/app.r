@@ -8,26 +8,20 @@ ui <- fluidPage(
     collapsible = TRUE,
     tabPanel(title = "Home",
              includeHTML("./components/layout/homepage.html")),
-    tabPanel(title = "Guides",),
+    tabPanel(title = "Guides"),
     tabPanel(title = "Explore Hector",
              fluidRow(
-               column(3,
-                      wellPanel(
-                        run_ui("run_1"),
-                        download_ui("download_1")
-                      )),
-               column(4,
-                      summary_ui("summary_1")),
-               column(4,
-                      graph_ui("graph_1"))
-             )),
+                 run_ui("run_1"),
+                 #download_ui("download_1"),
+                 )
+             ),
     tabPanel(title = "About")
   ),
 )
 
 server <- function(input, output, session) {
   r6 <- HectorInputs$new() # r6 class
-  
+
   run_server("run_1", r6 = r6)
   summary_server("summary_1", r6 = r6)
   graph_server("graph_1", r6 = r6)
