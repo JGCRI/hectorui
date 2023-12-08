@@ -6,10 +6,7 @@ run_ui <- function(id) {
         sidebarPanel(
             tabsetPanel(
                 tabPanel(class = "params", "Standard Scenarios",
-                         h5("Shared Socioeconomic Pathways (SSPs)"),
-                         # tagList(
                          chooseSliderSkin(skin = "Flat", color = "#375a7f"),
-                         #textInput(ns("core_name"), "Input name for core:", placeholder="Unnamed Hector core"),
                          prettyRadioButtons(ns("ssp_path"), label="Select SSP:",
                                             choices = list("SSP 1-1.9"="input/hector_ssp119.ini",
                                                            "SSP 1-2.6"="input/hector_ssp126.ini",
@@ -45,7 +42,6 @@ run_ui <- function(id) {
                                         dataTableOutput(ns("savetable")),
                                         actionButton(ns("deleteRuns"), "Delete Selected")
                          )
-                         #   )
                 )
             )
 
@@ -132,7 +128,7 @@ run_server <- function(id, r6) {
             if (r6$save == TRUE) {
 
                 r6$output[[r6$run_name()]] <- fetchvars(core(), r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
-                    mutate(run = r6$run_name(), ssp = input$ssp_path)
+                    mutate(run = r6$run_name(), Scenario = input$ssp_path)
 
             } else if (r6$save == FALSE) {
 
