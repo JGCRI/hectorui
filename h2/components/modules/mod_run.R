@@ -7,17 +7,16 @@ run_ui <- function(id) {
             tabsetPanel(
                 tabPanel(class = "params", "Standard Scenarios",
                          chooseSliderSkin(skin = "Flat", color = "#375a7f"),
-                         prettyRadioButtons(ns("ssp_path"), label="Select SSP:",
-                                            choices = list("SSP 1-1.9"="input/hector_ssp119.ini",
-                                                           "SSP 1-2.6"="input/hector_ssp126.ini",
-                                                           "SSP 2-4.5"="input/hector_ssp245.ini",
-                                                           "SSP 3-7.0"="input/hector_ssp370.ini",
-                                                           "SSP 4-3.4"="input/hector_ssp434.ini",
-                                                           "SSP 4-6.0"="input/hector_ssp460.ini",
-                                                           "SSP 5-3.4OS"="input/hector_ssp534-over.ini",
-                                                           "SSP 5-8.5"="input/hector_ssp585.ini"),
-                                            selected = "input/hector_ssp245.ini", inline=TRUE,
-                                            shape = "square", width = "80%"),
+                         selectInput(ns("ssp_path"), label="Select SSP:",
+                                     choices = list("SSP 1-1.9"="input/hector_ssp119.ini",
+                                                    "SSP 1-2.6"="input/hector_ssp126.ini",
+                                                    "SSP 2-4.5"="input/hector_ssp245.ini",
+                                                    "SSP 3-7.0"="input/hector_ssp370.ini",
+                                                    "SSP 4-3.4"="input/hector_ssp434.ini",
+                                                    "SSP 4-6.0"="input/hector_ssp460.ini",
+                                                    "SSP 5-3.4OS"="input/hector_ssp534-over.ini",
+                                                    "SSP 5-8.5"="input/hector_ssp585.ini"),
+                                     selected = "input/hector_ssp245.ini"),
                          sliderInput(ns("time"), label="Select dates:",
                                      min = 1750, max = 2300, value = c(1900,2100), sep="", width = "90%", step=5),
                          h5("Model Parameters"),
@@ -32,58 +31,55 @@ run_ui <- function(id) {
                          sliderInput(ns("q10_rh"), label="Heterotrophic temperature sensitivity", # Q10_RH()
                                      min = 1, max = 5, value = 2, step=0.1, width = "90%"),
                          sliderInput(ns("volscl"), label="Volcanic forcing scaling factor", # VOLCANIC_SCALE()
-                                     min = 0, max = 1, value = 1, width = "90%"),
-                         materialSwitch(ns("savetoggle"),"Save Run", value = FALSE),
-                         textInput(ns("run_name"), label = "Run Name", placeholder = "Run 1"),
-                         dropdownButton(inputId = ns("dropdown"),
-                                        icon = icon("gear"),
-                                        circle = TRUE,
-                                        status = "primary",
-                                        dataTableOutput(ns("savetable")),
-                                        actionButton(ns("deleteRuns"), "Delete Selected")
-                         )
+                                     min = 0, max = 1, value = 1, width = "90%")
                 )
             )
 
         ),
         mainPanel(width = 8,
-                  tabsetPanel(
-                      tabPanel(p(icon("chart-line","fa-2x"), "Scenario Output", value="outputTab"),
-                               br(),
-                               fluidRow(
-                                   column(4,
-                                          selectInput(ns("variable"), "Select variable:",
-                                                      list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
-                                                                                 "FFI Emissions" = FFI_EMISSIONS(),
-                                                                                 "LUC Emissions" = LUC_EMISSIONS()),
-                                                           "Concentrations" = list("N2O Concentration" = CONCENTRATIONS_N2O()),
-                                                           "Emissions" = list("Black Carbon Emissions" = EMISSIONS_BC(),
-                                                                              "Organic Carbon Emissions" = EMISSIONS_OC()),
-                                                           "Forcings" = list("RF - Total" = RF_TOTAL(),
-                                                                             "RF - Albedo" = RF_ALBEDO(),
-                                                                             "RF - CO2" = RF_CO2(),
-                                                                             "RF - N2O" = RF_N2O(),
-                                                                             "RF - Black Carbon" = RF_BC(),
-                                                                             "RF - Organic Carbon" = RF_OC(),
-                                                                             "RF - Total SO2" = RF_SO2(),
-                                                                             "RF - Volcanic Activity" = RF_VOL(),
-                                                                             "RF - CH4" = RF_CH4())),
-                                                      selected = "Atmospheric CO2", multiple = FALSE),
-                                   ),
-                                   column(3,
-                                          actionBttn(ns("run"),"Run", color = "primary"),
-
-                                   )
-                               ),
-                               fluidRow(
-                                   withSpinner(plotlyOutput(ns("graph")))
-                                   )
-                      ),
-                      tabPanel(p(icon("globe-americas","fa-2x"), "World Maps", value="outputTab")
-                      ),
-                      tabPanel(p(icon("chart-pie","fa-2x"), "Carbon Tracking", value="outputTab")
+                  fluidRow(
+                      column(4,
+                             selectInput(ns("variable"), "Choose Output Variable:",
+                                         list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
+                                                                    "FFI Emissions" = FFI_EMISSIONS(),
+                                                                    "LUC Emissions" = LUC_EMISSIONS()),
+                                              "Concentrations" = list("N2O Concentration" = CONCENTRATIONS_N2O()),
+                                              "Emissions" = list("Black Carbon Emissions" = EMISSIONS_BC(),
+                                                                 "Organic Carbon Emissions" = EMISSIONS_OC()),
+                                              "Forcings" = list("RF - Total" = RF_TOTAL(),
+                                                                "RF - Albedo" = RF_ALBEDO(),
+                                                                "RF - CO2" = RF_CO2(),
+                                                                "RF - N2O" = RF_N2O(),
+                                                                "RF - Black Carbon" = RF_BC(),
+                                                                "RF - Organic Carbon" = RF_OC(),
+                                                                "RF - Total SO2" = RF_SO2(),
+                                                                "RF - Volcanic Activity" = RF_VOL(),
+                                                                "RF - CH4" = RF_CH4())),
+                                         selected = "Atmospheric CO2", multiple = FALSE),
                       )
-
+                  ),
+                  fluidRow(
+                      column(2,
+                             actionBttn(ns("run"),"Run", color = "primary")
+                             ),
+                      column(3,
+                             materialSwitch(ns("savetoggle"),"Save Run", value = FALSE)
+                             ),
+                      column(5,
+                             textInput(ns("run_name"), label = "Run Name", placeholder = "Run 1")
+                             ),
+                      column(2,
+                             dropdownButton(inputId = ns("dropdown"),
+                                            icon = icon("gear"),
+                                            circle = TRUE,
+                                            status = "primary",
+                                            dataTableOutput(ns("savetable")),
+                                            actionButton(ns("deleteRuns"), "Delete Selected")
+                             )
+                             )
+                  ),
+                  fluidRow(
+                      withSpinner(plotlyOutput(ns("graph")))
                   )
         )
     )

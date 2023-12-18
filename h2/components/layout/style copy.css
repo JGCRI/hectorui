@@ -6,7 +6,6 @@ h5 {
 body
 {
 	font-family:"Barlow Regular", Sans-Serif !important;
-	font-size: 20px;
 }
 
 .about-info
@@ -87,4 +86,25 @@ body
 .params
 {
     font-size: 14px;
+}
+
+.navbar-nav
+{
+    float:none;
+    margin:0 auto;
+    display: block;
+    text-align: center;
+    color: #000000;
+}
+
+.navbar-nav > li {
+    display: inline-block;
+    float:none;
+    color: #000000;
+}
+
+.sticky-footer
+{
+    font-size: 12px;
+}
 }

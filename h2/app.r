@@ -1,6 +1,6 @@
 source("./global.r")
 
-ui <- fluidPage(
+ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
   includeCSS("./components/layout/style copy.css"),
   tags$div(class = "container",
            tags$img(src = "images/earth-header.png", height = "300px", width = "100%", class = "earth", alt = "Earth's atmosphere"),
@@ -24,9 +24,11 @@ ui <- fluidPage(
                  #download_ui("download_1"),
                  )
              ),
-    tabPanel(title = "Carbon Tracking"),
+    tabPanel(title = p(icon("chart-pie","fa-2x"), "Carbon Tracking", value="outputTab")),
     tabPanel(title = "About")
   ),
+  hr(),
+  includeHTML("./components/layout/footer.html")
 )
 
 server <- function(input, output, session) {
