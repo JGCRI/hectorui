@@ -5,6 +5,7 @@
 
 graph_ui <- function(id) {
   ns <- NS(id)
+
   fluidRow(selectInput(ns("variable"), "Select a variable to plot:",
                        list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
                                                   "Atmospheric Carbon Pool" = ATMOSPHERIC_CO2(), # i think this is the right var?
@@ -54,13 +55,17 @@ graph_ui <- function(id) {
                                                  "Heat Flux - Interior Layer Ocean" = FLUX_INTERIOR(),
                                                  "Total Heat Flux - Ocean" = HEAT_FLUX()))),
            # other variables can be found from the fetchvars help page
+  column(3,
            actionButton(ns("plot"), "Plot"),
-           plotlyOutput(ns("graph")))
+           plotlyOutput(ns("graph"))
+  )
+           #)
 }
 
 graph_server <- function(id, r6) {
   moduleServer(id, function(input, output, session) {
     observe({
+
       if (r6$save == TRUE) {
         
         # Get labels given input
@@ -70,8 +75,8 @@ graph_server <- function(id, r6) {
         
         # Filter data for selected variable
         filtered_output <-
-          filter(r6$output[[r6$i()]], variable == input$variable)
-        
+          filter(r6$output[[r6$run_name()]], variable == r6$selected_var())
+
         output$graph <- renderPlotly({
           plot_ly(
             filtered_output,
@@ -107,7 +112,7 @@ graph_server <- function(id, r6) {
 
         output$graph <- renderPlotly({
           plot_ly(
-            filtered_output,
+            r6$output,
             x = ~ year,
             y = ~ value,
             type = 'scatter',
@@ -126,7 +131,7 @@ graph_server <- function(id, r6) {
         })
       }
     }) %>%
-      bindEvent(input$plot, ignoreNULL = TRUE, ignoreInit = FALSE)
+      bindEvent(input$run, ignoreNULL = TRUE, ignoreInit = TRUE)
   })
 }
 

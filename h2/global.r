@@ -9,80 +9,43 @@ library(shinyalert) # don't need if we have shinyWidgets?
 library(DT)
 library(shinyWidgets)
 
-setwd("~/GitHub/hectorui/h2")
+#setwd("~/GitHub/hectorui/h2")
 
 source("./components/modules/mod_graph.r")
 source("./components/modules/mod_run.r")
 source("./components/modules/mod_summary.r")
 source("./components/modules/mod_download.r")
+source("./components/functions/func_graph_plots.R")
+
+theme_set(theme_minimal())
 
 # Define R6 class
 HectorInputs <- R6Class(
   classname = "HectorInputs",
   public = list(
     ini_file = NULL,
-    start = NA,
-    end = NA,
+    time = NA,
     output = NULL,
+    no_save_output = NULL,
     no_save = NULL,
-    i = NA,
+    run_name = NA,
     save = NULL,
     inputs = NULL,
     selected_var = NULL,
     initialize = function(ini_file = system.file("input/hector_ssp245.ini",
-                                                 package = "hector"),
-                          start = 2000,
-                          end = 2300,
-                          selected_var = "global_tas") {
+                                                 package = "hector")) {
       self$ini_file <- ini_file
-      self$start <- start
-      self$end <- end
+      self$time <- time
+      # self$time[2] <- time
       self$output <- list()
-      #self$no_save <- NULL
-      self$i <- 1
+      self$no_save <- NULL
+      self$run_name <- 1
       self$inputs <- list()
-      self$selected_var <- selected_var
-      stopifnot(end > start) #gotta have the start year before the end year
+      self$selected_var <- "CO2_concentration"
+      #stopifnot(time[2] > time[1]) #gotta have the start year before the end year
     }
   )
 )
-
-# labels dictionary
-# title <- list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
-#               "FFI Emissions" = FFI_EMISSIONS(),
-#               "LUC Emissions" = LUC_EMISSIONS(),
-#               "N2O Concentration" = CONCENTRATIONS_N2O(),
-#               "Black Carbon Emissions" = EMISSIONS_BC(),
-#               "Organic Carbon Emissions" = EMISSIONS_OC(),
-#               "RF - Total" = RF_TOTAL(),
-#               "RF - Albedo" = RF_ALBEDO(),
-#               "RF - CO2" = RF_CO2(),
-#               "RF - N2O" = RF_N2O(),
-#               "RF - Black Carbon" = RF_BC(),
-#               "RF - Organic Carbon" = RF_OC(),
-#               "RF - Total SO2" = RF_SO2(),
-#               "RF - Volcanic Activity" = RF_VOL(),
-#               "RF - CH4" = RF_CH4(),
-#               "CF4 Forcing"="RF_CF4", #function doesn't give the correct output?
-#               "C2F6 Forcing"="RF_C2F6", 
-#               "HFC-23 Forcing"="RF_HFC23", 
-#               "HFC-4310 Forcing"="RF_HFC4310", 
-#               "HFC-125 Forcing"="RF_HFC125",  
-#               "HFC-143a Forcing"="RF_HFC143A",
-#               "HFC-245fa Forcing"="RF_HFC245FA", 
-#               "SF6 Forcing"="RF_SF6", 
-#               "CFC-11 Forcing"="RF_CFC11", 
-#               "CFC-12 Forcing"="RF_CFC12", 
-#               "CFC-113 Forcing"="RF_CFC113",
-#               "CFC-114 Forcing"="RF_CFC114",
-#               "CFC-115 Forcing"="RF_CFC115",
-#               "CCl4 Forcing"="RF_CCl4", 
-#               "CH3CCl3 Forcing"="RF_CH3CCl3",
-#               "Halon-1211 Forcing"="RF_halon1211",
-#               "Halon-1301 Forcing"="RF_halon1301", 
-#               "Halon-2402 Forcing"="RF_halon2402", 
-#               "CH3Cl Forcing"="RF_CH3Cl", 
-#               "CH3Br Forcing"="RF_CH3Br")
 
 title <- list("CO2_concentration" = "Atmospheric CO2",
               "atmos_co2" = "Atmospheric Carbon Pool",
