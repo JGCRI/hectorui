@@ -56,18 +56,17 @@ run_ui <- function(id) {
                                                                 "RF - Volcanic Activity" = RF_VOL(),
                                                                 "RF - CH4" = RF_CH4())),
                                          selected = "Atmospheric CO2", multiple = FALSE),
-                      )
-                  ),
-                  fluidRow(
-                      column(2,
-                             actionBttn(ns("run"),"Run", color = "primary")
-                             ),
+                      ),
                       column(3,
-                             materialSwitch(ns("savetoggle"),"Save Run", value = FALSE)
-                             ),
+                             materialSwitch(ns("savetoggle"), "Save Run", status = "success")
+                      ),
                       column(5,
-                             textInput(ns("run_name"), label = "Run Name", placeholder = "Run 1")
-                             ),
+                             conditionalPanel(
+                                 condition = "input.savetoggle == true",
+                                 ns = ns,
+                                 textInput(ns("run_name"), label = "Run Name", placeholder = "Run 1")
+                             )
+                      ),
                       column(2,
                              dropdownButton(inputId = ns("dropdown"),
                                             icon = icon("gear"),
@@ -76,7 +75,11 @@ run_ui <- function(id) {
                                             dataTableOutput(ns("savetable")),
                                             actionButton(ns("deleteRuns"), "Delete Selected")
                              )
-                             )
+                      )
+                  ),
+                  fluidRow(
+                             actionBttn(ns("run"),"Run", color = "primary"),
+
                   ),
                   fluidRow(
                       withSpinner(plotlyOutput(ns("graph")))
@@ -126,6 +129,8 @@ run_server <- function(id, r6) {
                 r6$output[[r6$run_name()]] <- fetchvars(core(), r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
                     mutate(run = r6$run_name(), Scenario = input$ssp_path)
 
+                updateSwitchInput(session = session, "savetoggle", value = FALSE)
+
             } else if (r6$save == FALSE) {
 
                 r6$no_save_output <- fetchvars(core(), r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
@@ -145,6 +150,11 @@ run_server <- function(id, r6) {
             })
             }) %>%
             bindEvent(input$run, ignoreNULL = TRUE, ignoreInit = FALSE)
+
+        observe({
+            updateTextInput(session = session, "run_name", value = NA)
+        }) %>%
+            bindEvent(input$savetoggle == FALSE)
 
     })
 }
