@@ -15,7 +15,7 @@ graph_plots <- function(r6) {
     } else if(r6$save == FALSE) {
 
        {ggplot(r6$no_save_output) +
-            geom_line(aes(x = year, y = value, color = ssp)) +
+            geom_line(aes(x = year, y = value, color = Scenario)) +
             labs(x = "Year", y = r6$no_save_output$variable[1],
                  title = paste0("Run Name: Unsaved Run\n", "Variable: ", r6$no_save_output$variable[1]))} %>%
             plotly::ggplotly() %>%

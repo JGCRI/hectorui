@@ -47,6 +47,15 @@ HectorInputs <- R6Class(
   )
 )
 
+scenarios <- list("SSP 1-1.9"="input/hector_ssp119.ini",
+                  "SSP 1-2.6"="input/hector_ssp126.ini",
+                  "SSP 2-4.5"="input/hector_ssp245.ini",
+                  "SSP 3-7.0"="input/hector_ssp370.ini",
+                  "SSP 4-3.4"="input/hector_ssp434.ini",
+                  "SSP 4-6.0"="input/hector_ssp460.ini",
+                  "SSP 5-3.4OS"="input/hector_ssp534-over.ini",
+                  "SSP 5-8.5"="input/hector_ssp585.ini")
+
 title <- list("CO2_concentration" = "Atmospheric CO2",
               "atmos_co2" = "Atmospheric Carbon Pool",
               "ffi_emissions" = "FFI Emissions",

@@ -8,14 +8,7 @@ run_ui <- function(id) {
                 tabPanel(class = "params", "Standard Scenarios",
                          chooseSliderSkin(skin = "Flat", color = "#375a7f"),
                          selectInput(ns("ssp_path"), label="Select SSP:",
-                                     choices = list("SSP 1-1.9"="input/hector_ssp119.ini",
-                                                    "SSP 1-2.6"="input/hector_ssp126.ini",
-                                                    "SSP 2-4.5"="input/hector_ssp245.ini",
-                                                    "SSP 3-7.0"="input/hector_ssp370.ini",
-                                                    "SSP 4-3.4"="input/hector_ssp434.ini",
-                                                    "SSP 4-6.0"="input/hector_ssp460.ini",
-                                                    "SSP 5-3.4OS"="input/hector_ssp534-over.ini",
-                                                    "SSP 5-8.5"="input/hector_ssp585.ini"),
+                                     choices = scenarios,
                                      selected = "input/hector_ssp245.ini"),
                          sliderInput(ns("time"), label="Select dates:",
                                      min = 1750, max = 2300, value = c(1900,2100), sep="", width = "90%", step=5),
@@ -127,14 +120,14 @@ run_server <- function(id, r6) {
             if (r6$save == TRUE) {
 
                 r6$output[[r6$run_name()]] <- fetchvars(core(), r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
-                    mutate(run = r6$run_name(), Scenario = input$ssp_path)
+                    mutate(run = r6$run_name(), Scenario = names(which(scenarios == input$ssp_path, arr.ind = FALSE)))
 
                 updateSwitchInput(session = session, "savetoggle", value = FALSE)
 
             } else if (r6$save == FALSE) {
 
                 r6$no_save_output <- fetchvars(core(), r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
-                    mutate(ssp = input$ssp_path)
+                    mutate(Scenario = names(which(scenarios == input$ssp_path, arr.ind = FALSE)))
 
             }
 
