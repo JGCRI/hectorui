@@ -16,7 +16,23 @@ ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
     title = "",
     collapsible = TRUE,
     tabPanel(title = "Home",
-             includeHTML("./components/layout/homepage.html")),
+             fluidRow(
+                 column(7,
+                        includeHTML("./components/layout/homepage.html")
+                 ),
+                 column(4, div(
+                     br(),
+                     br(),
+
+                     actionButton(inputId = "launch_scenario",
+                                  label = "Explore Hector",
+                                  style = "background: #4174C3; color: white;
+                                                             font-size: 24px; padding: 32px 24px;
+                                                             box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);"),
+                     align = "center"
+                 ))
+             )
+    ),
     tabPanel(title = "Guides"),
     tabPanel(title = "Run Hector",
              fluidRow(
@@ -33,6 +49,7 @@ ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
 
 server <- function(input, output, session) {
   r6 <- HectorInputs$new() # r6 class
+  observeEvent(input$launch_scenario, updateTabsetPanel(session, "nav", selected = "Run Hector"), ignoreInit = TRUE)
 
   run_server("run_1", r6 = r6)
   summary_server("summary_1", r6 = r6)
