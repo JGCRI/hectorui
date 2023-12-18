@@ -8,6 +8,9 @@ library(plotly)
 library(shinyalert) # don't need if we have shinyWidgets?
 library(DT)
 library(shinyWidgets)
+library(gganimate)
+library(gifski)
+library(tidyverse)
 
 #setwd("~/GitHub/hectorui/h2")
 
@@ -15,6 +18,7 @@ source("./components/modules/mod_graph.r")
 source("./components/modules/mod_run.r")
 source("./components/modules/mod_summary.r")
 source("./components/modules/mod_download.r")
+source("./components/modules/mod_tracking.r")
 source("./components/functions/func_graph_plots.R")
 
 theme_set(theme_minimal())
@@ -144,3 +148,4 @@ units <- list("CO2_concentration" = "DegC",
               "heatflux_interior" = "W/m2",
               "heatflux" = "W/m2"
 )
+
