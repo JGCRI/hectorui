@@ -72,7 +72,6 @@ run_ui <- function(id) {
                   ),
                   fluidRow(
                              actionBttn(ns("run"),"Run", color = "primary"),
-
                   ),
                   fluidRow(
                       withSpinner(plotlyOutput(ns("graph")))
@@ -88,13 +87,9 @@ run_server <- function(id, r6) {
         observe({
 
             if (input$savetoggle == TRUE) {
-
                 r6$save <- TRUE
-
             } else {
-
                 r6$save <- FALSE
-
             }
 
             r6$selected_var <- reactive({input$variable})
@@ -116,7 +111,6 @@ run_server <- function(id, r6) {
             reset(core())
             run(core())
 
-            #browser()
             if (r6$save == TRUE) {
 
                 r6$output[[r6$run_name()]] <- fetchvars(core(), r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
@@ -148,6 +142,12 @@ run_server <- function(id, r6) {
             updateTextInput(session = session, "run_name", value = NA)
         }) %>%
             bindEvent(input$savetoggle == FALSE)
+
+
+        save_table <- reactive(as.data.frame(names(r6$output)))
+        output$savetable <- renderDataTable({
+            save_table()
+        })
 
     })
 }

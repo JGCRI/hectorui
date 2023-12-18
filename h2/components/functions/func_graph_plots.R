@@ -5,8 +5,8 @@ graph_plots <- function(r6) {
     if (r6$save == TRUE) {
         #browser()
 
-        {ggplot(r6$no_save_output) +
-                geom_line(aes(x = year, y = value, color = ssp)) +
+        {ggplot(last(r6$output)) +
+                geom_line(aes(x = year, y = value, color = Scenario)) +
                 labs(x = "Year", y = last(r6$output)$variable[1],
                      title = paste0("Run Name: ",  last(r6$output)$run[1], "\n", "Variable: ", last(r6$output)$variable[1])) +
                 theme(legend.position = "bottom")} %>%
