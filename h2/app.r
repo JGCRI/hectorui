@@ -15,6 +15,7 @@ ui <- fluidPage(
                  #download_ui("download_1"),
                  )
              ),
+    tabPanel(title = "Carbon Tracking"),
     tabPanel(title = "About")
   ),
 )
