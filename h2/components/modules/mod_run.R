@@ -138,16 +138,30 @@ run_server <- function(id, r6) {
             }) %>%
             bindEvent(input$run, ignoreNULL = TRUE, ignoreInit = FALSE)
 
+        # Clear text input for run save after toggle switch is off
         observe({
             updateTextInput(session = session, "run_name", value = NA)
         }) %>%
             bindEvent(input$savetoggle == FALSE)
 
+        # Create a table to show saved runs in session
+        observe({
 
-        save_table <- reactive(as.data.frame(names(r6$output)))
-        output$savetable <- renderDataTable({
-            save_table()
-        })
+            savetable <- reactive(tibble("Run Name" = names(r6$output)))
+            output$savetable <- renderDataTable({savetable()})
+
+        }) %>% bindEvent(input$run)
+
+        # Create delete entry in saved output list based on user-selected row
+        observe({
+
+            #this should work in theory, but savetable isn't getting passed into the observe?
+            delete <- savetable()$`Run Name`[input$savetable_rows_selected]
+
+            r6$output[[delete]] <- NULL
+
+        }) %>% bindEvent(input$deleteRuns)
+
 
     })
 }
