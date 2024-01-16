@@ -14,8 +14,12 @@ tracking_ui <- function(id) {
                                         "SSP 5-8.5"="input/hector_ssp585.ini"),
                          selected = "input/hector_ssp245.ini", inline=TRUE,
                          shape = "square", width = "80%"),
+      bsPopover(ns("ssp_path"), title="",content="Select a Shared Socioeconomic Pathway to plot.",
+                placement = "top", trigger = "hover", options = NULL),
+      
       sliderInput(ns("start"), label="Select year to begin tracking:",
                   min = 1750, max = 2200, value = 1900, sep="",step=5),
+      
       selectInput(ns("pool"), label="Select pool to view:",
                   choices = list("High latitude ocean"="HL Ocean",
                                  "Low latitude ocean"="LL Ocean",
@@ -26,29 +30,53 @@ tracking_ui <- function(id) {
                                  "Detritus"="Detritus",
                                  "Soil"="Soil"),
                   selected="Atmosphere"),
-      radioButtons(ns("view"), label="View:",
-                   choices = list("Carbon Amount"=1,
-                                  "Carbon Fraction"=2),
-                   selected = 1),
-      radioButtons(ns("ff"), label="Toggle fossil fuels:",
-                   choices = list("On"=1,"Off"=2)),
-      radioButtons(ns("plotSelect"), label="Select plot to view:",
+      
+      prettyRadioButtons(ns("plotSelect"), label="Select plot to view:",
                    choices = list("Area Plot"=1,
-                                  "Animated Bar Plot (Carbon Amount Only)"=2),
+                                  "Animated Bar Plot"=2),
                    selected=1),
+      
+      prettyRadioButtons(ns("ff"), label="Toggle fossil fuels:",
+                         choices = list("On"=1,"Off"=2)),
+      bsPopover(ns("ff"), title="",content="Select whether you want fossil fuels to be included (On), or only non-anthropogenic sources of carbon (Off).",
+                placement = "top", trigger = "hover", options = NULL),
+      
+      conditionalPanel(
+        condition = "input.plotSelect == 1",
+        prettyRadioButtons(ns("view"), label="View:",
+                           choices = list("Carbon Amount"=10,
+                                          "Carbon Fraction"=7),
+                           selected = 10),
+        bsPopover(ns("view"), title="",content="Select whether you want to view the total amounts of carbon in each pool (Carbon Amount), or the fraction each pool has of the total amount in the system (Carbon Fraction).",
+                  placement = "top", trigger = "hover", options = NULL),
+        ns = NS("tracking_1")
+      ),
       actionButton(ns("generate"),"Generate"),
       downloadButton(ns("downloadGif"),"Download Plot"),
     ),
     mainPanel(
-      withSpinner(plotlyOutput(ns("fig")),type=7)
+      conditionalPanel(
+        condition = "input.plotSelect == 1",
+        withSpinner(plotlyOutput(ns("fig"))),
+        ns = NS("tracking_1")
+      ),
+      conditionalPanel(
+        condition = "input.plotSelect == 2",
+        withSpinner(imageOutput(ns("gif"))),
+        ns = NS("tracking_1")
+      )
     )
   )
 }
 
 tracking_server <- function(id) {
   moduleServer(id, function(input, output, session) {
+    
+     # Get shinycssloaders to not appear until plots are generated
+    #output$fig <- renderPlotly(NULL)
+    #output$gif <- renderImage(NULL)
+    
     observe({
-      #browser()
       # Run Hector w/ carbon tracking
       ini_file <- reactive({system.file(input$ssp_path,package="hector")})
       core <- newcore(ini_file())
@@ -59,7 +87,7 @@ tracking_server <- function(id) {
       run(core, runtodate = 2300)
       print("Gathering data...")
       df <- get_tracking_data(core)
-      
+
       # clean up pool names
       df[df=="atmos_co2"] <- "Atmosphere"
       df[df=="deep"] <- "Deep Ocean"
@@ -82,9 +110,11 @@ tracking_server <- function(id) {
       df <- subset(df, source_name!="permafrost_c")
       df <- subset(df, source_name!="thawedp_c")
       
-      # bar width for area plot
-      #barwidth <- reactive({(2100-input$start)/50})
-      #browser()
+      # fill in any missing pools
+      df <- df[order(df$source_name),] # sort by source, then year, so sources are always in same order each year
+      df <- df[order(df$year),]
+      
+      
       # rank column for moving bar plot
       df <- df %>%
         group_by(year) %>%
@@ -95,20 +125,22 @@ tracking_server <- function(id) {
                frac_lbl = paste0(format(round(source_fraction,2),nsmall=2))) %>%
         group_by(source_name) %>%
         ungroup()
-
-      #browser()
       
       # Plotting
-      plotSelect <- reactive({input$plotSelect})
+      plotSelect <- reactive({input$plotSelect}) # area or bar
+      view <- reactive({input$view}) # fraction or amount
+      view <- as.numeric(view())
+      #browser()
       
       # Area plot
       if (plotSelect() == 1) {
+        
         print("Generating plot...")
         area_plot <-
           plot_ly(
             filter(df, source_name == "HL Ocean"),
             x =  ~ year,
-            y =  ~ source_amt,
+            y = ~ source_amt,
             name = "HL Ocean",
             type = "scatter",
             mode = "none",
@@ -118,56 +150,56 @@ tracking_server <- function(id) {
         area_plot <-
           area_plot %>% add_trace(
             data = filter(df, source_name == "LL Ocean"),
-            y =  ~ source_amt,
+            y = ~ source_amt,
             name = "LL Ocean",
             fillcolor = "#3B528BFF"
           )
         area_plot <-
           area_plot %>% add_trace(
             data = filter(df, source_name == "Intermediate Ocean"),
-            y =  ~ source_amt,
+            y = ~ source_amt,
             name = "Intermediate Ocean",
             fillcolor = "#472D7BFF"
           )
         area_plot <-
           area_plot %>% add_trace(
             data = filter(df, source_name == "Deep Ocean"),
-            y =  ~ source_amt,
+            y = ~ source_amt,
             name = "Deep Ocean",
             fillcolor = "#440154FF"
           )
         area_plot <-
           area_plot %>% add_trace(
             data = filter(df, source_name == "Atmosphere"),
-            y =  ~ source_amt,
+            y = ~ source_amt,
             name = "Atmosphere",
             fillcolor = "#21908CFF"
           )
         area_plot <-
           area_plot %>% add_trace(
             data = filter(df, source_name == "Vegetation"),
-            y =  ~ source_amt,
+            y = ~ source_amt,
             name = "Vegetation",
             fillcolor = "#27AD81FF"
           )
         area_plot <-
           area_plot %>% add_trace(
             data = filter(df, source_name == "Soil"),
-            y =  ~ source_amt,
+            y = ~ source_amt,
             name = "Soil",
             fillcolor = "#5DC863FF"
           )
         area_plot <-
           area_plot %>% add_trace(
             data = filter(df, source_name == "Detritus"),
-            y =  ~ source_amt,
+            y = ~ source_amt,
             name = "Detritus",
             fillcolor = "#AADC32FF"
           )
         area_plot <-
           area_plot %>% add_trace(
             data = filter(df, source_name == "Fossil Fuels"),
-            y =  ~ source_amt,
+            y = ~ source_amt,
             name = "Fossil Fuels",
             fillcolor = "#FDE725FF"
           )
@@ -179,23 +211,53 @@ tracking_server <- function(id) {
         output$fig <- renderPlotly(area_plot)
         
       } else if (plotSelect() == 2) {
-
-        bar_plot <-
-          plot_ly(
-            df,
-            y =  ~ source_name,
-            x =  ~ source_amt,
-            type = "bar",
-            orientation = "h",
-            frame =  ~ year
-            #color =  ~ source_name
-          )
         
-        output$fig <- renderPlotly(bar_plot)
-        
+        output$gif <- renderImage({
+          # Temp file to save output
+          outfile <- tempfile(fileext='.gif')
+          
+          # Make animation
+          p <- ggplot(df,aes(fill=source_name,color=source_name,
+                             x=reorder(source_name,source_amt),
+                             y=source_amt)) +
+            geom_bar(stat="identity") +
+            geom_text(aes(y=0, label = paste(source_name, " ")),
+                      vjust = 0.2, hjust = 1, size = 6) +
+            geom_text(aes(y = source_amt, label = paste(" ",amt_lbl), hjust=0), 
+                      size = 6) +
+            coord_flip(clip = "off", expand = FALSE) +
+            theme_void() +
+            theme(plot.title = element_text(size=20,face="bold"),
+                  plot.subtitle = element_text(size=18),
+                  legend.position="none",
+                  panel.grid.major.x = element_line(size=.1,color="snow2"),
+                  panel.grid.minor.x = element_line(size=.1,color="snow2"),
+                  plot.margin = margin(1,6,1,6,"cm")) +
+            ylab("Carbon (Pg)") +
+            xlab("") +
+            scale_fill_viridis_d() +
+            scale_color_viridis_d() +
+            
+            # gganimate
+            transition_time(year) +
+            ease_aes('linear')
+          
+          # Animate
+          anim <- p + transition_states(year,transition_length=4, 
+                                        state_length=2,wrap=FALSE) +
+            view_follow(fixed_x = TRUE) +
+            labs(title=paste0(selectedPool()," Carbon Sources"),
+               subtitle="Year: {closest_state}")
+          
+          anim_save("outfile.gif", animate(anim, height = 500, width = 800, 
+                                           end_pause=30))
+          list(src = 'outfile.gif',
+               contentType = 'image/gif'
+               # width = 800,
+               # height = 300,
+               # alt = "An animation tracking the sources of carbon in a chosen pool"
+          )}, deleteFile = TRUE)
       }
-      
-      
       
     }) %>%
       bindEvent(input$generate)

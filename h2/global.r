@@ -5,12 +5,11 @@ library(dplyr)
 library(ggplot2)
 library(shinycssloaders)
 library(plotly)
-library(shinyalert) # don't need if we have shinyWidgets?
 library(DT)
 library(shinyWidgets)
 library(gganimate)
-library(gifski)
 library(tidyverse)
+library(shinyBS)
 
 #setwd("~/GitHub/hectorui/h2")
 
@@ -40,13 +39,11 @@ HectorInputs <- R6Class(
                                                  package = "hector")) {
       self$ini_file <- ini_file
       self$time <- time
-      # self$time[2] <- time
       self$output <- list()
       self$no_save <- NULL
       self$run_name <- 1
       self$inputs <- list()
       self$selected_var <- "CO2_concentration"
-      #stopifnot(time[2] > time[1]) #gotta have the start year before the end year
     }
   )
 )
