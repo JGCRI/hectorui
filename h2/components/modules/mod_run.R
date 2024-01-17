@@ -24,7 +24,8 @@ run_ui <- function(id) {
                          sliderInput(ns("q10_rh"), label="Heterotrophic temperature sensitivity", # Q10_RH()
                                      min = 1, max = 5, value = 2, step=0.1, width = "90%"),
                          sliderInput(ns("volscl"), label="Volcanic forcing scaling factor", # VOLCANIC_SCALE()
-                                     min = 0, max = 1, value = 1, width = "90%")
+                                     min = 0, max = 1, value = 1, width = "90%"),
+                         materialSwitch(ns("permafrost"), "Include Permafrost Carbon", value = FALSE)
                 )
             )
 
@@ -101,6 +102,9 @@ run_server <- function(id, r6) {
             core <- reactive({newcore(r6$ini_file())}) # create core
 
             # Set parameters using inputs (function to only call setvar once in final version)
+            if (input$permafrost == TRUE) {
+              setvar(core(),0,PERMAFROST_C(),865,"Pg C")
+            }
             setvar(core(),NA,AERO_SCALE(),input$alpha,"(unitless)")
             setvar(core(),NA,BETA(),input$beta,"(unitless)")
             setvar(core(),NA,DIFFUSIVITY(),input$diff,"cm2/s")
