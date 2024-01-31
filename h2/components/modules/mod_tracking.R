@@ -31,40 +31,40 @@ tracking_ui <- function(id) {
                                  "Soil"="Soil"),
                   selected="Atmosphere"),
       
-      prettyRadioButtons(ns("plotSelect"), label="Select plot to view:",
-                   choices = list("Area Plot"=1,
-                                  "Animated Bar Plot"=2),
-                   selected=1),
+      # prettyRadioButtons(ns("plotSelect"), label="Select plot to view:",
+      #              choices = list("Area Plot"=1,
+      #                             "Animated Bar Plot"=2),
+      #              selected=1),
       
       prettyRadioButtons(ns("ff"), label="Toggle fossil fuels:",
                          choices = list("On"=1,"Off"=2)),
       bsPopover(ns("ff"), title="",content="Select whether you want fossil fuels to be included (On), or only non-anthropogenic sources of carbon (Off).",
                 placement = "top", trigger = "hover", options = NULL),
       
-      conditionalPanel(
-        condition = "input.plotSelect == 1",
+#      conditionalPanel(
+#        condition = "input.plotSelect == 1",
         prettyRadioButtons(ns("view"), label="View:",
-                           choices = list("Carbon Amount"=10,
-                                          "Carbon Fraction"=7),
-                           selected = 10),
+                           choices = list("Carbon Amount"=1,
+                                          "Carbon Fraction"=2),
+                           selected = 1),
         bsPopover(ns("view"), title="",content="Select whether you want to view the total amounts of carbon in each pool (Carbon Amount), or the fraction each pool has of the total amount in the system (Carbon Fraction).",
                   placement = "top", trigger = "hover", options = NULL),
-        ns = NS("tracking_1")
-      ),
+#        ns = NS("tracking_1")
+#      ),
       actionButton(ns("generate"),"Generate"),
       downloadButton(ns("downloadGif"),"Download Plot"),
     ),
     mainPanel(
-      conditionalPanel(
-        condition = "input.plotSelect == 1",
+#      conditionalPanel(
+#        condition = "input.plotSelect == 1",
         withSpinner(plotlyOutput(ns("fig"))),
-        ns = NS("tracking_1")
-      ),
-      conditionalPanel(
-        condition = "input.plotSelect == 2",
+#        ns = NS("tracking_1")
+#      ),
+#      conditionalPanel(
+#        condition = "input.plotSelect == 2",
         withSpinner(imageOutput(ns("gif"))),
-        ns = NS("tracking_1")
-      )
+#        ns = NS("tracking_1")
+#      )
     )
   )
 }
@@ -127,90 +127,171 @@ tracking_server <- function(id) {
         ungroup()
       
       # Plotting
-      plotSelect <- reactive({input$plotSelect}) # area or bar
-      view <- reactive({input$view}) # fraction or amount
-      view <- as.numeric(view())
+#      plotSelect <- reactive({input$plotSelect}) # area or bar
+      #view <- reactive({input$view}) # fraction or amount
+      #view <- as.numeric(view())
       #browser()
       
       # Area plot
-      if (plotSelect() == 1) {
+ #     if (plotSelect() == 1) {
         
-        print("Generating plot...")
-        area_plot <-
-          plot_ly(
-            filter(df, source_name == "HL Ocean"),
-            x =  ~ year,
-            y = ~ source_amt,
-            name = "HL Ocean",
-            type = "scatter",
-            mode = "none",
-            stackgroup = "one",
-            fillcolor = "#2C728EFF"
-          )
-        area_plot <-
-          area_plot %>% add_trace(
-            data = filter(df, source_name == "LL Ocean"),
-            y = ~ source_amt,
-            name = "LL Ocean",
-            fillcolor = "#3B528BFF"
-          )
-        area_plot <-
-          area_plot %>% add_trace(
-            data = filter(df, source_name == "Intermediate Ocean"),
-            y = ~ source_amt,
-            name = "Intermediate Ocean",
-            fillcolor = "#472D7BFF"
-          )
-        area_plot <-
-          area_plot %>% add_trace(
-            data = filter(df, source_name == "Deep Ocean"),
-            y = ~ source_amt,
-            name = "Deep Ocean",
-            fillcolor = "#440154FF"
-          )
-        area_plot <-
-          area_plot %>% add_trace(
-            data = filter(df, source_name == "Atmosphere"),
-            y = ~ source_amt,
-            name = "Atmosphere",
-            fillcolor = "#21908CFF"
-          )
-        area_plot <-
-          area_plot %>% add_trace(
-            data = filter(df, source_name == "Vegetation"),
-            y = ~ source_amt,
-            name = "Vegetation",
-            fillcolor = "#27AD81FF"
-          )
-        area_plot <-
-          area_plot %>% add_trace(
-            data = filter(df, source_name == "Soil"),
-            y = ~ source_amt,
-            name = "Soil",
-            fillcolor = "#5DC863FF"
-          )
-        area_plot <-
-          area_plot %>% add_trace(
-            data = filter(df, source_name == "Detritus"),
-            y = ~ source_amt,
-            name = "Detritus",
-            fillcolor = "#AADC32FF"
-          )
-        area_plot <-
-          area_plot %>% add_trace(
-            data = filter(df, source_name == "Fossil Fuels"),
-            y = ~ source_amt,
-            name = "Fossil Fuels",
-            fillcolor = "#FDE725FF"
-          )
-        area_plot <-
-          area_plot %>% layout(title = paste0("Amount of Carbon in ", selectedPool(), " by Source"),
-                               xaxis = list(title=""),
-                               yaxis = list(title="Carbon Pool (Pg C)"))
+        # Carbon amount
+        if (input$view == 1) {
+          
+          print("Generating plot...")
+          area_plot <-
+            plot_ly(
+              filter(df, source_name == "HL Ocean"),
+              x =  ~ year,
+              y = ~ source_amt,
+              name = "HL Ocean",
+              type = "scatter",
+              mode = "none",
+              stackgroup = "one",
+              fillcolor = "#2C728EFF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "LL Ocean"),
+              y = ~ source_amt,
+              name = "LL Ocean",
+              fillcolor = "#3B528BFF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Intermediate Ocean"),
+              y = ~ source_amt,
+              name = "Intermediate Ocean",
+              fillcolor = "#472D7BFF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Deep Ocean"),
+              y = ~ source_amt,
+              name = "Deep Ocean",
+              fillcolor = "#440154FF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Atmosphere"),
+              y = ~ source_amt,
+              name = "Atmosphere",
+              fillcolor = "#21908CFF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Vegetation"),
+              y = ~ source_amt,
+              name = "Vegetation",
+              fillcolor = "#27AD81FF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Soil"),
+              y = ~ source_amt,
+              name = "Soil",
+              fillcolor = "#5DC863FF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Detritus"),
+              y = ~ source_amt,
+              name = "Detritus",
+              fillcolor = "#AADC32FF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Fossil Fuels"),
+              y = ~ source_amt,
+              name = "Fossil Fuels",
+              fillcolor = "#FDE725FF"
+            )
+          area_plot <-
+            area_plot %>% layout(title = paste0("Amount of Carbon in ", selectedPool(), " by Source"),
+                                 xaxis = list(title=""),
+                                 yaxis = list(title="Carbon Pool (Pg C)"))
+        }
+        
+        # Carbon fraction
+        if (input$view == 2) {
+          
+          print("Generating plot...")
+          area_plot <-
+            plot_ly(
+              filter(df, source_name == "HL Ocean"),
+              x =  ~ year,
+              y = ~ source_fraction,
+              name = "HL Ocean",
+              type = "scatter",
+              mode = "none",
+              stackgroup = "one",
+              fillcolor = "#2C728EFF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "LL Ocean"),
+              y = ~ source_fraction,
+              name = "LL Ocean",
+              fillcolor = "#3B528BFF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Intermediate Ocean"),
+              y = ~ source_fraction,
+              name = "Intermediate Ocean",
+              fillcolor = "#472D7BFF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Deep Ocean"),
+              y = ~ source_fraction,
+              name = "Deep Ocean",
+              fillcolor = "#440154FF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Atmosphere"),
+              y = ~ source_fraction,
+              name = "Atmosphere",
+              fillcolor = "#21908CFF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Vegetation"),
+              y = ~ source_fraction,
+              name = "Vegetation",
+              fillcolor = "#27AD81FF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Soil"),
+              y = ~ source_fraction,
+              name = "Soil",
+              fillcolor = "#5DC863FF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Detritus"),
+              y = ~ source_fraction,
+              name = "Detritus",
+              fillcolor = "#AADC32FF"
+            )
+          area_plot <-
+            area_plot %>% add_trace(
+              data = filter(df, source_name == "Fossil Fuels"),
+              y = ~ source_fraction,
+              name = "Fossil Fuels",
+              fillcolor = "#FDE725FF"
+            )
+          area_plot <-
+            area_plot %>% layout(title = paste0("Fraction of Carbon in ", selectedPool(), " by Source"),
+                                 xaxis = list(title=""),
+                                 yaxis = list(title="Carbon Pool (Fraction)"))
+        }
         
         output$fig <- renderPlotly(area_plot)
         
-      } else if (plotSelect() == 2) {
+ #     } else if (plotSelect() == 2) {
         
         output$gif <- renderImage({
           # Temp file to save output
@@ -257,7 +338,7 @@ tracking_server <- function(id) {
                # height = 300,
                # alt = "An animation tracking the sources of carbon in a chosen pool"
           )}, deleteFile = TRUE)
-      }
+#      }
       
     }) %>%
       bindEvent(input$generate)
