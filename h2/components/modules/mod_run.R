@@ -12,6 +12,7 @@ run_ui <- function(id) {
                                      selected = "input/hector_ssp245.ini"),
                          sliderInput(ns("time"), label="Select dates:",
                                      min = 1750, max = 2300, value = c(1900,2100), sep="", width = "90%", step=5),
+                         materialSwitch(ns("permafrost"), "Include Permafrost Carbon", value = FALSE),
                          h5("Model Parameters"),
                          sliderInput(ns("alpha"), label="Aerosol forcing scaling factor", # AERO_SCALE()
                                      min = 0.01, max = 1, value = 1, width = "90%"),
@@ -24,8 +25,7 @@ run_ui <- function(id) {
                          sliderInput(ns("q10_rh"), label="Heterotrophic temperature sensitivity", # Q10_RH()
                                      min = 1, max = 5, value = 2, step=0.1, width = "90%"),
                          sliderInput(ns("volscl"), label="Volcanic forcing scaling factor", # VOLCANIC_SCALE()
-                                     min = 0, max = 1, value = 1, width = "90%"),
-                         materialSwitch(ns("permafrost"), "Include Permafrost Carbon", value = FALSE)
+                                     min = 0, max = 1, value = 1, width = "90%")
                 )
             )
 
@@ -104,6 +104,9 @@ run_server <- function(id, r6) {
             # Set parameters using inputs (function to only call setvar once in final version)
             if (input$permafrost == TRUE) {
               setvar(core(),0,PERMAFROST_C(),865,"Pg C")
+              r6$permafrost <- "On"
+            } else if (input$permafrost == FALSE) {
+              r6$permafrost <- "Off"
             }
             setvar(core(),NA,AERO_SCALE(),input$alpha,"(unitless)")
             setvar(core(),NA,BETA(),input$beta,"(unitless)")
@@ -169,9 +172,3 @@ run_server <- function(id, r6) {
 
     })
 }
-
-# might be worth it to just run the core with all selectable variables. how much time would that add?
-# issue seems to be that mod_run goes first, so input$variable just doesn't exist yet... maybe having
-# that module containing all choices is a good idea
-
-# fetchvars(core,1745:2300,vars=list(CONCENTRATIONS_CO2(),FFI_EMISSIONS(),LUC_EMISSIONS(),CONCENTRATIONS_N2O,EMISSIONS_BC(),EMISSIONS_OC(),RF_TOTAL(),RF_ALBEDO(),RF_N2O(),RF_CO2(),RF_BC(),RF_OC(),RF_SO2(),RF_CH4(),RF_VOL()))
