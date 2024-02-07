@@ -29,6 +29,7 @@ HectorInputs <- R6Class(
     no_save_output = NULL,
     no_save = NULL,
     run_name = NA,
+    permafrost = NULL,
     save = NULL,
     inputs = NULL,
     selected_var = NULL,
