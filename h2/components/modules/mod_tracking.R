@@ -52,7 +52,7 @@ tracking_ui <- function(id) {
 #        ns = NS("tracking_1")
 #      ),
       actionButton(ns("generate"),"Generate"),
-      downloadButton(ns("downloadGif"),"Download Plot"),
+      downloadButton(ns("download"),"Download Plots"),
     ),
     mainPanel(
 #      conditionalPanel(
@@ -137,79 +137,90 @@ tracking_server <- function(id) {
         
         # Carbon amount
         if (input$view == 1) {
+          area_plot <-
+            ggplot(df, aes(x=year,y=source_amt,fill=source_name)) +
+            geom_area(stat="identity") +
+            scale_fill_viridis_d() +
+            scale_color_viridis_d() +
+            ggtitle(paste0("Amount of Carbon in ", selectedPool(), " by Source")) +
+            xlab("") +
+            ylab("Carbon Pool (Pg C)")
           
-          print("Generating plot...")
-          area_plot <-
-            plot_ly(
-              filter(df, source_name == "HL Ocean"),
-              x =  ~ year,
-              y = ~ source_amt,
-              name = "HL Ocean",
-              type = "scatter",
-              mode = "none",
-              stackgroup = "one",
-              fillcolor = "#2C728EFF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "LL Ocean"),
-              y = ~ source_amt,
-              name = "LL Ocean",
-              fillcolor = "#3B528BFF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Intermediate Ocean"),
-              y = ~ source_amt,
-              name = "Intermediate Ocean",
-              fillcolor = "#472D7BFF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Deep Ocean"),
-              y = ~ source_amt,
-              name = "Deep Ocean",
-              fillcolor = "#440154FF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Atmosphere"),
-              y = ~ source_amt,
-              name = "Atmosphere",
-              fillcolor = "#21908CFF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Vegetation"),
-              y = ~ source_amt,
-              name = "Vegetation",
-              fillcolor = "#27AD81FF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Soil"),
-              y = ~ source_amt,
-              name = "Soil",
-              fillcolor = "#5DC863FF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Detritus"),
-              y = ~ source_amt,
-              name = "Detritus",
-              fillcolor = "#AADC32FF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Fossil Fuels"),
-              y = ~ source_amt,
-              name = "Fossil Fuels",
-              fillcolor = "#FDE725FF"
-            )
-          area_plot <-
-            area_plot %>% layout(title = paste0("Amount of Carbon in ", selectedPool(), " by Source"),
-                                 xaxis = list(title=""),
-                                 yaxis = list(title="Carbon Pool (Pg C)"))
+          # save as file
+          ggsave("outfile_area.png",plot=area_plot,device="png")
+          
+          # print("Generating plot...")
+          # area_plot <-
+          #   plot_ly(
+          #     filter(df, source_name == "HL Ocean"),
+          #     x =  ~ year,
+          #     y = ~ source_amt,
+          #     name = "HL Ocean",
+          #     type = "scatter",
+          #     mode = "none",
+          #     stackgroup = "one",
+          #     fillcolor = "#2C728EFF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "LL Ocean"),
+          #     y = ~ source_amt,
+          #     name = "LL Ocean",
+          #     fillcolor = "#3B528BFF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Intermediate Ocean"),
+          #     y = ~ source_amt,
+          #     name = "Intermediate Ocean",
+          #     fillcolor = "#472D7BFF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Deep Ocean"),
+          #     y = ~ source_amt,
+          #     name = "Deep Ocean",
+          #     fillcolor = "#440154FF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Atmosphere"),
+          #     y = ~ source_amt,
+          #     name = "Atmosphere",
+          #     fillcolor = "#21908CFF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Vegetation"),
+          #     y = ~ source_amt,
+          #     name = "Vegetation",
+          #     fillcolor = "#27AD81FF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Soil"),
+          #     y = ~ source_amt,
+          #     name = "Soil",
+          #     fillcolor = "#5DC863FF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Detritus"),
+          #     y = ~ source_amt,
+          #     name = "Detritus",
+          #     fillcolor = "#AADC32FF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Fossil Fuels"),
+          #     y = ~ source_amt,
+          #     name = "Fossil Fuels",
+          #     fillcolor = "#FDE725FF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% layout(title = paste0("Amount of Carbon in ", selectedPool(), " by Source"),
+          #                        xaxis = list(title=""),
+          #                        yaxis = list(title="Carbon Pool (Pg C)"))
         }
         
         # Carbon fraction
@@ -217,76 +228,89 @@ tracking_server <- function(id) {
           
           print("Generating plot...")
           area_plot <-
-            plot_ly(
-              filter(df, source_name == "HL Ocean"),
-              x =  ~ year,
-              y = ~ source_fraction,
-              name = "HL Ocean",
-              type = "scatter",
-              mode = "none",
-              stackgroup = "one",
-              fillcolor = "#2C728EFF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "LL Ocean"),
-              y = ~ source_fraction,
-              name = "LL Ocean",
-              fillcolor = "#3B528BFF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Intermediate Ocean"),
-              y = ~ source_fraction,
-              name = "Intermediate Ocean",
-              fillcolor = "#472D7BFF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Deep Ocean"),
-              y = ~ source_fraction,
-              name = "Deep Ocean",
-              fillcolor = "#440154FF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Atmosphere"),
-              y = ~ source_fraction,
-              name = "Atmosphere",
-              fillcolor = "#21908CFF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Vegetation"),
-              y = ~ source_fraction,
-              name = "Vegetation",
-              fillcolor = "#27AD81FF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Soil"),
-              y = ~ source_fraction,
-              name = "Soil",
-              fillcolor = "#5DC863FF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Detritus"),
-              y = ~ source_fraction,
-              name = "Detritus",
-              fillcolor = "#AADC32FF"
-            )
-          area_plot <-
-            area_plot %>% add_trace(
-              data = filter(df, source_name == "Fossil Fuels"),
-              y = ~ source_fraction,
-              name = "Fossil Fuels",
-              fillcolor = "#FDE725FF"
-            )
-          area_plot <-
-            area_plot %>% layout(title = paste0("Fraction of Carbon in ", selectedPool(), " by Source"),
-                                 xaxis = list(title=""),
-                                 yaxis = list(title="Carbon Pool (Fraction)"))
+            ggplot(df, aes(x=year,y=source_fraction,fill=source_name)) +
+            geom_area(stat="identity") +
+            scale_fill_viridis_d() +
+            scale_color_viridis_d() +
+            ggtitle(paste0("Fraction of Carbon in ", selectedPool(), " by Source")) +
+            xlab("") +
+            ylab("Carbon Pool (Fraction)")
+          
+          # save as file
+          ggsave("outfile_area.svg",plot=area_plot,device="svg",
+                 width=500,height=500,units="px")
+          
+          # 
+          #   plot_ly(
+          #     filter(df, source_name == "HL Ocean"),
+          #     x =  ~ year,
+          #     y = ~ source_fraction,
+          #     name = "HL Ocean",
+          #     type = "scatter",
+          #     mode = "none",
+          #     stackgroup = "one",
+          #     fillcolor = "#2C728EFF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "LL Ocean"),
+          #     y = ~ source_fraction,
+          #     name = "LL Ocean",
+          #     fillcolor = "#3B528BFF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Intermediate Ocean"),
+          #     y = ~ source_fraction,
+          #     name = "Intermediate Ocean",
+          #     fillcolor = "#472D7BFF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Deep Ocean"),
+          #     y = ~ source_fraction,
+          #     name = "Deep Ocean",
+          #     fillcolor = "#440154FF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Atmosphere"),
+          #     y = ~ source_fraction,
+          #     name = "Atmosphere",
+          #     fillcolor = "#21908CFF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Vegetation"),
+          #     y = ~ source_fraction,
+          #     name = "Vegetation",
+          #     fillcolor = "#27AD81FF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Soil"),
+          #     y = ~ source_fraction,
+          #     name = "Soil",
+          #     fillcolor = "#5DC863FF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Detritus"),
+          #     y = ~ source_fraction,
+          #     name = "Detritus",
+          #     fillcolor = "#AADC32FF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% add_trace(
+          #     data = filter(df, source_name == "Fossil Fuels"),
+          #     y = ~ source_fraction,
+          #     name = "Fossil Fuels",
+          #     fillcolor = "#FDE725FF"
+          #   )
+          # area_plot <-
+          #   area_plot %>% layout(title = paste0("Fraction of Carbon in ", selectedPool(), " by Source"),
+          #                        xaxis = list(title=""),
+          #                        yaxis = list(title="Carbon Pool (Fraction)"))
         }
         
         output$fig <- renderPlotly(area_plot)
@@ -295,7 +319,7 @@ tracking_server <- function(id) {
         
         output$gif <- renderImage({
           # Temp file to save output
-          outfile <- tempfile(fileext='.gif')
+          #outfile <- tempfile(fileext='.gif')
           
           # Make animation
           p <- ggplot(df,aes(fill=source_name,color=source_name,
@@ -311,8 +335,8 @@ tracking_server <- function(id) {
             theme(plot.title = element_text(size=20,face="bold"),
                   plot.subtitle = element_text(size=18),
                   legend.position="none",
-                  panel.grid.major.x = element_line(size=.1,color="snow2"),
-                  panel.grid.minor.x = element_line(size=.1,color="snow2"),
+                  panel.grid.major.x = element_line(linewidth=.1,color="snow2"),
+                  panel.grid.minor.x = element_line(linewidth=.1,color="snow2"),
                   plot.margin = margin(1,6,1,6,"cm")) +
             ylab("Carbon (Pg)") +
             xlab("") +
@@ -330,17 +354,26 @@ tracking_server <- function(id) {
             labs(title=paste0(selectedPool()," Carbon Sources"),
                subtitle="Year: {closest_state}")
           
-          anim_save("outfile.gif", animate(anim, height = 500, width = 800, 
+          anim_save("outfile_bar.gif", animate(anim, height = 500, width = 800, 
                                            end_pause=30))
-          list(src = 'outfile.gif',
+          list(src = 'outfile_bar.gif',
                contentType = 'image/gif'
                # width = 800,
                # height = 300,
                # alt = "An animation tracking the sources of carbon in a chosen pool"
-          )}, deleteFile = TRUE)
+          )}, deleteFile = FALSE)
 #      }
       
     }) %>%
       bindEvent(input$generate)
+    
+    # Download plots
+    output$download <- downloadHandler(
+      filename="myplots.zip",
+      content=function(file){
+        zip(file,files=c('outfile_area.png','outfile_bar.gif'))
+      }
+    )
+    
   })
 }

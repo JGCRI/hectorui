@@ -10,8 +10,9 @@ library(shinyWidgets)
 library(gganimate)
 library(tidyverse)
 library(shinyBS)
+library(zip)
 
-#setwd("~/GitHub/hectorui/h2")
+setwd("~/GitHub/hectorui/h2")
 
 source("./components/modules/mod_graph.r")
 source("./components/modules/mod_run.r")
