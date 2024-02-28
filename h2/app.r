@@ -12,7 +12,6 @@ ui <- fluidPage(
     tabPanel(title = "Explore Hector",
              fluidRow(
                run_ui("run_1"),
-               #download_ui("download_1"),
              )
     ),
     tabPanel(title = "Carbon Tracking",
@@ -26,7 +25,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   r6 <- HectorInputs$new() # r6 class
-  r6_tracking <- HectorInputs$new() # r6 class for carbon tracking
+  r6_tracking <- HectorInputs$new() # separate r6 class for carbon tracking
 
   run_server("run_1", r6 = r6)
   summary_server("summary_1", r6 = r6)

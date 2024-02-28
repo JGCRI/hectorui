@@ -11,6 +11,7 @@ library(gganimate)
 library(tidyverse)
 library(shinyBS)
 library(zip)
+library(svglite)
 
 setwd("~/GitHub/hectorui/h2")
 
