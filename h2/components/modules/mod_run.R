@@ -7,19 +7,12 @@ run_ui <- function(id) {
             tabsetPanel(
                 tabPanel(class = "params", "Standard Scenarios",
                          chooseSliderSkin(skin = "Flat", color = "#375a7f"),
-                         prettyRadioButtons(ns("ssp_path"), label="Select SSP:",
-                                            choices = list("SSP 1-1.9"="input/hector_ssp119.ini",
-                                                           "SSP 1-2.6"="input/hector_ssp126.ini",
-                                                           "SSP 2-4.5"="input/hector_ssp245.ini",
-                                                           "SSP 3-7.0"="input/hector_ssp370.ini",
-                                                           "SSP 4-3.4"="input/hector_ssp434.ini",
-                                                           "SSP 4-6.0"="input/hector_ssp460.ini",
-                                                           "SSP 5-3.4OS"="input/hector_ssp534-over.ini",
-                                                           "SSP 5-8.5"="input/hector_ssp585.ini"),
-                                            selected = "input/hector_ssp245.ini", inline=TRUE,
-                                            shape = "square", width = "80%"),
+                         selectInput(ns("ssp_path"), label="Select SSP:",
+                                     choices = scenarios,
+                                     selected = "input/hector_ssp245.ini"),
                          sliderInput(ns("time"), label="Select dates:",
                                      min = 1750, max = 2300, value = c(1900,2100), sep="", width = "90%", step=5),
+                         materialSwitch(ns("permafrost"), "Include Permafrost Carbon", value = FALSE),
                          h5("Model Parameters"),
                          sliderInput(ns("alpha"), label="Aerosol forcing scaling factor", # AERO_SCALE()
                                      min = 0.01, max = 1, value = 1, width = "90%"),
@@ -32,58 +25,57 @@ run_ui <- function(id) {
                          sliderInput(ns("q10_rh"), label="Heterotrophic temperature sensitivity", # Q10_RH()
                                      min = 1, max = 5, value = 2, step=0.1, width = "90%"),
                          sliderInput(ns("volscl"), label="Volcanic forcing scaling factor", # VOLCANIC_SCALE()
-                                     min = 0, max = 1, value = 1, width = "90%"),
-                         materialSwitch(ns("savetoggle"),"Save Run", value = FALSE),
-                         textInput(ns("run_name"), label = "Run Name", placeholder = "Run 1"),
-                         dropdownButton(inputId = ns("dropdown"),
-                                        icon = icon("gear"),
-                                        circle = TRUE,
-                                        status = "primary",
-                                        dataTableOutput(ns("savetable")),
-                                        actionButton(ns("deleteRuns"), "Delete Selected")
-                         )
+                                     min = 0, max = 1, value = 1, width = "90%")
                 )
             )
 
         ),
         mainPanel(width = 8,
-                  tabsetPanel(
-                      tabPanel(p(icon("chart-line","fa-2x"), "Scenario Output", value="outputTab"),
-                               br(),
-                               fluidRow(
-                                   column(4,
-                                          selectInput(ns("variable"), "Select variable:",
-                                                      list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
-                                                                                 "FFI Emissions" = FFI_EMISSIONS(),
-                                                                                 "LUC Emissions" = LUC_EMISSIONS()),
-                                                           "Concentrations" = list("N2O Concentration" = CONCENTRATIONS_N2O()),
-                                                           "Emissions" = list("Black Carbon Emissions" = EMISSIONS_BC(),
-                                                                              "Organic Carbon Emissions" = EMISSIONS_OC()),
-                                                           "Forcings" = list("RF - Total" = RF_TOTAL(),
-                                                                             "RF - Albedo" = RF_ALBEDO(),
-                                                                             "RF - CO2" = RF_CO2(),
-                                                                             "RF - N2O" = RF_N2O(),
-                                                                             "RF - Black Carbon" = RF_BC(),
-                                                                             "RF - Organic Carbon" = RF_OC(),
-                                                                             "RF - Total SO2" = RF_SO2(),
-                                                                             "RF - Volcanic Activity" = RF_VOL(),
-                                                                             "RF - CH4" = RF_CH4())),
-                                                      selected = "Atmospheric CO2", multiple = FALSE),
-                                   ),
-                                   column(3,
-                                          actionBttn(ns("run"),"Run", color = "primary"),
-
-                                   )
-                               ),
-                               fluidRow(
-                                   withSpinner(plotlyOutput(ns("graph")))
-                                   )
+                  fluidRow(
+                      column(4,
+                             selectInput(ns("variable"), "Choose Output Variable:",
+                                         list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
+                                                                    "FFI Emissions" = FFI_EMISSIONS(),
+                                                                    "LUC Emissions" = LUC_EMISSIONS()),
+                                              "Concentrations" = list("N2O Concentration" = CONCENTRATIONS_N2O()),
+                                              "Emissions" = list("Black Carbon Emissions" = EMISSIONS_BC(),
+                                                                 "Organic Carbon Emissions" = EMISSIONS_OC()),
+                                              "Forcings" = list("RF - Total" = RF_TOTAL(),
+                                                                "RF - Albedo" = RF_ALBEDO(),
+                                                                "RF - CO2" = RF_CO2(),
+                                                                "RF - N2O" = RF_N2O(),
+                                                                "RF - Black Carbon" = RF_BC(),
+                                                                "RF - Organic Carbon" = RF_OC(),
+                                                                "RF - Total SO2" = RF_SO2(),
+                                                                "RF - Volcanic Activity" = RF_VOL(),
+                                                                "RF - CH4" = RF_CH4())),
+                                         selected = "Atmospheric CO2", multiple = FALSE),
                       ),
-                      tabPanel(p(icon("globe-americas","fa-2x"), "World Maps", value="outputTab")
+                      column(3,
+                             materialSwitch(ns("savetoggle"), "Save Run", status = "success")
                       ),
-                      tabPanel(p(icon("chart-pie","fa-2x"), "Carbon Tracking", value="outputTab")
+                      column(5,
+                             conditionalPanel(
+                                 condition = "input.savetoggle == true",
+                                 ns = ns,
+                                 textInput(ns("run_name"), label = "Run Name", placeholder = "Run 1")
+                             )
+                      ),
+                      column(2,
+                             dropdownButton(inputId = ns("dropdown"),
+                                            icon = icon("gear"),
+                                            circle = TRUE,
+                                            status = "primary",
+                                            dataTableOutput(ns("savetable")),
+                                            actionButton(ns("deleteRuns"), "Delete Selected")
+                             )
                       )
-
+                  ),
+                  fluidRow(
+                             actionBttn(ns("run"),"Run", color = "primary"),
+                  ),
+                  fluidRow(
+                      withSpinner(plotlyOutput(ns("graph")))
                   )
         )
     )
@@ -96,13 +88,9 @@ run_server <- function(id, r6) {
         observe({
 
             if (input$savetoggle == TRUE) {
-
                 r6$save <- TRUE
-
             } else {
-
                 r6$save <- FALSE
-
             }
 
             r6$selected_var <- reactive({input$variable})
@@ -114,6 +102,12 @@ run_server <- function(id, r6) {
             core <- reactive({newcore(r6$ini_file())}) # create core
 
             # Set parameters using inputs (function to only call setvar once in final version)
+            if (input$permafrost == TRUE) {
+              setvar(core(),0,PERMAFROST_C(),865,"Pg C")
+              r6$permafrost <- "On"
+            } else if (input$permafrost == FALSE) {
+              r6$permafrost <- "Off"
+            }
             setvar(core(),NA,AERO_SCALE(),input$alpha,"(unitless)")
             setvar(core(),NA,BETA(),input$beta,"(unitless)")
             setvar(core(),NA,DIFFUSIVITY(),input$diff,"cm2/s")
@@ -124,16 +118,17 @@ run_server <- function(id, r6) {
             reset(core())
             run(core())
 
-            #browser()
             if (r6$save == TRUE) {
 
                 r6$output[[r6$run_name()]] <- fetchvars(core(), r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
-                    mutate(run = r6$run_name(), Scenario = input$ssp_path)
+                    mutate(run = r6$run_name(), Scenario = names(which(scenarios == input$ssp_path, arr.ind = FALSE)))
+
+                updateSwitchInput(session = session, "savetoggle", value = FALSE)
 
             } else if (r6$save == FALSE) {
 
                 r6$no_save_output <- fetchvars(core(), r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
-                    mutate(ssp = input$ssp_path)
+                    mutate(Scenario = names(which(scenarios == input$ssp_path, arr.ind = FALSE)))
 
             }
 
@@ -150,11 +145,30 @@ run_server <- function(id, r6) {
             }) %>%
             bindEvent(input$run, ignoreNULL = TRUE, ignoreInit = FALSE)
 
+        # Clear text input for run save after toggle switch is off
+        observe({
+            updateTextInput(session = session, "run_name", value = NA)
+        }) %>%
+            bindEvent(input$savetoggle == FALSE)
+
+        # Create a table to show saved runs in session
+        observe({
+
+            savetable <- reactive(tibble("Run Name" = names(r6$output)))
+            output$savetable <- renderDataTable({savetable()})
+
+        }) %>% bindEvent(input$run)
+
+        # Create delete entry in saved output list based on user-selected row
+        observe({
+
+            #this should work in theory, but savetable isn't getting passed into the observe?
+            delete <- savetable()$`Run Name`[input$savetable_rows_selected]
+
+            r6$output[[delete]] <- NULL
+
+        }) %>% bindEvent(input$deleteRuns)
+
+
     })
 }
-
-# might be worth it to just run the core with all selectable variables. how much time would that add?
-# issue seems to be that mod_run goes first, so input$variable just doesn't exist yet... maybe having
-# that module containing all choices is a good idea
-
-# fetchvars(core,1745:2300,vars=list(CONCENTRATIONS_CO2(),FFI_EMISSIONS(),LUC_EMISSIONS(),CONCENTRATIONS_N2O,EMISSIONS_BC(),EMISSIONS_OC(),RF_TOTAL(),RF_ALBEDO(),RF_N2O(),RF_CO2(),RF_BC(),RF_OC(),RF_SO2(),RF_CH4(),RF_VOL()))

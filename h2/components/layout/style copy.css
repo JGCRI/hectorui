@@ -1,8 +1,110 @@
 
-.test {
-    font-family:"Barlow Regular", Sans-Serif !important;
-}
-
 h5 {
   font-weight: bold;
+}
+
+body
+{
+	font-family:"Barlow Regular", Sans-Serif !important;
+}
+
+.about-info
+{
+    font-size: 12px;
+}
+
+.c-emissions
+{
+    font-size: 14px;
+}
+
+.container {
+    position: relative;
+    width:100%;
+}
+
+.header-text-title
+{
+    position: absolute;
+    color: #FFFFFF;
+    top: 40%;
+    left: 50%;
+    text-align: center;!important
+    max-width: 120px;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+}
+
+.header-text-sub
+{
+    position: absolute;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 100%;
+    top: 60%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+}
+
+.home-text
+{
+    font-size: 16px;
+}
+
+.hrNav
+{
+    font-size: 50px;
+}
+
+.logo
+{
+
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    margin:20px;
+  padding:0px 8px;
+  width:5em;
+}
+
+.maps
+{
+    font-size: 16px;
+}
+
+.nav-tabs
+{
+    font-size: 14px;
+}
+
+.output-vars
+{
+    font-size: 16px;
+}
+
+.params
+{
+    font-size: 14px;
+}
+
+.navbar-nav
+{
+    float:none;
+    margin:0 auto;
+    display: block;
+    text-align: center;
+    color: #000000;
+}
+
+.navbar-nav > li {
+    display: inline-block;
+    float:none;
+    color: #000000;
+}
+
+.sticky-footer
+{
+    font-size: 12px;
+}
 }
