@@ -141,7 +141,12 @@ tracking_server <- function(id) {
             xlab("") +
             ylab("Carbon Pool (Fraction)") +
             theme(plot.title = element_text(size=20,face="bold"),
-                  legend.position="bottom")
+                  legend.title=element_text(size=16),
+                  legend.position="bottom",
+                  legend.text=element_text(size=12),
+                  axis.title.y=element_text(size=14),
+                  axis.text=element_text(size=10),
+                  plot.margin = margin(1,1,1,1,"cm"))
           
           # save as file
           ggsave("outfile_area.jpeg",plot=area_plot,device="jpeg",
