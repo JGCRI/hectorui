@@ -23,7 +23,6 @@ ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
                  column(4, div(
                      br(),
                      br(),
-
                      actionButton(inputId = "launch_scenario",
                                   label = "Explore Hector",
                                   style = "background: #4174C3; color: white;
@@ -36,11 +35,14 @@ ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
     tabPanel(title = "Guides"),
     tabPanel(title = "Run Hector",
              fluidRow(
-                 run_ui("run_1"),
-                 #download_ui("download_1"),
-                 )
-             ),
-    tabPanel(title = p(icon("chart-pie","fa-2x"), "Carbon Tracking", value="outputTab")),
+               run_ui("run_1"),
+             )
+    ),
+    tabPanel(title = "Carbon Tracking",
+             fluidRow(
+               tracking_ui("tracking_1")
+             )
+    ),
     tabPanel(title = "About")
   ),
   hr(),
@@ -49,12 +51,14 @@ ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
 
 server <- function(input, output, session) {
   r6 <- HectorInputs$new() # r6 class
+  r6_tracking <- HectorInputs$new() # separate r6 class for carbon tracking
   observeEvent(input$launch_scenario, updateTabsetPanel(session, "nav", selected = "Run Hector"), ignoreInit = TRUE)
 
   run_server("run_1", r6 = r6)
   summary_server("summary_1", r6 = r6)
   graph_server("graph_1", r6 = r6)
   download_server("download_1", r6 = r6)
+  tracking_server("tracking_1")
 }
 
 # Run the application
