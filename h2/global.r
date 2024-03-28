@@ -13,8 +13,6 @@ library(shinyBS)
 library(zip)
 library(svglite)
 
-setwd("~/GitHub/hectorui/h2")
-
 source("./components/modules/mod_graph.r")
 source("./components/modules/mod_run.r")
 source("./components/modules/mod_summary.r")
