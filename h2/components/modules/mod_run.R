@@ -154,7 +154,8 @@ run_server <- function(id, r6) {
         # Create a table to show saved runs in session
         observe({
 
-            savetable <- reactive(tibble("Run Name" = names(r6$output)))
+            # this double allows it to be accessible outside this observe
+            savetable <<- reactive(tibble("Run Name" = names(r6$output)))
             output$savetable <- renderDataTable({savetable()})
 
         }) %>% bindEvent(input$run)
@@ -162,10 +163,10 @@ run_server <- function(id, r6) {
         # Create delete entry in saved output list based on user-selected row
         observe({
 
-            #this should work in theory, but savetable isn't getting passed into the observe?
             delete <- savetable()$`Run Name`[input$savetable_rows_selected]
 
             r6$output[[delete]] <- NULL
+            #this works, but the table needs to be updated
 
         }) %>% bindEvent(input$deleteRuns)
 
