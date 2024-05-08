@@ -44,7 +44,12 @@ ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
              ),
     tabPanel(title = "Run Hector",
              fluidRow(
-               run_ui("run_1"),
+               run_ui("run_1")
+             )
+    ),
+    tabPanel(title = "Custom Emissions",
+             fluidRow(
+               custom_ui("custom_1")
              )
     ),
     tabPanel(title = "Carbon Tracking",
