@@ -73,6 +73,7 @@ server <- function(input, output, session) {
   graph_server("graph_1", r6 = r6)
   download_server("download_1", r6 = r6)
   tracking_server("tracking_1")
+  custom_server("custom_1")
 }
 
 # Run the application

@@ -22,6 +22,8 @@ source("./components/modules/mod_tracking.r")
 source("./components/functions/func_graph_plots.R")
 source("./components/functions/func_custom_emissions.R")
 
+#setwd("../GitHub/hectorui/h2")
+
 theme_set(theme_minimal())
 
 # Define R6 class
