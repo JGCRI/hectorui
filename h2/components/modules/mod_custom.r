@@ -20,14 +20,15 @@ custom_ui <- function(id) {
                    tags$table(
                      tags$tr(width = "100%",
                              tags$td(width = "145", "Baseline Scenario:"),
-                             tags$td(width = "155", selectInput(ns("input_custom_SSP"), label = NULL, list("SSP 1-1.9" = "SSP 1-1.9",
-                                                                                                       "SSP 1-2.6" = "SSP 1-2.6",
-                                                                                                       "SSP 2-4.5" = "SSP 2-4.5",
-                                                                                                       "SSP 3-7.0" = "SSP 3-7.0",
-                                                                                                       "SSP 4-3.4" = "SSP 4-3.4",
-                                                                                                       "SSP 4-6.0" = "SSP 4-6.0",
-                                                                                                       "SSP 5-3.4OS" = "SSP 5-3.4OS",
-                                                                                                       "SSP 5-8.5" = "SSP 5-8.5"), 
+                             tags$td(width = "155", selectInput(ns("input_custom_SSP"), label = NULL, 
+                                                                choices = list("SSP 1-1.9"="input/hector_ssp119.ini",
+                                                                               "SSP 1-2.6"="input/hector_ssp126.ini",
+                                                                               "SSP 2-4.5"="input/hector_ssp245.ini",
+                                                                               "SSP 3-7.0"="input/hector_ssp370.ini",
+                                                                               "SSP 4-3.4"="input/hector_ssp434.ini",
+                                                                               "SSP 4-6.0"="input/hector_ssp460.ini",
+                                                                               "SSP 5-3.4OS"="input/hector_ssp534-over.ini",
+                                                                               "SSP 5-8.5"="input/hector_ssp585.ini"), 
                                                                 width=150, selected = "SSP 2-4.5"))
                      ),
                      tags$tr(width = "100%",
@@ -37,49 +38,49 @@ custom_ui <- function(id) {
                    ),
                    div(
                      conditionalPanel(
-                       condition = "input.input_custom_SSP == 'SSP 1-1.9'",
+                       condition = "input.input_custom_SSP == 'input/hector_ssp119.ini'",
                        a(h6("Download SSP 1-1.9 Emissions File Template"),
                          href="C:/Users/done231/OneDrive - PNNL/Documents/GitHub/hectorui/h2/components/inputs/ssp_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
-                       condition = "input.input_custom_SSP == 'SSP 1-2.6'",
+                       condition = "input.input_custom_SSP == 'input/hector_ssp126.ini'",
                        a(h6("Download SSP 1-2.6 Emissions File Template"), 
                          href="components/inputs/ssp126_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
-                       condition = "input.input_custom_SSP == 'SSP 2-4.5'",
+                       condition = "input.input_custom_SSP == 'input/hector_ssp245.ini'",
                        a(h6("Download SSP 2-4.5 Emissions File Template"), 
                          href="components/inputs/ssp245_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
-                       condition = "input.input_custom_SSP == 'SSP 3-7.0'",
+                       condition = "input.input_custom_SSP == 'input/hector_ssp370.ini'",
                        a(h6("Download SSP 3-7.0 Emissions File Template"), 
                          href="components/inputs/ssp370_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
-                       condition = "input.input_custom_SSP == 'SSP 4-3.4'",
+                       condition = "input.input_custom_SSP == 'input/hector_ssp434.ini'",
                        a(h6("Download SSP 4-3.4 Emissions File Template"), 
                          href="components/inputs/ssp434_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
-                       condition = "input.input_custom_SSP == 'SSP 4-6.0'",
+                       condition = "input.input_custom_SSP == 'input/hector_ssp460.ini'",
                        a(h6("Download SSP 4-6.0 Emissions File Template"), 
                          href="components/inputs/ssp460_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
-                       condition = "input.input_custom_SSP == 'SSP 5-3.4OS'",
+                       condition = "input.input_custom_SSP == 'input/hector_ssp534-over.ini'",
                        a(h6("Download SSP 5-3.4OS Emissions File Template"), 
                          href="components/inputs/ssp534-over_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
-                       condition = "input.input_custom_SSP == 'SSP 5-8.5'",
+                       condition = "input.input_custom_SSP == 'input/hector_ssp585.ini'",
                        a(h6("Download SSP 5-8.5 Emissions File Template"), 
                          href="components/inputs/ssp585_emiss-constraints_rf.csv"),
                        ns=NS(id)
@@ -108,19 +109,21 @@ custom_server <- function(id, r6) {
         shinyalert::shinyalert("Missing Information", "Please name the scenario and load an emissions file before attempting to load the scenario.", type = "warning")
         return(NULL)
       }
-      scenarioName <- input$input_custom_scenarioName
-      sspName <- input$input_custom_SSP
+      r6$run_name <- input$input_custom_scenarioName
       
       # Read in input data
-      inifile <- system.file("input/hector_ssp119.ini",package="hector")#system.file(input$input_custom_SSP, package='hector', mustWork=TRUE)
-      file <- input$input_custom_emissions_file
-      emissions_data <- read.csv(file=file$datapath, header=TRUE, sep=",", skip = 5)
-      emissions_headers <- read.csv(file=file$datapath, header=FALSE, sep=",", skip = 4)
+      inifile <- system.file(input$input_custom_SSP,package="hector")
+      emifile <- input$input_custom_emissions_file
+      emissions_data <- read.csv(file=emifile$datapath, header=TRUE, sep=",", skip = 5)
+      emissions_headers <- read.csv(file=emifile$datapath, header=FALSE, sep=",", skip = 4)
       dates_col <- emissions_data$Date
 
-      
-      core <- newcore(inifile, suppresslogging=TRUE, name=scenarioName)
-      run(core)
+      withProgress(message = paste('Creating Custom Scenario ', r6$run_name, "...\n"), value = 1/2, {
+        core <- newcore(inifile, suppresslogging=TRUE, name=r6$run_name)
+        run(core)
+        incProgress(1/1, detail = paste("Load complete."))
+        Sys.sleep(0.2)
+      })
       
       # set vars
       for(i in c(2:ncol(emissions_data))) {
@@ -135,8 +138,7 @@ custom_server <- function(id, r6) {
       output$plot <- renderPlotly(ggplot(data = data) +
         geom_line(aes(year, value)) +
         facet_wrap("variable", scales = "free") +
-        labs(title = scenarioName,
-             subtitle = sspName,
+        labs(title = r6$run_name,
              x = NULL) +
         theme(axis.text.x = element_text(angle = 90)))
       

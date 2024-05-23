@@ -66,6 +66,7 @@ ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
 server <- function(input, output, session) {
   r6 <- HectorInputs$new() # r6 class
   r6_tracking <- HectorInputs$new() # separate r6 class for carbon tracking
+  r6_custom <- HectorInputs$new()
   observeEvent(input$launch_scenario, updateTabsetPanel(session, "nav", selected = "Run Hector"), ignoreInit = TRUE)
 
   run_server("run_1", r6 = r6)
@@ -73,7 +74,7 @@ server <- function(input, output, session) {
   graph_server("graph_1", r6 = r6)
   download_server("download_1", r6 = r6)
   tracking_server("tracking_1")
-  custom_server("custom_1")
+  custom_server("custom_1", r6 = r6_custom)
 }
 
 # Run the application
