@@ -94,7 +94,7 @@ custom_ui <- function(id) {
       )
     ),
     mainPanel(
-      plotlyOutput(ns("plot")),
+      plotlyOutput(ns("graph")),
     )
   )
 }
@@ -132,15 +132,20 @@ custom_server <- function(id, r6) {
       
       reset(core)
       run(core)
-      data <- fetchvars(core,2000:2100)
+      r6$output[[r6$run_name]] <- fetchvars(core, 1745:2300, vars = list("CO2_concentration")) %>%
+        mutate(run = r6$run_name, Scenario = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)))
+      r6$output <- as.data.frame(r6$output)
+      colnames(r6$output) <- c("scenario","year","variable","value","units","run","Scenario")
       
       # Plot
-      output$plot <- renderPlotly(ggplot(data = data) +
-        geom_line(aes(year, value)) +
-        facet_wrap("variable", scales = "free") +
-        labs(title = r6$run_name,
-             x = NULL) +
-        theme(axis.text.x = element_text(angle = 90)))
+      # replace following with graph plots function in future
+      output$graph <- renderPlotly({
+        ggplot(r6$output) +
+          geom_line(aes(x = year, y = value, color = scenario)) +
+          labs(x = "Year", y = last(r6$output)$variable[1],
+               title = paste0("Variable: ", last(r6$output)$variable[1])) +
+          theme(legend.position = "bottom")
+      })
       
     }) %>% bindEvent(input$input_load_emissions)
   })
