@@ -125,23 +125,30 @@ custom_server <- function(id, r6) {
         Sys.sleep(0.2)
       })
       
-      # set vars
+      # get data from base SSP run
+      base_output <- fetchvars(core, 1745:2300, vars = list("CO2_concentration")) %>%
+        mutate(run = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)),
+                           Scenario = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)))
+      #browser()
+      
+      # set vars and rerun core
       for(i in c(2:ncol(emissions_data))) {
         setvar(core = core, dates = emissions_data[, 1],var = colnames(emissions_data)[i], values = emissions_data[, i], unit = as.character(emissions_headers[[paste0("V",i)]][[1]]))
       }
       
       reset(core)
       run(core)
-      r6$output[[r6$run_name]] <- fetchvars(core, 1745:2300, vars = list("CO2_concentration")) %>%
+      
+      # get custom output
+      custom_output <- fetchvars(core, 1745:2300, vars = list("CO2_concentration")) %>%
         mutate(run = r6$run_name, Scenario = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)))
-      r6$output <- as.data.frame(r6$output)
-      colnames(r6$output) <- c("scenario","year","variable","value","units","run","Scenario")
+      r6$output <- bind_rows(list(base_output,custom_output))
       
       # Plot
       # replace following with graph plots function in future
       output$graph <- renderPlotly({
         ggplot(r6$output) +
-          geom_line(aes(x = year, y = value, color = scenario)) +
+          geom_line(aes(x = year, y = value, color = run)) +
           labs(x = "Year", y = last(r6$output)$variable[1],
                title = paste0("Variable: ", last(r6$output)$variable[1])) +
           theme(legend.position = "bottom")
