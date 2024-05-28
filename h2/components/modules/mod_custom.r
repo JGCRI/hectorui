@@ -40,49 +40,53 @@ custom_ui <- function(id) {
                      conditionalPanel(
                        condition = "input.input_custom_SSP == 'input/hector_ssp119.ini'",
                        a(h6("Download SSP 1-1.9 Emissions File Template"),
-                         href="C:/Users/done231/OneDrive - PNNL/Documents/GitHub/hectorui/h2/components/inputs/ssp_emiss-constraints_rf.csv"),
+                         href="inputs/ssp119_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
+                     # conditionalPanel(
+                     #   condition = "input.input_custom_SSP == 'input/hector_ssp119.ini'",
+                     #   downloadButton(ns("download_file"), label = "Download SSP 1-1.9 Emissions File Template")
+                     # ),
                      conditionalPanel(
                        condition = "input.input_custom_SSP == 'input/hector_ssp126.ini'",
                        a(h6("Download SSP 1-2.6 Emissions File Template"), 
-                         href="components/inputs/ssp126_emiss-constraints_rf.csv"),
+                         href="inputs/ssp126_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
                        condition = "input.input_custom_SSP == 'input/hector_ssp245.ini'",
                        a(h6("Download SSP 2-4.5 Emissions File Template"), 
-                         href="components/inputs/ssp245_emiss-constraints_rf.csv"),
+                         href="inputs/ssp245_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
                        condition = "input.input_custom_SSP == 'input/hector_ssp370.ini'",
                        a(h6("Download SSP 3-7.0 Emissions File Template"), 
-                         href="components/inputs/ssp370_emiss-constraints_rf.csv"),
+                         href="inputs/ssp370_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
                        condition = "input.input_custom_SSP == 'input/hector_ssp434.ini'",
                        a(h6("Download SSP 4-3.4 Emissions File Template"), 
-                         href="components/inputs/ssp434_emiss-constraints_rf.csv"),
+                         href="inputs/ssp434_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
                        condition = "input.input_custom_SSP == 'input/hector_ssp460.ini'",
                        a(h6("Download SSP 4-6.0 Emissions File Template"), 
-                         href="components/inputs/ssp460_emiss-constraints_rf.csv"),
+                         href="inputs/ssp460_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
                        condition = "input.input_custom_SSP == 'input/hector_ssp534-over.ini'",
                        a(h6("Download SSP 5-3.4OS Emissions File Template"), 
-                         href="components/inputs/ssp534-over_emiss-constraints_rf.csv"),
+                         href="inputs/ssp534-over_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      conditionalPanel(
                        condition = "input.input_custom_SSP == 'input/hector_ssp585.ini'",
                        a(h6("Download SSP 5-8.5 Emissions File Template"), 
-                         href="components/inputs/ssp585_emiss-constraints_rf.csv"),
+                         href="inputs/ssp585_emiss-constraints_rf.csv"),
                        ns=NS(id)
                      ),
                      fileInput(ns("input_custom_emissions_file"), "Upload Custom Emissions File:", width=275, buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
@@ -155,5 +159,10 @@ custom_server <- function(id, r6) {
       })
       
     }) %>% bindEvent(input$input_load_emissions)
+    
+    output$download_file <- downloadHandler(
+      
+    )
+    
   })
 }
