@@ -17,13 +17,13 @@ run_ui <- function(id) {
                          sliderInput(ns("alpha"), label="Aerosol forcing scaling factor", # AERO_SCALE()
                                      min = 0.01, max = 1, value = 1, width = "90%"),
                          sliderInput(ns("beta"), label="CO2 fertilization factor", # BETA()
-                                     min = 0.01, max = 4, value = 0.36, step=0.01, width = "90%"),
+                                     min = 0.01, max = 4, value = 0.55, step=0.01, width = "90%"),
                          sliderInput(ns("diff"), label="Ocean heat diffusivity", # DIFFUSIVITY()
-                                     min = 0, max = 5, value = 2.3, step=0.1, post = " cm2/s", width = "90%"),
+                                     min = 0, max = 5, value = 1.16, step=0.1, post = " cm2/s", width = "90%"),
                          sliderInput(ns("S"), label="Equilibrium climate sensitivity", # ECS()
                                      min = 1, max = 6, value = 3, step=0.1, post = " °C", width = "90%"),
                          sliderInput(ns("q10_rh"), label="Heterotrophic temperature sensitivity", # Q10_RH()
-                                     min = 1, max = 5, value = 2, step=0.1, width = "90%"),
+                                     min = 1, max = 5, value = 2.1, step=0.1, width = "90%"),
                          sliderInput(ns("volscl"), label="Volcanic forcing scaling factor", # VOLCANIC_SCALE()
                                      min = 0, max = 1, value = 1, width = "90%")
                 )
