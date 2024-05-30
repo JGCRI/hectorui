@@ -49,7 +49,6 @@ run_ui <- function(id) {
         ),
         mainPanel(
                   fluidRow(
-                      column(8,
                              selectInput(ns("variable"), "Output Variable:",
                                          list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
                                                                     "FFI Emissions" = FFI_EMISSIONS(),
@@ -66,12 +65,12 @@ run_ui <- function(id) {
                                                                 "RF - Total SO2" = RF_SO2(),
                                                                 "RF - Volcanic Activity" = RF_VOL(),
                                                                 "RF - CH4" = RF_CH4())),
-                                         selected = "Atmospheric CO2", multiple = FALSE, width = '100%'),
-                      )
+                                         selected = "Atmospheric CO2", multiple = FALSE)
                   ),
                   fluidRow(
-                      actionButton(ns("run"), label="Load Graphs", width = '200px', style = "background: #0B3F8F; color: white;"),
-                      downloadButton(ns("downloadData"), label="Download Raw Data", style = "background: #0B3F8F; color: white;")
+                      actionButton(ns("run"), label="Load Graphs", width = '150px', style = "background: #0B3F8F; color: white;"),
+                      downloadButton(ns("downloadData"), label="Download Data", style = "background: #B8B8B8; color: black;"),
+                      downloadButton(ns("downloadParam"), label="Download Parameters", style = "background: #B8B8B8; color: black;")
                   ),
                   fluidRow(
                       br(),
@@ -135,8 +134,6 @@ run_server <- function(id, r6) {
             }) %>%
             bindEvent(input$run, ignoreNULL = TRUE, ignoreInit = FALSE)
 
-        #observe({
-
             # Download handler for downloading the raw data output from a Hector run. This is activated upon button click.
             output$downloadData <- downloadHandler(
                 filename = function()
@@ -146,30 +143,45 @@ run_server <- function(id, r6) {
 
                 content = function(file)
                 {
-                    browser()
+
                     if(!is.null(r6$output))
                     {
-
-                        header_text <- paste("File created with Hector UI - https://github.com/JGCRI/hector-ui\n" ,
-                                             "Model Parameters: " , input$input_paramToggle , "\n",
-                                             "Alpha:,", input$alpha, ",Beta:,", input$beta, ",Diff:,", input$diff,
-                                             ",ECS:,", input$S, ",Q10:,", input$q10_rh, ",Volc:,", input$volscl,
-                                             "\n")
-
-                        cat(header_text, file = file)
-
+                        write.csv(as.data.frame(r6$output), file, row.names = FALSE)
                     }
                     else
                     {
-                        shinyalert::shinyalert("No active Hector cores", "Please set at least one of the SSP scenarios to active or upload a custom emissions scenario before downloading.", type = "warning")
+                        shinyalert::shinyalert("No active Hector cores", "Please set at least one of the SSP scenarios to active.", type = "warning")
                     }
                 }
             )
-
             outputOptions(output, "downloadData", suspendWhenHidden = FALSE)
 
-        #}) %>%
-        #    bindEvent(input$downloadData, ignoreNULL = TRUE, ignoreInit = FALSE)
+            output$downloadParam <- downloadHandler(
+                filename = function()
+                {
+                    paste0('HectorUI_Parameters_', Sys.Date(), '.txt')
+                },
+
+                content = function(file)
+                {
+
+                    if(!is.null(r6$output))
+                    {
+                        header_text <- paste0("File created with Hector UI - https://github.com/JGCRI/hector-ui\n" ,
+                                             "Permafrost: ", r6$permafrost, "\n",
+                                             "Model Parameters: " , input$input_paramToggle ,
+                                             "Alpha: ", input$alpha, " Beta: ", input$beta, " Diff: ", input$diff,
+                                             " ECS: ", input$S, " Q10: ", input$q10_rh, " Volc: ", input$volscl)
+
+                        writeLines(header_text, file)
+                    }
+                    else
+                    {
+                        shinyalert::shinyalert("No active Hector cores", "Upload a custom emissions scenario before downloading.", type = "warning")
+                    }
+                }
+            )
+            outputOptions(output, "downloadParam", suspendWhenHidden = FALSE)
 
     })
 }
