@@ -1,113 +1,119 @@
 # Run the model with custom emissions
 custom_ui <- function(id) {
-  ns <- NS(id)
-  fluidRow(
-    sidebarPanel(
-      h5("Custom Emissions Pathway"),
-      tags$hr(class="hrNav"),
-      p("Steps to run your own scenario with custom emissions:"),
-      tags$ol(
-        tags$li("Choose a baseline SSP scenario as your starting point"),
-        tags$li("Give your new custom scenario a name"),
-        tags$li("Download the emissions file template for that scenario and enter your own emissions"),
-        tags$li("Upload the new customized emissions file")
-      ),
-      p(tags$strong("Do not edit any field names or change the CSV file in any way other than changing the data")),
-      tags$table(
-        tags$tr(width = "100%",
-                tags$td(width = "145", "Baseline Scenario:"),
-                tags$td(width = "155", selectInput(ns("input_custom_SSP"), label = NULL,
-                                                   choices = list("SSP 1-1.9"="input/hector_ssp119.ini",
-                                                                  "SSP 1-2.6"="input/hector_ssp126.ini",
-                                                                  "SSP 2-4.5"="input/hector_ssp245.ini",
-                                                                  "SSP 3-7.0"="input/hector_ssp370.ini",
-                                                                  "SSP 4-3.4"="input/hector_ssp434.ini",
-                                                                  "SSP 4-6.0"="input/hector_ssp460.ini",
-                                                                  "SSP 5-3.4OS"="input/hector_ssp534-over.ini",
-                                                                  "SSP 5-8.5"="input/hector_ssp585.ini"),
-                                                   width=150, selected = "SSP 2-4.5"))
+    ns <- NS(id)
+    fluidRow(
+        sidebarPanel(
+            h5("Custom Emissions Pathway"),
+            tags$hr(class="hrNav"),
+            p("Steps to run your own scenario with custom emissions:"),
+            tags$ol(
+                tags$li("Choose a baseline SSP scenario as your starting point"),
+                tags$li("Give your new custom scenario a name"),
+                tags$li("Download the emissions file template for that scenario and enter your own emissions"),
+                tags$li("Upload the new customized emissions file")
+            ),
+            p(tags$strong("Do not edit any field names or change the CSV file in any way other than changing the data")),
+            tags$table(
+                tags$tr(width = "100%",
+                        tags$td(width = "145", "Baseline Scenario:"),
+                        tags$td(width = "155", selectInput(ns("input_custom_SSP"), label = NULL,
+                                                           choices = list("SSP 1-1.9"="input/hector_ssp119.ini",
+                                                                          "SSP 1-2.6"="input/hector_ssp126.ini",
+                                                                          "SSP 2-4.5"="input/hector_ssp245.ini",
+                                                                          "SSP 3-7.0"="input/hector_ssp370.ini",
+                                                                          "SSP 4-3.4"="input/hector_ssp434.ini",
+                                                                          "SSP 4-6.0"="input/hector_ssp460.ini",
+                                                                          "SSP 5-3.4OS"="input/hector_ssp534-over.ini",
+                                                                          "SSP 5-8.5"="input/hector_ssp585.ini"),
+                                                           width=150, selected = "SSP 2-4.5"))
+                ),
+                tags$tr(width = "100%",
+                        tags$td(width = "145", "Your Scenario Name:"),
+                        tags$td(width = "200",  textInput(ns("input_custom_scenarioName"), label = NULL, width=195, value = ""))
+                )
+            ),
+            div(
+                conditionalPanel(
+                    condition = "input.input_custom_SSP == 'input/hector_ssp119.ini'",
+                    a(h6("Download SSP 1-1.9 Emissions File Template"),
+                      href="inputs/ssp119_emissions.csv"),
+                    ns=NS(id)
+                ),
+                conditionalPanel(
+                    condition = "input.input_custom_SSP == 'input/hector_ssp126.ini'",
+                    a(h6("Download SSP 1-2.6 Emissions File Template"),
+                      href="inputs/ssp126_emissions.csv"),
+                    ns=NS(id)
+                ),
+                conditionalPanel(
+                    condition = "input.input_custom_SSP == 'input/hector_ssp245.ini'",
+                    a(h6("Download SSP 2-4.5 Emissions File Template"),
+                      href="inputs/ssp245_emissions.csv"),
+                    ns=NS(id)
+                ),
+                conditionalPanel(
+                    condition = "input.input_custom_SSP == 'input/hector_ssp370.ini'",
+                    a(h6("Download SSP 3-7.0 Emissions File Template"),
+                      href="inputs/ssp370_emissions.csv"),
+                    ns=NS(id)
+                ),
+                conditionalPanel(
+                    condition = "input.input_custom_SSP == 'input/hector_ssp434.ini'",
+                    a(h6("Download SSP 4-3.4 Emissions File Template"),
+                      href="inputs/ssp434_emissions.csv"),
+                    ns=NS(id)
+                ),
+                conditionalPanel(
+                    condition = "input.input_custom_SSP == 'input/hector_ssp460.ini'",
+                    a(h6("Download SSP 4-6.0 Emissions File Template"),
+                      href="inputs/ssp460_emissions.csv"),
+                    ns=NS(id)
+                ),
+                conditionalPanel(
+                    condition = "input.input_custom_SSP == 'input/hector_ssp534-over.ini'",
+                    a(h6("Download SSP 5-3.4OS Emissions File Template"),
+                      href="inputs/ssp534-over_emissions.csv"),
+                    ns=NS(id)
+                ),
+                conditionalPanel(
+                    condition = "input.input_custom_SSP == 'input/hector_ssp585.ini'",
+                    a(h6("Download SSP 5-8.5 Emissions File Template"),
+                      href="inputs/ssp585_emissions.csv"),
+                    ns=NS(id)
+                ),
+                fileInput(ns("input_custom_emissions_file"), "Upload Custom Emissions File:", width=275,
+                          buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain"))
+            )
         ),
-        tags$tr(width = "100%",
-                tags$td(width = "145", "Your Scenario Name:"),
-                tags$td(width = "200",  textInput(ns("input_custom_scenarioName"), label = NULL, width=195, value = ""))
+        mainPanel(
+            fluidRow(
+                       selectInput(ns("variable"), "Output Variable:",
+                                   list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
+                                                              "FFI Emissions" = FFI_EMISSIONS(),
+                                                              "LUC Emissions" = LUC_EMISSIONS()),
+                                        "Concentrations" = list("N2O Concentration" = CONCENTRATIONS_N2O()),
+                                        "Emissions" = list("Black Carbon Emissions" = EMISSIONS_BC(),
+                                                           "Organic Carbon Emissions" = EMISSIONS_OC()),
+                                        "Forcings" = list("RF - Total" = RF_TOTAL(),
+                                                          "RF - Albedo" = RF_ALBEDO(),
+                                                          "RF - CO2" = RF_CO2(),
+                                                          "RF - N2O" = RF_N2O(),
+                                                          "RF - Black Carbon" = RF_BC(),
+                                                          "RF - Organic Carbon" = RF_OC(),
+                                                          "RF - Total SO2" = RF_SO2(),
+                                                          "RF - Volcanic Activity" = RF_VOL(),
+                                                          "RF - CH4" = RF_CH4())),
+                                   selected = "Atmospheric CO2", multiple = FALSE)
+            ),
+            fluidRow(
+                actionButton(ns("input_load_emissions"), label="Create Scenario", width = '150px', style = "background: #0B3F8F; color: white;"),
+                downloadButton(ns("downloadData"), label="Download Data", style = "background: #B8B8B8; color: black;")
+            ),
+            fluidRow(
+                plotlyOutput(ns("graph"))
+            )
         )
-      ),
-      div(
-        conditionalPanel(
-          condition = "input.input_custom_SSP == 'input/hector_ssp119.ini'",
-          a(h6("Download SSP 1-1.9 Emissions File Template"),
-            href="inputs/ssp119_emissions.csv"),
-          ns=NS(id)
-        ),
-        conditionalPanel(
-          condition = "input.input_custom_SSP == 'input/hector_ssp126.ini'",
-          a(h6("Download SSP 1-2.6 Emissions File Template"),
-            href="inputs/ssp126_emissions.csv"),
-          ns=NS(id)
-        ),
-        conditionalPanel(
-          condition = "input.input_custom_SSP == 'input/hector_ssp245.ini'",
-          a(h6("Download SSP 2-4.5 Emissions File Template"),
-            href="inputs/ssp245_emissions.csv"),
-          ns=NS(id)
-        ),
-        conditionalPanel(
-          condition = "input.input_custom_SSP == 'input/hector_ssp370.ini'",
-          a(h6("Download SSP 3-7.0 Emissions File Template"),
-            href="inputs/ssp370_emissions.csv"),
-          ns=NS(id)
-        ),
-        conditionalPanel(
-          condition = "input.input_custom_SSP == 'input/hector_ssp434.ini'",
-          a(h6("Download SSP 4-3.4 Emissions File Template"),
-            href="inputs/ssp434_emissions.csv"),
-          ns=NS(id)
-        ),
-        conditionalPanel(
-          condition = "input.input_custom_SSP == 'input/hector_ssp460.ini'",
-          a(h6("Download SSP 4-6.0 Emissions File Template"),
-            href="inputs/ssp460_emissions.csv"),
-          ns=NS(id)
-        ),
-        conditionalPanel(
-          condition = "input.input_custom_SSP == 'input/hector_ssp534-over.ini'",
-          a(h6("Download SSP 5-3.4OS Emissions File Template"),
-            href="inputs/ssp534-over_emissions.csv"),
-          ns=NS(id)
-        ),
-        conditionalPanel(
-          condition = "input.input_custom_SSP == 'input/hector_ssp585.ini'",
-          a(h6("Download SSP 5-8.5 Emissions File Template"),
-            href="inputs/ssp585_emissions.csv"),
-          ns=NS(id)
-        ),
-        fileInput(ns("input_custom_emissions_file"), "Upload Custom Emissions File:", width=275,
-                  buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
-        selectInput(ns("variable"), "Choose Output Variable:",
-                    list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
-                                               "FFI Emissions" = FFI_EMISSIONS(),
-                                               "LUC Emissions" = LUC_EMISSIONS()),
-                         "Concentrations" = list("N2O Concentration" = CONCENTRATIONS_N2O()),
-                         "Emissions" = list("Black Carbon Emissions" = EMISSIONS_BC(),
-                                            "Organic Carbon Emissions" = EMISSIONS_OC()),
-                         "Forcings" = list("RF - Total" = RF_TOTAL(),
-                                           "RF - Albedo" = RF_ALBEDO(),
-                                           "RF - CO2" = RF_CO2(),
-                                           "RF - N2O" = RF_N2O(),
-                                           "RF - Black Carbon" = RF_BC(),
-                                           "RF - Organic Carbon" = RF_OC(),
-                                           "RF - Total SO2" = RF_SO2(),
-                                           "RF - Volcanic Activity" = RF_VOL(),
-                                           "RF - CH4" = RF_CH4())),
-                    selected = "Atmospheric CO2", multiple = FALSE),
-        div(
-          class="paramDivs", actionButton(ns("input_load_emissions"), label="Create Scenario"))
-      )
-    ),
-    mainPanel(
-      plotlyOutput(ns("graph")),
     )
-  )
 }
 
 custom_server <- function(id, r6) {
@@ -141,7 +147,6 @@ custom_server <- function(id, r6) {
       base_output <- fetchvars(core, 1745:2300, vars = list(r6$selected_var)) %>%
         mutate(run = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)),
                            Scenario = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)))
-      #browser()
 
       # set vars and rerun core
       for(i in c(2:ncol(emissions_data))) {
@@ -168,9 +173,26 @@ custom_server <- function(id, r6) {
 
     }) %>% bindEvent(input$input_load_emissions)
 
-    output$download_file <- downloadHandler(
+      output$downloadData <- downloadHandler(
+          filename = function()
+          {
+              paste0('HectorUI_CustomEmiss_', r6$run_name, "_", Sys.Date(), '.csv')
+          },
 
-    )
+          content = function(file)
+          {
+
+              if(!is.null(r6$output))
+              {
+                  write.csv(as.data.frame(r6$output), file, row.names = FALSE)
+              }
+              else
+              {
+                  shinyalert::shinyalert("No active Hector cores", "Upload a custom emissions scenario before downloading.", type = "warning")
+              }
+          }
+      )
+      outputOptions(output, "downloadData", suspendWhenHidden = FALSE)
 
   })
 }
