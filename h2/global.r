@@ -15,10 +15,14 @@ library(svglite)
 
 source("./components/modules/mod_graph.r")
 source("./components/modules/mod_run.r")
+source("./components/modules/mod_custom.r")
 source("./components/modules/mod_summary.r")
 source("./components/modules/mod_download.r")
 source("./components/modules/mod_tracking.r")
 source("./components/functions/func_graph_plots.R")
+source("./components/functions/func_custom_emissions.R")
+
+#setwd("../GitHub/hectorui/h2")
 
 theme_set(theme_minimal())
 
@@ -29,11 +33,8 @@ HectorInputs <- R6Class(
     ini_file = NULL,
     time = NA,
     output = NULL,
-    no_save_output = NULL,
-    no_save = NULL,
     run_name = NA,
     permafrost = NULL,
-    save = NULL,
     inputs = NULL,
     selected_var = NULL,
     initialize = function(ini_file = system.file("input/hector_ssp245.ini",
@@ -41,7 +42,6 @@ HectorInputs <- R6Class(
       self$ini_file <- ini_file
       self$time <- time
       self$output <- list()
-      self$no_save <- NULL
       self$run_name <- 1
       self$inputs <- list()
       self$selected_var <- "CO2_concentration"

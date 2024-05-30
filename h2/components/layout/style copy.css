@@ -88,6 +88,14 @@ body
     font-size: 14px;
 }
 
+
+    .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-danger,
+    .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-danger {
+     background: #00699d;
+     color: white;
+}
+
+
 .navbar-nav
 {
     float:none;
