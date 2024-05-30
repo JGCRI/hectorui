@@ -13,16 +13,13 @@ library(shinyBS)
 library(zip)
 library(svglite)
 
-source("./components/modules/mod_graph.r")
-source("./components/modules/mod_run.r")
-source("./components/modules/mod_custom.r")
-source("./components/modules/mod_summary.r")
-source("./components/modules/mod_download.r")
-source("./components/modules/mod_tracking.r")
-source("./components/functions/func_graph_plots.R")
-source("./components/functions/func_custom_emissions.R")
-
-#setwd("../GitHub/hectorui/h2")
+source("components/modules/mod_run.r", local = TRUE)
+source("components/modules/mod_custom.r", local = TRUE)
+source("components/modules/mod_summary.r", local = TRUE)
+source("components/modules/mod_download.r", local = TRUE)
+source("components/modules/mod_tracking.r", local = TRUE)
+source("components/functions/func_graph_plots.R", local = TRUE)
+source("components/functions/func_custom_emissions.R", local = TRUE)
 
 theme_set(theme_minimal())
 
@@ -36,16 +33,16 @@ HectorInputs <- R6Class(
     run_name = NA,
     permafrost = NULL,
     inputs = NULL,
-    selected_var = NULL,
-    initialize = function(ini_file = system.file("input/hector_ssp245.ini",
-                                                 package = "hector")) {
-      self$ini_file <- ini_file
-      self$time <- time
-      self$output <- list()
-      self$run_name <- 1
-      self$inputs <- list()
-      self$selected_var <- "CO2_concentration"
-    }
+    selected_var = NULL#,
+    # initialize = function(ini_file = system.file("input/hector_ssp245.ini",
+    #                                              package = "hector")) {
+    #   self$ini_file <- ini_file
+    #   self$time <- time
+    #   self$output <- list()
+    #   self$run_name <- 1
+    #   self$inputs <- list()
+    #   self$selected_var <- "CO2_concentration"
+    # }
   )
 )
 
