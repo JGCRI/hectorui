@@ -15,10 +15,14 @@ library(svglite)
 
 source("./components/modules/mod_graph.r")
 source("./components/modules/mod_run.r")
+source("./components/modules/mod_custom.r")
 source("./components/modules/mod_summary.r")
 source("./components/modules/mod_download.r")
 source("./components/modules/mod_tracking.r")
 source("./components/functions/func_graph_plots.R")
+source("./components/functions/func_custom_emissions.R")
+
+#setwd("../GitHub/hectorui/h2")
 
 theme_set(theme_minimal())
 
