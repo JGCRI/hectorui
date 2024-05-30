@@ -12,7 +12,6 @@ summary_ui <- function(id) {
 summary_server <- function(id, r6) {
   moduleServer(id, function(input, output, session) {
     observe({
-        browser()
       if (r6$save == TRUE) {
         hectoroutput <- r6$output[[r6$run_name()]]
         output$summary <- renderDT({datatable(hectoroutput)})
