@@ -27,17 +27,17 @@ run_ui <- function(id) {
                                  min = 1, max = 5, value = 2, step=0.1, width = "90%"),
                      sliderInput(ns("volscl"), label="Volcanic forcing scaling factor", # VOLCANIC_SCALE()
                                  min = 0, max = 1, value = 1, width = "90%"),
-                     bsPopover(ns("alpha"), "Decrease this means aerosols exert a lower radiative forcing",
+                     bsPopover(ns("alpha"), title="", content = "Decreasing this means aerosols exert a lower radiative forcing",
                                placement = "top", trigger = "hover", options = NULL),
-                     bsPopover(ns("beta"), "Increasing this means vegetation grows faster as CO2 increases",
+                     bsPopover(ns("beta"), title="", content = "Increasing this means vegetation grows faster as CO2 increases",
                                placement = "top", trigger = "hover", options = NULL),
-                     bsPopover(ns("diff"), "Increasing this means heat moves deeper into the ocean quicker",
+                     bsPopover(ns("diff"), title="", content = "Increasing this means heat moves deeper into the ocean quicker",
                                placement = "top", trigger = "hover", options = NULL),
-                     bsPopover(ns("S"), "Increasing this means a larger temperature rise as CO2 increases",
+                     bsPopover(ns("S"), title="", content = "Increasing this means a larger temperature rise as CO2 increases",
                                placement = "top", trigger = "hover", options = NULL),
-                     bsPopover(ns("q10_rh"), "Increasing this means soil microbes respire faster as temperature rises",
+                     bsPopover(ns("q10_rh"), title="", content = "Increasing this means soil microbes respire faster as temperature rises",
                                placement = "top", trigger = "hover", options = NULL),
-                     bsPopover(ns("volscl"), "Increasing this means that volcanic eruptions exert a stronger radiative forcing",
+                     bsPopover(ns("volscl"), title="", content = "Increasing this means that volcanic eruptions exert a stronger radiative forcing",
                                placement = "top", trigger = "hover", options = NULL)
 
 
@@ -61,13 +61,15 @@ run_ui <- function(id) {
                                                                 "RF - Total SO2" = RF_SO2(),
                                                                 "RF - Volcanic Activity" = RF_VOL(),
                                                                 "RF - CH4" = RF_CH4())),
-                                         selected = "Atmospheric CO2", multiple = FALSE),
-                      ),
-                      column(4,
-                             actionBttn(ns("run"),"Run", color = "primary")
-                             )
+                                         selected = "Atmospheric CO2", multiple = FALSE, width = '100%'),
+                      )
                   ),
                   fluidRow(
+                      actionButton(ns("run"), label="Load Graphs", width = '200px', style = "background: #0B3F8F; color: white;"),
+                      downloadButton(ns("downloadData"), label="Download Raw Data", style = "background: #0B3F8F; color: white;")
+                  ),
+                  fluidRow(
+                      br(),
                       withSpinner(plotlyOutput(ns("graph")))
                   )
         )
@@ -126,6 +128,42 @@ run_server <- function(id, r6) {
             })
             }) %>%
             bindEvent(input$run, ignoreNULL = TRUE, ignoreInit = FALSE)
+
+        #observe({
+
+            # Download handler for downloading the raw data output from a Hector run. This is activated upon button click.
+            output$downloadData <- downloadHandler(
+                filename = function()
+                {
+                    paste0('HectorUI_Output_', Sys.Date(), '.csv')
+                },
+
+                content = function(file)
+                {
+                    browser()
+                    if(!is.null(r6$output))
+                    {
+
+                        header_text <- paste("File created with Hector UI - https://github.com/JGCRI/hector-ui\n" ,
+                                             "Model Parameters: " , input$input_paramToggle , "\n",
+                                             "Alpha:,", input$alpha, ",Beta:,", input$beta, ",Diff:,", input$diff,
+                                             ",ECS:,", input$S, ",Q10:,", input$q10_rh, ",Volc:,", input$volscl,
+                                             "\n")
+
+                        cat(header_text, file = file)
+
+                    }
+                    else
+                    {
+                        shinyalert::shinyalert("No active Hector cores", "Please set at least one of the SSP scenarios to active or upload a custom emissions scenario before downloading.", type = "warning")
+                    }
+                }
+            )
+
+            outputOptions(output, "downloadData", suspendWhenHidden = FALSE)
+
+        #}) %>%
+        #    bindEvent(input$downloadData, ignoreNULL = TRUE, ignoreInit = FALSE)
 
     })
 }
