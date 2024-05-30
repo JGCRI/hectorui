@@ -32,16 +32,6 @@ ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
                  ))
              )
     ),
-    tabPanel(title = "Guides",
-             mainPanel(
-                 style="vertical-align: middle;",
-                 h3("Ready to get started?",
-                    tags$a("View the Guide/Tutorial", href="https://jgcri.github.io/hectorui/articles/Tutorial.html", target="blank")),
-                 br(),
-                 HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/fBHXS7pjZcI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
-
-             )
-             ),
     tabPanel(title = "Run Hector",
              fluidRow(
                run_ui("run_1")
@@ -55,6 +45,16 @@ ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
     tabPanel(title = "Carbon Tracking",
              fluidRow(
                tracking_ui("tracking_1")
+             )
+    ),
+    tabPanel(title = "Guides",
+             mainPanel(
+                 style="vertical-align: middle;",
+                 h3("Ready to get started?",
+                    tags$a("View the Guide/Tutorial", href="https://jgcri.github.io/hectorui/articles/Tutorial.html", target="blank")),
+                 br(),
+                 HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/fBHXS7pjZcI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+
              )
     ),
     tabPanel(title = "About")

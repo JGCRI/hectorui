@@ -28,12 +28,11 @@ run_ui <- function(id) {
                                      min = 0, max = 1, value = 1, width = "90%")
                 )
             )
-
         ),
-        mainPanel(width = 8,
+        mainPanel(
                   fluidRow(
-                      column(4,
-                             selectInput(ns("variable"), "Choose Output Variable:",
+                      column(8,
+                             selectInput(ns("variable"), "Output Variable:",
                                          list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
                                                                     "FFI Emissions" = FFI_EMISSIONS(),
                                                                     "LUC Emissions" = LUC_EMISSIONS()),
@@ -49,32 +48,15 @@ run_ui <- function(id) {
                                                                 "RF - Total SO2" = RF_SO2(),
                                                                 "RF - Volcanic Activity" = RF_VOL(),
                                                                 "RF - CH4" = RF_CH4())),
-                                         selected = "Atmospheric CO2", multiple = FALSE),
-                      ),
-                      column(3,
-                             materialSwitch(ns("savetoggle"), "Save Run", status = "success")
-                      ),
-                      column(5,
-                             conditionalPanel(
-                                 condition = "input.savetoggle == true",
-                                 ns = ns,
-                                 textInput(ns("run_name"), label = "Run Name", placeholder = "Run 1")
-                             )
-                      ),
-                      column(2,
-                             dropdownButton(inputId = ns("dropdown"),
-                                            icon = icon("gear"),
-                                            circle = TRUE,
-                                            status = "primary",
-                                            dataTableOutput(ns("savetable")),
-                                            actionButton(ns("deleteRuns"), "Delete Selected")
-                             )
+                                         selected = "Atmospheric CO2", multiple = FALSE, width = '100%'),
                       )
                   ),
                   fluidRow(
-                             actionBttn(ns("run"),"Run", color = "primary"),
+                      actionButton(ns("run"), label="Load Graphs", width = '200px', style = "background: #0B3F8F; color: white;"),
+                      downloadButton(ns("downloadData"), label="Download Raw Data", style = "background: #0B3F8F; color: white;")
                   ),
                   fluidRow(
+                      br(),
                       withSpinner(plotlyOutput(ns("graph")))
                   )
         )
@@ -87,51 +69,40 @@ run_server <- function(id, r6) {
 
         observe({
 
-            if (input$savetoggle == TRUE) {
-                r6$save <- TRUE
-            } else {
-                r6$save <- FALSE
+            runs <- list()
+
+            for(i in 1:length(input$ssp_path)) {
+
+                r6$selected_var <- reactive({input$variable})
+                r6$run_name <- reactive({input$run_name})
+                r6$ini_file <- reactive({system.file(input$ssp_path[i],package="hector")})
+                r6$time <- reactive({input$time})
+
+                print("Running...") # in command line
+                core <- reactive({newcore(r6$ini_file())}) # create core
+
+                # Set parameters using inputs (function to only call setvar once in final version)
+                if (input$permafrost == TRUE) {
+                    setvar(core(),0,PERMAFROST_C(),865,"Pg C")
+                    r6$permafrost <- "On"
+                } else if (input$permafrost == FALSE) {
+                    r6$permafrost <- "Off"
+                }
+                setvar(core(),NA,AERO_SCALE(),input$alpha,"(unitless)")
+                setvar(core(),NA,BETA(),input$beta,"(unitless)")
+                setvar(core(),NA,DIFFUSIVITY(),input$diff,"cm2/s")
+                setvar(core(),NA,ECS(),input$S,"degC")
+                setvar(core(),NA,Q10_RH(),input$q10_rh,"(unitless)")
+                setvar(core(),NA,VOLCANIC_SCALE(),input$volscl,"(unitless)")
+
+                reset(core())
+                run(core())
+
+                runs[[i]] <- fetchvars(core(), r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
+                    mutate(Scenario = names(which(scenarios == input$ssp_path[i], arr.ind = FALSE)))
             }
 
-            r6$selected_var <- reactive({input$variable})
-            r6$run_name <- reactive({input$run_name})
-            r6$ini_file <- reactive({system.file(input$ssp_path,package="hector")})
-            r6$time <- reactive({input$time})
-
-            print("Running...") # in command line
-            core <- reactive({newcore(r6$ini_file())}) # create core
-
-            # Set parameters using inputs (function to only call setvar once in final version)
-            if (input$permafrost == TRUE) {
-              setvar(core(),0,PERMAFROST_C(),865,"Pg C")
-              r6$permafrost <- "On"
-            } else if (input$permafrost == FALSE) {
-              r6$permafrost <- "Off"
-            }
-            setvar(core(),NA,AERO_SCALE(),input$alpha,"(unitless)")
-            setvar(core(),NA,BETA(),input$beta,"(unitless)")
-            setvar(core(),NA,DIFFUSIVITY(),input$diff,"cm2/s")
-            setvar(core(),NA,ECS(),input$S,"degC")
-            setvar(core(),NA,Q10_RH(),input$q10_rh,"(unitless)")
-            setvar(core(),NA,VOLCANIC_SCALE(),input$volscl,"(unitless)")
-
-            reset(core())
-            run(core())
-
-            if (r6$save == TRUE) {
-
-                r6$output[[r6$run_name()]] <- fetchvars(core(), r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
-                    mutate(run = r6$run_name(), Scenario = names(which(scenarios == input$ssp_path, arr.ind = FALSE)))
-
-                updateSwitchInput(session = session, "savetoggle", value = FALSE)
-
-            } else if (r6$save == FALSE) {
-
-                r6$no_save_output <- fetchvars(core(), r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
-                    mutate(Scenario = names(which(scenarios == input$ssp_path, arr.ind = FALSE)))
-
-            }
-
+            r6$output <- bind_rows(runs)
             print("Done")
 
         }) %>%
@@ -145,31 +116,41 @@ run_server <- function(id, r6) {
             }) %>%
             bindEvent(input$run, ignoreNULL = TRUE, ignoreInit = FALSE)
 
-        # Clear text input for run save after toggle switch is off
-        observe({
-            updateTextInput(session = session, "run_name", value = NA)
-        }) %>%
-            bindEvent(input$savetoggle == FALSE)
+        #observe({
 
-        # Create a table to show saved runs in session
-        observe({
+            # Download handler for downloading the raw data output from a Hector run. This is activated upon button click.
+            output$downloadData <- downloadHandler(
+                filename = function()
+                {
+                    paste0('HectorUI_Output_', Sys.Date(), '.csv')
+                },
 
-            # this double allows it to be accessible outside this observe
-            savetable <<- reactive(tibble("Run Name" = names(r6$output)))
-            output$savetable <- renderDataTable({savetable()})
+                content = function(file)
+                {
+                    browser()
+                    if(!is.null(r6$output))
+                    {
 
-        }) %>% bindEvent(input$run)
+                        header_text <- paste("File created with Hector UI - https://github.com/JGCRI/hector-ui\n" ,
+                                             "Model Parameters: " , input$input_paramToggle , "\n",
+                                             "Alpha:,", input$alpha, ",Beta:,", input$beta, ",Diff:,", input$diff,
+                                             ",ECS:,", input$S, ",Q10:,", input$q10_rh, ",Volc:,", input$volscl,
+                                             "\n")
 
-        # Create delete entry in saved output list based on user-selected row
-        observe({
+                        cat(header_text, file = file)
 
-            delete <- savetable()$`Run Name`[input$savetable_rows_selected]
+                    }
+                    else
+                    {
+                        shinyalert::shinyalert("No active Hector cores", "Please set at least one of the SSP scenarios to active or upload a custom emissions scenario before downloading.", type = "warning")
+                    }
+                }
+            )
 
-            r6$output[[delete]] <- NULL
-            #this works, but the table needs to be updated
+            outputOptions(output, "downloadData", suspendWhenHidden = FALSE)
 
-        }) %>% bindEvent(input$deleteRuns)
-
+        #}) %>%
+        #    bindEvent(input$downloadData, ignoreNULL = TRUE, ignoreInit = FALSE)
 
     })
 }

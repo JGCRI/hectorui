@@ -33,11 +33,8 @@ HectorInputs <- R6Class(
     ini_file = NULL,
     time = NA,
     output = NULL,
-    no_save_output = NULL,
-    no_save = NULL,
     run_name = NA,
     permafrost = NULL,
-    save = NULL,
     inputs = NULL,
     selected_var = NULL,
     initialize = function(ini_file = system.file("input/hector_ssp245.ini",
@@ -45,7 +42,6 @@ HectorInputs <- R6Class(
       self$ini_file <- ini_file
       self$time <- time
       self$output <- list()
-      self$no_save <- NULL
       self$run_name <- 1
       self$inputs <- list()
       self$selected_var <- "CO2_concentration"
