@@ -17,18 +17,24 @@ run_ui <- function(id) {
                      switchInput(ns("permafrost"), "Permafrost", value = TRUE, size = 'small', onStatus = "danger"),
                      h5("Model Parameters"),
                      sliderInput(ns("alpha"), label="Aerosol forcing scaling factor", # AERO_SCALE()
-                                 min = 0.01, max = 1, value = 1, width = "90%"),
+                                 value = 1,
+                                 min = 0.01, max = 1, width = "90%"),
                      sliderInput(ns("beta"), label="CO2 fertilization factor", # BETA()
-                                 min = 0.01, max = 4, value = 0.55, step=0.01, width = "90%"),
+                                 value = 0.53,
+                                 min = 0.01, max = 4, step=0.01, width = "90%"),
                      sliderInput(ns("diff"), label="Ocean heat diffusivity", # DIFFUSIVITY()
-                                 min = 0, max = 5, value = 1.16, step=0.1, post = " cm2/s", width = "90%"),
+                                 value = 2.38,
+                                 min = 0, max = 5, step=0.1, post = " cm2/s", width = "90%"),
                      sliderInput(ns("S"), label="Equilibrium climate sensitivity", # ECS()
-                                 min = 1, max = 6, value = 3, step=0.1, post = " °C", width = "90%"),
+                                 value = 3,
+                                 min = 1, max = 6, step=0.1, post = " °C", width = "90%"),
                      sliderInput(ns("q10_rh"), label="Heterotrophic temperature sensitivity", # Q10_RH()
-                                 min = 1, max = 5, value = 2.1, step=0.1, width = "90%"),
+                                 value = 1.76,
+                                 min = 1, max = 5, step=0.1, width = "90%"),
                      sliderInput(ns("volscl"), label="Volcanic forcing scaling factor", # VOLCANIC_SCALE()
-                                 min = 0, max = 1, value = 1, width = "90%"),
-                     bsPopover(ns("alpha"), title="", content = "Decreasing this means aerosols exert a lower radiative forcing",
+                                 value = 1,
+                                 min = 0, max = 1, width = "90%"),
+                     bsPopover(ns("alpha"), title="", content = "Decreasing this means aerosols exert less radiative forcing",
                                placement = "top", trigger = "hover", options = NULL),
                      bsPopover(ns("beta"), title="", content = "Increasing this means vegetation grows faster as CO2 increases",
                                placement = "top", trigger = "hover", options = NULL),
@@ -38,7 +44,7 @@ run_ui <- function(id) {
                                placement = "top", trigger = "hover", options = NULL),
                      bsPopover(ns("q10_rh"), title="", content = "Increasing this means soil microbes respire faster as temperature rises",
                                placement = "top", trigger = "hover", options = NULL),
-                     bsPopover(ns("volscl"), title="", content = "Increasing this means that volcanic eruptions exert a stronger radiative forcing",
+                     bsPopover(ns("volscl"), title="", content = "Decreasing this means that volcanic eruptions exert less radiative forcing",
                                placement = "top", trigger = "hover", options = NULL)
         ),
         mainPanel(
@@ -95,11 +101,12 @@ run_server <- function(id, r6) {
 
                 # Set parameters using inputs (function to only call setvar once in final version)
                 if (input$permafrost == TRUE) {
-                    setvar(core(),0,PERMAFROST_C(),865,"Pg C")
                     r6$permafrost <- "On"
                 } else if (input$permafrost == FALSE) {
+                    setvar(core(),0,PERMAFROST_C(),0,"Pg C")
                     r6$permafrost <- "Off"
                 }
+
                 setvar(core(),NA,AERO_SCALE(),input$alpha,"(unitless)")
                 setvar(core(),NA,BETA(),input$beta,"(unitless)")
                 setvar(core(),NA,DIFFUSIVITY(),input$diff,"cm2/s")
