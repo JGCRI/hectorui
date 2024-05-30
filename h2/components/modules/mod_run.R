@@ -74,7 +74,7 @@ run_ui <- function(id) {
                   ),
                   fluidRow(
                       br(),
-                      withSpinner(plotlyOutput(ns("graph")))
+                      plotlyOutput(ns("graph"))
                   )
         )
     )
@@ -95,26 +95,31 @@ run_server <- function(id, r6) {
                 r6$ini_file <- reactive({system.file(input$ssp_path[i],package="hector")})
                 r6$time <- reactive({input$time})
 
-                print("Running...") # in command line
-                core <- reactive({newcore(r6$ini_file())}) # create core
+                withProgress(message = paste("Running Hector", names(which(scenarios == input$ssp_path[i], arr.ind = FALSE)), "...\n"), value = 1/2, {
+                    print("Running...") # in command line
+                    core <- reactive({newcore(r6$ini_file())}) # create core
 
-                # Set parameters using inputs (function to only call setvar once in final version)
-                if (input$permafrost == TRUE) {
-                    r6$permafrost <- "On"
-                } else if (input$permafrost == FALSE) {
-                    setvar(core(),0,PERMAFROST_C(),0,"Pg C")
-                    r6$permafrost <- "Off"
-                }
+                    # Set parameters using inputs (function to only call setvar once in final version)
+                    if (input$permafrost == TRUE) {
+                        r6$permafrost <- "On"
+                    } else if (input$permafrost == FALSE) {
+                        setvar(core(),0,PERMAFROST_C(),0,"Pg C")
+                        r6$permafrost <- "Off"
+                    }
 
-                setvar(core(),NA,AERO_SCALE(),input$alpha,"(unitless)")
-                setvar(core(),NA,BETA(),input$beta,"(unitless)")
-                setvar(core(),NA,DIFFUSIVITY(),input$diff,"cm2/s")
-                setvar(core(),NA,ECS(),input$S,"degC")
-                setvar(core(),NA,Q10_RH(),input$q10_rh,"(unitless)")
-                setvar(core(),NA,VOLCANIC_SCALE(),input$volscl,"(unitless)")
+                    setvar(core(),NA,AERO_SCALE(),input$alpha,"(unitless)")
+                    setvar(core(),NA,BETA(),input$beta,"(unitless)")
+                    setvar(core(),NA,DIFFUSIVITY(),input$diff,"cm2/s")
+                    setvar(core(),NA,ECS(),input$S,"degC")
+                    setvar(core(),NA,Q10_RH(),input$q10_rh,"(unitless)")
+                    setvar(core(),NA,VOLCANIC_SCALE(),input$volscl,"(unitless)")
 
-                reset(core())
-                run(core())
+                    reset(core())
+                    run(core())
+
+                    incProgress(1/1, detail = paste("Load complete."))
+                    Sys.sleep(0.2)
+                })
 
                 runs[[i]] <- fetchvars(core(), r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
                     mutate(Scenario = names(which(scenarios == input$ssp_path[i], arr.ind = FALSE)))
@@ -124,7 +129,7 @@ run_server <- function(id, r6) {
             print("Done")
 
         }) %>%
-            bindEvent(input$run, ignoreNULL = FALSE, ignoreInit = FALSE)
+            bindEvent(input$run, ignoreNULL = FALSE, ignoreInit = TRUE)
 
         observe({
 
@@ -132,7 +137,7 @@ run_server <- function(id, r6) {
                 graph_plots(r6 = r6)
             })
             }) %>%
-            bindEvent(input$run, ignoreNULL = TRUE, ignoreInit = FALSE)
+            bindEvent(input$run, ignoreNULL = TRUE, ignoreInit = TRUE)
 
             # Download handler for downloading the raw data output from a Hector run. This is activated upon button click.
             output$downloadData <- downloadHandler(
