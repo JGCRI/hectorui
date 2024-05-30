@@ -39,10 +39,6 @@ custom_ui <- function(id) {
             href="inputs/ssp119_emiss-constraints_rf.csv"),
           ns=NS(id)
         ),
-        # conditionalPanel(
-        #   condition = "input.input_custom_SSP == 'input/hector_ssp119.ini'",
-        #   downloadButton(ns("download_file"), label = "Download SSP 1-1.9 Emissions File Template")
-        # ),
         conditionalPanel(
           condition = "input.input_custom_SSP == 'input/hector_ssp126.ini'",
           a(h6("Download SSP 1-2.6 Emissions File Template"), 
@@ -87,6 +83,23 @@ custom_ui <- function(id) {
         ),
         fileInput(ns("input_custom_emissions_file"), "Upload Custom Emissions File:", width=275, 
                   buttonLabel = "Choose File", accept = c("text/csv", ".csv", "text/comma-separated-values,text/plain")),
+        selectInput(ns("variable"), "Choose Output Variable:",
+                    list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
+                                               "FFI Emissions" = FFI_EMISSIONS(),
+                                               "LUC Emissions" = LUC_EMISSIONS()),
+                         "Concentrations" = list("N2O Concentration" = CONCENTRATIONS_N2O()),
+                         "Emissions" = list("Black Carbon Emissions" = EMISSIONS_BC(),
+                                            "Organic Carbon Emissions" = EMISSIONS_OC()),
+                         "Forcings" = list("RF - Total" = RF_TOTAL(),
+                                           "RF - Albedo" = RF_ALBEDO(),
+                                           "RF - CO2" = RF_CO2(),
+                                           "RF - N2O" = RF_N2O(),
+                                           "RF - Black Carbon" = RF_BC(),
+                                           "RF - Organic Carbon" = RF_OC(),
+                                           "RF - Total SO2" = RF_SO2(),
+                                           "RF - Volcanic Activity" = RF_VOL(),
+                                           "RF - CH4" = RF_CH4())),
+                    selected = "Atmospheric CO2", multiple = FALSE),
         div(
           class="paramDivs", actionButton(ns("input_load_emissions"), label="Create Scenario"))
       )
@@ -115,6 +128,7 @@ custom_server <- function(id, r6) {
       emissions_data <- read.csv(file=emifile$datapath, header=TRUE, sep=",", skip = 5)
       emissions_headers <- read.csv(file=emifile$datapath, header=FALSE, sep=",", skip = 4)
       dates_col <- emissions_data$Date
+      r6$selected_var <- input$variable
 
       withProgress(message = paste('Creating Custom Scenario ', r6$run_name, "...\n"), value = 1/2, {
         core <- newcore(inifile, suppresslogging=TRUE, name=r6$run_name)
@@ -124,7 +138,7 @@ custom_server <- function(id, r6) {
       })
       
       # get data from base SSP run
-      base_output <- fetchvars(core, 1745:2300, vars = list("CO2_concentration")) %>%
+      base_output <- fetchvars(core, 1745:2300, vars = list(r6$selected_var)) %>%
         mutate(run = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)),
                            Scenario = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)))
       #browser()
@@ -138,7 +152,7 @@ custom_server <- function(id, r6) {
       run(core)
       
       # get custom output
-      custom_output <- fetchvars(core, 1745:2300, vars = list("CO2_concentration")) %>%
+      custom_output <- fetchvars(core, 1745:2300, vars = list(r6$selected_var)) %>%
         mutate(run = r6$run_name, Scenario = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)))
       r6$output <- bind_rows(list(base_output,custom_output))
       
