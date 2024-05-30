@@ -16,10 +16,10 @@ tracking_ui <- function(id) {
                          shape = "square", width = "80%"),
       bsPopover(ns("ssp_path"), title="",content="Select a Shared Socioeconomic Pathway to plot.",
                 placement = "top", trigger = "hover", options = NULL),
-      
+
       sliderInput(ns("start"), label="Select year to begin tracking:",
                   min = 1750, max = 2200, value = 1900, sep="",step=5),
-      
+
       selectInput(ns("pool"), label="Select pool to view:",
                   choices = list("High latitude ocean"="HL Ocean",
                                  "Low latitude ocean"="LL Ocean",
@@ -30,7 +30,7 @@ tracking_ui <- function(id) {
                                  "Detritus"="Detritus",
                                  "Soil"="Soil"),
                   selected="Atmosphere"),
-      
+
       prettyRadioButtons(ns("ff"), label="Toggle fossil fuels:",
                          choices = list("On"=1,"Off"=2)),
       bsPopover(ns("ff"), title="",content="Select whether you want fossil fuels to be included (On), or only non-anthropogenic sources of carbon (Off).",
@@ -53,7 +53,7 @@ tracking_ui <- function(id) {
 
 tracking_server <- function(id) {
   moduleServer(id, function(input, output, session) {
-    
+
     observe({
       # Run Hector w/ carbon tracking
       ini_file <- reactive({system.file(input$ssp_path,package="hector")})
@@ -76,7 +76,7 @@ tracking_server <- function(id) {
       df[df=="LL"] <- "LL Ocean"
       df[df=="soil_c"] <- "Soil"
       df[df=="veg_c"] <- "Vegetation"
-      
+
       ## filter df to just selected pool
       selectedPool <- reactive({input$pool})
       df <- filter(df,pool_name==selectedPool())
@@ -87,12 +87,12 @@ tracking_server <- function(id) {
       # filter out permafrost rows (for now -- they're empty)
       df <- subset(df, source_name!="permafrost_c")
       df <- subset(df, source_name!="thawedp_c")
-      
+
       # fill in any missing pools
       df <- df[order(df$source_name),] # sort by source, then year, so sources are always in same order each year
       df <- df[order(df$year),]
-      
-      
+
+
       # rank column for moving bar plot
       df <- df %>%
         group_by(year) %>%
@@ -103,7 +103,7 @@ tracking_server <- function(id) {
                frac_lbl = paste0(format(round(source_fraction,2),nsmall=2))) %>%
         group_by(source_name) %>%
         ungroup()
-        
+
         # Carbon amount
         if (input$view == 1) {
           area_plot <-
@@ -121,16 +121,16 @@ tracking_server <- function(id) {
                   axis.title.y=element_text(size=14),
                   axis.text=element_text(size=10),
                   plot.margin = margin(1,1,1,1,"cm"))
-          
+
           # save as file
           ggsave("outfile_area.jpeg",plot=area_plot,device="jpeg",
                  dpi=72,width=800,height=500,units="px")
-          
+
         }
-        
+
         # Carbon fraction
         if (input$view == 2) {
-          
+
           print("Generating plot...")
           area_plot <-
             ggplot(df, aes(x=year,y=source_fraction,fill=source_name)) +
@@ -147,17 +147,17 @@ tracking_server <- function(id) {
                   axis.title.y=element_text(size=14),
                   axis.text=element_text(size=10),
                   plot.margin = margin(1,1,1,1,"cm"))
-          
+
           # save as file
           ggsave("outfile_area.jpeg",plot=area_plot,device="jpeg",
                  width=800,height=500,units="px")
-          
+
         }
-        
+
         output$fig <- renderPlot(area_plot)
-        
+
         output$gif <- renderImage({
-          
+
           # Make animation
           p <- ggplot(df,aes(fill=source_name,color=source_name,
                              x=reorder(source_name,source_amt),
@@ -165,7 +165,7 @@ tracking_server <- function(id) {
             geom_bar(stat="identity") +
             geom_text(aes(y=0, label = paste(source_name, " ")),
                       vjust = 0.2, hjust = 1, size = 6) +
-            geom_text(aes(y = source_amt, label = paste(" ",amt_lbl), hjust=0), 
+            geom_text(aes(y = source_amt, label = paste(" ",amt_lbl), hjust=0),
                       size = 6) +
             coord_flip(clip = "off", expand = FALSE) +
             theme_void() +
@@ -179,30 +179,30 @@ tracking_server <- function(id) {
             xlab("") +
             scale_fill_viridis_d() +
             scale_color_viridis_d() +
-            
+
             # gganimate
             transition_time(year) +
             ease_aes('linear')
-          
+
           # Animate
-          anim <- p + transition_states(year,transition_length=4, 
+          anim <- p + transition_states(year,transition_length=4,
                                         state_length=2,wrap=FALSE) +
             view_follow(fixed_x = TRUE) +
             labs(title=paste0(selectedPool()," Carbon Sources"),
                subtitle="Year: {closest_state}")
-          
-          anim_save("outfile_bar.gif", animate(anim, height = 500, width = 800, 
+
+          anim_save("outfile_bar.gif", animate(anim, height = 500, width = 800,
                                            end_pause=30))
           list(src = 'outfile_bar.gif',
                contentType = 'image/gif'
                # width = 800,
                # height = 500,
                # alt = "An animation tracking the sources of carbon in a chosen pool"
-          )}, deleteFile = FALSE)
-      
+          )}, deleteFile = TRUE)
+
     }) %>%
       bindEvent(input$generate)
-    
+
     # Download plots
     output$download <- downloadHandler(
       filename="myplots.zip",
@@ -210,6 +210,6 @@ tracking_server <- function(id) {
         zip(file,files=c('outfile_area.jpeg','outfile_bar.gif'))
       }
     )
-    
+
   })
 }

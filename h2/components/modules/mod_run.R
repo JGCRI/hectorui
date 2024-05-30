@@ -13,6 +13,7 @@ run_ui <- function(id) {
                          selected = "input/hector_ssp245.ini"),
                      sliderInput(ns("time"), label="Select dates:",
                                  min = 1750, max = 2300, value = c(1900,2100), sep="", width = "90%", step=5),
+                     h6("Include permafrost thaw:", id = "perm-lab"),
                      switchInput(ns("permafrost"), "Permafrost", value = TRUE, size = 'small', onStatus = "danger"),
                      h5("Model Parameters"),
                      sliderInput(ns("alpha"), label="Aerosol forcing scaling factor", # AERO_SCALE()
