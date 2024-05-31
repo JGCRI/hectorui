@@ -198,6 +198,8 @@ run_server <- function(id, r6) {
                     if(!is.null(r6$output))
                     {
                         header_text <- paste0("File created with Hector UI - https://github.com/JGCRI/hector-ui accessed on ", format(Sys.time(), "%Y-%m-%d %X"), "\n",
+                                             "Hector Version: ", packageVersion("hector"), "\n",
+                                             "SSPs Used: ", names(which(scenarios == input$ssp_path, arr.ind = FALSE)), "\n",
                                              "Permafrost: ", r6$permafrost, "\n",
                                              "Model Parameters: " , input$input_paramToggle , "\n",
                                              "Alpha: ", input$alpha,  "\n",
