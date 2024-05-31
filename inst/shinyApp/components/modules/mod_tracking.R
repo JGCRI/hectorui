@@ -48,8 +48,8 @@ tracking_ui <- function(id) {
             downloadButton(ns("download"),"Download Plots", style = "background: #B8B8B8; color: black;")
         ),
         fluidRow(
-            withSpinner(plotOutput(ns("fig"))),
-            imageOutput(ns("gif"))
+            withSpinner(plotOutput(ns("fig"), width = "80%")),
+            imageOutput(ns("gif"), width = "80%")
         )
     )
   )
@@ -59,15 +59,13 @@ tracking_server <- function(id) {
   moduleServer(id, function(input, output, session) {
 
       observe({
-          withProgress(message = "Generating plots", value = 0, {
+          withProgress(message = "Running Hector", value = 0, {
               # Run Hector w/ carbon tracking
               ini_file <- reactive({system.file(input$ssp_path,package="hector")})
               core <- newcore(ini_file())
               tunits <- getunits(TRACKING_DATE())
               setvar(core, NA, TRACKING_DATE(), input$start, tunits)
               reset(core, core$reset_date)
-
-              incProgress(0.25, detail = "Running hector...")
               print("Running Hector...")
               run(core, runtodate = 2300)
 
@@ -86,6 +84,7 @@ tracking_server <- function(id) {
               df[df=="soil_c"] <- "Soil"
               df[df=="veg_c"] <- "Vegetation"
 
+              incProgress(0.25, detail = "Setting variables...")
               ## filter df to just selected pool
               selectedPool <- reactive({input$pool})
               df <- filter(df,pool_name==selectedPool())
@@ -113,7 +112,6 @@ tracking_server <- function(id) {
                   group_by(source_name) %>%
                   ungroup()
 
-              incProgress(0.25, detail = "Generating plots...")
               # Carbon amount
               if (input$view == 1) {
                   area_plot <-
@@ -121,10 +119,10 @@ tracking_server <- function(id) {
                       geom_area(stat="identity") +
                       scale_fill_viridis_d(name="Source") +
                       scale_color_viridis_d() +
-                      ggtitle(paste0(selectedPool(), " Carbon Amount by Source")) +
+                      ggtitle(paste0(selectedPool(), " Carbon Amount Sources")) +
                       xlab("") +
                       ylab("Carbon Pool (Pg C)") +
-                      theme(plot.title = element_text(size=20,face="bold"),
+                      theme(plot.title = element_text(size=20),
                             legend.title=element_text(size=16),
                             legend.position="bottom",
                             legend.text=element_text(size=12),
@@ -147,10 +145,10 @@ tracking_server <- function(id) {
                       geom_area(stat="identity") +
                       scale_fill_viridis_d() +
                       scale_color_viridis_d() +
-                      ggtitle(paste0(selectedPool(), " Carbon Fraction by Source")) +
+                      ggtitle(paste0(selectedPool(), " Carbon Fraction Sources")) +
                       xlab("") +
                       ylab("Carbon Pool (Fraction)") +
-                      theme(plot.title = element_text(size=20,face="bold"),
+                      theme(plot.title = element_text(size=20),
                             legend.title=element_text(size=16),
                             legend.position="bottom",
                             legend.text=element_text(size=12),
@@ -167,7 +165,7 @@ tracking_server <- function(id) {
               output$fig <- renderPlot(area_plot)
 
               output$gif <- renderImage({
-
+                  withProgress(message = "Generating plots", value = 0, {
                   # Make animation
                   p <- ggplot(df,aes(fill=source_name,color=source_name,
                                      x=reorder(source_name,source_amt),
@@ -179,7 +177,7 @@ tracking_server <- function(id) {
                                 size = 6) +
                       coord_flip(clip = "off", expand = FALSE) +
                       theme_void() +
-                      theme(plot.title = element_text(size=20,face="bold"),
+                      theme(plot.title = element_text(size=20),
                             plot.subtitle = element_text(size=18),
                             legend.position="none",
                             panel.grid.major.x = element_line(linewidth=.1,color="snow2"),
@@ -193,7 +191,7 @@ tracking_server <- function(id) {
                       # gganimate
                       transition_time(year) +
                       ease_aes('linear')
-
+                  incProgress(0.5, detail = "Rendering (please hold!)")
                   # Animate
                   anim <- p + transition_states(year,transition_length=4,
                                                 state_length=2,wrap=FALSE) +
@@ -203,14 +201,16 @@ tracking_server <- function(id) {
 
                   anim_save("outfile_bar.gif", animate(anim, height = 350, width = 650,
                                                        end_pause=30, renterer = gifski_renderer()))
+                  incProgress(0.5, detail = "Complete!")
+
                   list(src = 'outfile_bar.gif',
                        contentType = 'image/gif'
                        # width = 800,
                        # height = 500,
                        # alt = "An animation tracking the sources of carbon in a chosen pool"
-                  )}, deleteFile = FALSE)
-
-              incProgress(0.25, detail = "Complete")
+                  )
+                  })
+                  }, deleteFile = FALSE)
               Sys.sleep(0.2)
           })
       }) %>%
