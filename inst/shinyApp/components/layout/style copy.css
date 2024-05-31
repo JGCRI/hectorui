@@ -6,6 +6,7 @@ h5 {
 body
 {
 	font-family:"Barlow Regular", Sans-Serif !important;
+	font-size: 16px;
 }
 
 /* * {
@@ -13,7 +14,12 @@ body
 }*/
 .about-info
 {
-    font-size: 12px;
+    font-size: 16px;
+}
+
+.popover
+{
+    font-family:"Barlow Regular", Sans-Serif !important;
 }
 
 .c-emissions
@@ -29,7 +35,7 @@ body
 .header-text-title
 {
     position: absolute;
-    color: #8B0000;
+    color: white;
     top: 40%;
     left: 50%;
     text-align: center;!important

@@ -7,7 +7,7 @@ ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
            tags$div(
                a(
                    img(src = "images/GCIMS_logo_alt.svg", class = "logo"), href = "https://gcims.pnnl.gov/", target = "_blank"),
-               h1("HectorUI - BETA", class = "header-text-title"),
+               h1("HectorUI", class = "header-text-title"),
                h2("An Interactive Climate Model", class = "header-text-sub", style = "font-weight:normal; "),
            ),
   ),
@@ -69,13 +69,10 @@ ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
                      tabPanel
                      (
                          p(icon("info-circle", "fa-2x"), "Hector Information", value="infoTab"),
-                         h5("Background Information"), tags$hr(class="hrNav"),
                          tags$table(
                              tags$tr(
                                  tags$td(width = "50%",
-                                         h5("Explore the Hector Product Family", style="text-align: left"),
-                                         br(),
-                                         h6("Source code and contribution is available on the ",
+                                         h5("Source code and contribution is available on the ",
                                             a("HectorUI Github page", href = "https://github.com/JGCRI/hector", target = "_blank")),
                                  ),
                              )
@@ -199,8 +196,10 @@ ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
                      tabPanel
                      (
                          p(icon("comment", "fa-2x"), "Support", value="feedbackTab"),
-                         h5("To contact the Hector team regarding any questions, concerns, suggestions, or problems, please use",
-                           a("Github issues.", href = "https://github.com/JGCRI/hectorui/issues/new/choose"))
+                         h5("To contact the Hector model team regarding any questions, concerns, suggestions, or problems, please submit a Hector",
+                           a("Github issues.", href = "https://github.com/JGCRI/hector/issues/new/choose")),
+                         h5("For HectorUI questions, concerns, suggestions, or problems, please submit a HectorUI",
+                            a("Github issues.", href = "https://github.com/JGCRI/hectorui/issues/new/choose"))
                      )
                  )
              )
