@@ -8,9 +8,9 @@ body
 	font-family:"Barlow Regular", Sans-Serif !important;
 }
 
-* {
+/* * {
     font-family:"Barlow Regular", Sans-Serif !important;
-}
+}*/
 .about-info
 {
     font-size: 12px;
@@ -29,7 +29,7 @@ body
 .header-text-title
 {
     position: absolute;
-    color: #FFFFFF;
+    color: #8B0000;
     top: 40%;
     left: 50%;
     text-align: center;!important
