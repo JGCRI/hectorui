@@ -1,24 +1,34 @@
 tracking_ui <- function(id) {
   ns <- NS(id)
   fluidRow(
-    sidebarPanel(
-      chooseSliderSkin(skin = "Flat", color = "#375a7f"),
-      prettyRadioButtons(ns("ssp_path"), label="Select SSP:",
-                         choices = list("SSP 1-1.9"="input/hector_ssp119.ini",
-                                        "SSP 1-2.6"="input/hector_ssp126.ini",
-                                        "SSP 2-4.5"="input/hector_ssp245.ini",
-                                        "SSP 3-7.0"="input/hector_ssp370.ini",
-                                        "SSP 4-3.4"="input/hector_ssp434.ini",
-                                        "SSP 4-6.0"="input/hector_ssp460.ini",
-                                        "SSP 5-3.4OS"="input/hector_ssp534-over.ini",
-                                        "SSP 5-8.5"="input/hector_ssp585.ini"),
-                         selected = "input/hector_ssp245.ini", inline=TRUE,
-                         shape = "square", width = "80%"),
-      bsPopover(ns("ssp_path"), title="",content="Select a Shared Socioeconomic Pathway to plot.",
-                placement = "top", trigger = "hover", options = NULL),
+      sidebarPanel(
+          chooseSliderSkin(skin = "Flat", color = "#375a7f"),
+          # prettyRadioButtons(ns("ssp_path"), label="Select SSP:",
+          #                    choices = list("SSP 1-1.9"="input/hector_ssp119.ini",
+          #                                   "SSP 1-2.6"="input/hector_ssp126.ini",
+          #                                   "SSP 2-4.5"="input/hector_ssp245.ini",
+          #                                   "SSP 3-7.0"="input/hector_ssp370.ini",
+          #                                   "SSP 4-3.4"="input/hector_ssp434.ini",
+          #                                   "SSP 4-6.0"="input/hector_ssp460.ini",
+          #                                   "SSP 5-3.4OS"="input/hector_ssp534-over.ini",
+          #                                   "SSP 5-8.5"="input/hector_ssp585.ini"),
+          #                    selected = "input/hector_ssp245.ini", inline=TRUE,
+          #                    shape = "square", width = "80%"),
+          selectInput(ns("ssp_path"), "Baseline Scenario:",
+                      choices = list("SSP 1-1.9"="input/hector_ssp119.ini",
+                                     "SSP 1-2.6"="input/hector_ssp126.ini",
+                                     "SSP 2-4.5"="input/hector_ssp245.ini",
+                                     "SSP 3-7.0"="input/hector_ssp370.ini",
+                                     "SSP 4-3.4"="input/hector_ssp434.ini",
+                                     "SSP 4-6.0"="input/hector_ssp460.ini",
+                                     "SSP 5-3.4OS"="input/hector_ssp534-over.ini",
+                                     "SSP 5-8.5"="input/hector_ssp585.ini"),
+                      width=150, selected = "SSP 2-4.5"),
+          bsPopover(ns("ssp_path"), title="",content="Select a Shared Socioeconomic Pathway to plot.",
+                    placement = "top", trigger = "hover", options = NULL),
 
-      sliderInput(ns("start"), label="Select year to begin tracking:",
-                  min = 1750, max = 2200, value = 1900, sep="",step=5),
+          sliderInput(ns("start"), label="Select year to begin tracking:",
+                      min = 1750, max = 2200, value = 1900, sep="",step=5),
 
       selectInput(ns("pool"), label="Select pool to view:",
                   choices = list("High latitude ocean"="HL Ocean",
@@ -45,11 +55,11 @@ tracking_ui <- function(id) {
     mainPanel(
         fluidRow(
             actionButton(ns("generate"),"Generate", width = '150px', style = "background: #0B3F8F; color: white;"),
-            downloadButton(ns("download"),"Download Plots", style = "background: #B8B8B8; color: black;")
+            downloadButton(ns("download"),"Download Plot", style = "background: #B8B8B8; color: black;")
         ),
         fluidRow(
-            withSpinner(plotOutput(ns("fig"), width = "80%")),
-            imageOutput(ns("gif"), width = "80%")
+            withSpinner(plotOutput(ns("fig"), width = "80%"))#,
+            # imageOutput(ns("gif"), width = "80%")
         )
     )
   )
@@ -129,10 +139,9 @@ tracking_server <- function(id) {
                             axis.title.y=element_text(size=14),
                             axis.text=element_text(size=10),
                             plot.margin = margin(1,1,1,1,"cm"))
-
                   # save as file
                   ggsave("outfile_area.jpeg",plot=area_plot,device="jpeg",
-                         dpi=72,width=800,height=500,units="px")
+                         dpi=300, width = 13, units = "in")
 
               }
 
@@ -158,71 +167,75 @@ tracking_server <- function(id) {
 
                   # save as file
                   ggsave("outfile_area.jpeg",plot=area_plot,device="jpeg",
-                         width=800,height=500,units="px")
+                         dpi=300, width = 13, units = "in")
 
               }
 
               output$fig <- renderPlot(area_plot)
 
-              output$gif <- renderImage({
-                  withProgress(message = "Generating plots", value = 0, {
-                  # Make animation
-                  p <- ggplot(df,aes(fill=source_name,color=source_name,
-                                     x=reorder(source_name,source_amt),
-                                     y=source_amt)) +
-                      geom_bar(stat="identity") +
-                      geom_text(aes(y=0, label = paste(source_name, " ")),
-                                vjust = 0.2, hjust = 1, size = 6) +
-                      geom_text(aes(y = source_amt, label = paste(" ",amt_lbl), hjust=0),
-                                size = 6) +
-                      coord_flip(clip = "off", expand = FALSE) +
-                      theme_void() +
-                      theme(plot.title = element_text(size=20),
-                            plot.subtitle = element_text(size=18),
-                            legend.position="none",
-                            panel.grid.major.x = element_line(linewidth=.1,color="snow2"),
-                            panel.grid.minor.x = element_line(linewidth=.1,color="snow2"),
-                            plot.margin = margin(1,6,1,6,"cm")) +
-                      ylab("Carbon (Pg)") +
-                      xlab("") +
-                      scale_fill_viridis_d() +
-                      scale_color_viridis_d() +
-
-                      # gganimate
-                      transition_time(year) +
-                      ease_aes('linear')
-                  incProgress(0.5, detail = "Rendering (please hold!)")
-                  # Animate
-                  anim <- p + transition_states(year,transition_length=4,
-                                                state_length=2,wrap=FALSE) +
-                      view_follow(fixed_x = TRUE) +
-                      labs(title=paste0(selectedPool()," Carbon Sources"),
-                           subtitle="Year: {closest_state}")
-
-                  anim_save("outfile_bar.gif", animate(anim, height = 350, width = 650,
-                                                       end_pause=30, renterer = gifski_renderer()))
-                  incProgress(0.5, detail = "Complete!")
-
-                  list(src = 'outfile_bar.gif',
-                       contentType = 'image/gif'
-                       # width = 800,
-                       # height = 500,
-                       # alt = "An animation tracking the sources of carbon in a chosen pool"
-                  )
-                  })
-                  }, deleteFile = FALSE)
+              # output$gif <- renderImage({
+              #     withProgress(message = "Generating plots", value = 0, {
+              #     # Make animation
+              #     p <- ggplot(df,aes(fill=source_name,color=source_name,
+              #                        x=reorder(source_name,source_amt),
+              #                        y=source_amt)) +
+              #         geom_bar(stat="identity") +
+              #         geom_text(aes(y=0, label = paste(source_name, " ")),
+              #                   vjust = 0.2, hjust = 1, size = 6) +
+              #         geom_text(aes(y = source_amt, label = paste(" ",amt_lbl), hjust=0),
+              #                   size = 6) +
+              #         coord_flip(clip = "off", expand = FALSE) +
+              #         theme_void() +
+              #         theme(plot.title = element_text(size=20),
+              #               plot.subtitle = element_text(size=18),
+              #               legend.position="none",
+              #               panel.grid.major.x = element_line(linewidth=.1,color="snow2"),
+              #               panel.grid.minor.x = element_line(linewidth=.1,color="snow2"),
+              #               plot.margin = margin(1,6,1,6,"cm")) +
+              #         ylab("Carbon (Pg)") +
+              #         xlab("") +
+              #         scale_fill_viridis_d() +
+              #         scale_color_viridis_d() +
+              #
+              #         # gganimate
+              #         transition_time(year) +
+              #         ease_aes('linear')
+              #     incProgress(0.5, detail = "Rendering (please hold!)")
+              #     # Animate
+              #     anim <- p + transition_states(year,transition_length=4,
+              #                                   state_length=2,wrap=FALSE) +
+              #         view_follow(fixed_x = TRUE) +
+              #         labs(title=paste0(selectedPool()," Carbon Sources"),
+              #              subtitle="Year: {closest_state}")
+              #
+              #     anim_save("outfile_bar.gif", animate(anim, height = 350, width = 650,
+              #                                          end_pause=30, renterer = gifski_renderer()))
+              #     incProgress(0.5, detail = "Complete!")
+              #
+              #     list(src = 'outfile_bar.gif',
+              #          contentType = 'image/gif'
+              #          # width = 800,
+              #          # height = 500,
+              #          # alt = "An animation tracking the sources of carbon in a chosen pool"
+              #     )
+              #     })
+              #     }, deleteFile = FALSE)
               Sys.sleep(0.2)
           })
       }) %>%
           bindEvent(input$generate)
 
     # Download plots
-    output$download <- downloadHandler(
-      filename="myplots.zip",
-      content=function(file){
-        zip(file,files=c('outfile_area.jpeg','outfile_bar.gif'))
-      }
-    )
+      output$download <- downloadHandler(
+          #filename="myplots.zip",
+          filename =  function() {
+              paste0('HectorUI_CarbonTracking_', format(Sys.time(), "%Y-%m-%d_%H%M%S"), '.zip')
+          },
+          content=function(file){
+              #zip(file,files=c('outfile_area.jpeg','outfile_bar.gif'))
+              zip(file, files = 'outfile_area.jpeg')
+          }
+      )
 
   })
 }

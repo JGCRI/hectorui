@@ -168,7 +168,7 @@ run_server <- function(id, r6) {
             output$downloadData <- downloadHandler(
                 filename = function()
                 {
-                    paste0('HectorUI_Output_', Sys.Date(), '.csv')
+                    paste0('HectorUI_Output_', format(Sys.time(), "%Y-%m-%d_%H%M%S"), '.csv')
                 },
 
                 content = function(file)

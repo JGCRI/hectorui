@@ -28,8 +28,30 @@ custom_ui <- function(id) {
                                                            width=150, selected = "SSP 2-4.5"))
                 ),
                 tags$tr(width = "100%",
+                        tags$td(width = "145", "Output Variable:"),
+                        tags$td(width = "155", selectInput(ns("variable"), label = NULL,
+                                                           list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
+                                                                                      "FFI Emissions" = FFI_EMISSIONS(),
+                                                                                      "LUC Emissions" = LUC_EMISSIONS()),
+                                                                "Concentrations" = list("N2O Concentration" = CONCENTRATIONS_N2O()),
+                                                                "Emissions" = list("Black Carbon Emissions" = EMISSIONS_BC(),
+                                                                                   "Organic Carbon Emissions" = EMISSIONS_OC()),
+                                                                "Forcings" = list("RF - Total" = RF_TOTAL(),
+                                                                                  "RF - Albedo" = RF_ALBEDO(),
+                                                                                  "RF - CO2" = RF_CO2(),
+                                                                                  "RF - N2O" = RF_N2O(),
+                                                                                  "RF - Black Carbon" = RF_BC(),
+                                                                                  "RF - Organic Carbon" = RF_OC(),
+                                                                                  "RF - Total SO2" = RF_SO2(),
+                                                                                  "RF - Volcanic Activity" = RF_VOL(),
+                                                                                  "RF - CH4" = RF_CH4())),
+                                                           selected = "Atmospheric CO2", multiple = FALSE)
+
+                        )
+                ),
+                tags$tr(width = "100%",
                         tags$td(width = "145", "Your Scenario Name:"),
-                        tags$td(width = "200",  textInput(ns("input_custom_scenarioName"), label = NULL, width=195, value = ""))
+                        tags$td(width = "200",  textInput(ns("input_custom_scenarioName"), label = NULL, value = ""))
                 )
             ),
             div(
@@ -86,25 +108,6 @@ custom_ui <- function(id) {
             )
         ),
         mainPanel(
-            fluidRow(
-                       selectInput(ns("variable"), "Output Variable:",
-                                   list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
-                                                              "FFI Emissions" = FFI_EMISSIONS(),
-                                                              "LUC Emissions" = LUC_EMISSIONS()),
-                                        "Concentrations" = list("N2O Concentration" = CONCENTRATIONS_N2O()),
-                                        "Emissions" = list("Black Carbon Emissions" = EMISSIONS_BC(),
-                                                           "Organic Carbon Emissions" = EMISSIONS_OC()),
-                                        "Forcings" = list("RF - Total" = RF_TOTAL(),
-                                                          "RF - Albedo" = RF_ALBEDO(),
-                                                          "RF - CO2" = RF_CO2(),
-                                                          "RF - N2O" = RF_N2O(),
-                                                          "RF - Black Carbon" = RF_BC(),
-                                                          "RF - Organic Carbon" = RF_OC(),
-                                                          "RF - Total SO2" = RF_SO2(),
-                                                          "RF - Volcanic Activity" = RF_VOL(),
-                                                          "RF - CH4" = RF_CH4())),
-                                   selected = "Atmospheric CO2", multiple = FALSE)
-            ),
             fluidRow(
                 actionButton(ns("input_load_emissions"), label="Create Scenario", width = '150px', style = "background: #0B3F8F; color: white;"),
                 downloadButton(ns("downloadData"), label="Download Data", style = "background: #B8B8B8; color: black;")
