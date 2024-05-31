@@ -153,7 +153,8 @@ custom_server <- function(id, r6) {
 
       # set vars and rerun core
       for(i in c(2:ncol(emissions_data))) {
-        setvar(core = core, dates = emissions_data[, 1],var = colnames(emissions_data)[i], values = emissions_data[, i], unit = as.character(emissions_headers[[paste0("V",i)]][[1]]))
+          vname <- colnames(emissions_data)[i]
+          setvar(core = core, dates = emissions_data[, 1], var = vname, values = emissions_data[, i], unit = getunits(vname))
       }
 
       reset(core)
