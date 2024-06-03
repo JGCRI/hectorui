@@ -37,5 +37,5 @@ Suggests:
 Remotes:
     github::JGCRI/hector@v3.2.0,
     github::JGCRI/fldgen@v2.0.0
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.1
 VignetteBuilder: knitr
