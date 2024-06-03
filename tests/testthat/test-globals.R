@@ -1,10 +1,11 @@
 library(hector)
+source("../../inst/shinyApp/components/layout/global-lists.r", local = TRUE)
 
 context("globals")
 
 test_that("globals: scenarios", {
 
-  expect_equal(scenarios, c("SSP 1-1.9"="input/hector_ssp119.ini",
+  expect_equal(scenarios, list("SSP 1-1.9"="input/hector_ssp119.ini",
                             "SSP 1-2.6"="input/hector_ssp126.ini",
                             "SSP 2-4.5"="input/hector_ssp245.ini",
                             "SSP 3-7.0"="input/hector_ssp370.ini",
@@ -18,7 +19,7 @@ test_that("globals: scenarios", {
 
 test_that("globals: titles", {
 
-  expect_equal(title, c("CO2_concentration" = "Atmospheric CO2",
+  expect_equal(title, list("CO2_concentration" = "Atmospheric CO2",
                                        "atmos_co2" = "Atmospheric Carbon Pool",
                                        "ffi_emissions" = "FFI Emissions",
                                        "luc_emissions" = "LUC Emissions",
@@ -71,8 +72,7 @@ test_that("globals: titles", {
 
 test_that("globals: units", {
 
-
-    expect_equal(units, c("CO2_concentration" = "DegC",
+    expect_equal(units, list("CO2_concentration" = "DegC",
                           "atmos_co2" = "Pg C",
                           "ffi_emissions" = "Pg C/yr",
                           "luc_emissions" = "Pg C/yr",
