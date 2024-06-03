@@ -1,5 +1,5 @@
 library(hector)
-source("../../inst/shinyApp/components/layout/global-lists.r", local = TRUE)
+source("components/layout/global-lists.r", local = TRUE)
 
 context("globals")
 
