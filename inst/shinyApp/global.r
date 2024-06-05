@@ -23,7 +23,6 @@ source("components/functions/func_graph_plots.R", local = TRUE)
 source("components/functions/func_custom_emissions.R", local = TRUE)
 
 scenarios <- get_scenarios()
-units <- get_units()
 title <- get_titles()
 
 theme_set(theme_minimal())
