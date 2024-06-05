@@ -87,6 +87,7 @@ run_server <- function(id, r6) {
 
         observe({
 
+            r6$run_mode <- "regular"
             runs <- list()
             cores <- list()
 

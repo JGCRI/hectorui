@@ -120,83 +120,86 @@ custom_ui <- function(id) {
 }
 
 custom_server <- function(id, r6) {
-  moduleServer(id, function(input, output, session) {
-    observe({
+    moduleServer(id, function(input, output, session) {
+        observe({
 
-      # Require all inputs to exist
-      if (is.null(input$input_custom_emissions_file) | (is.na(input$input_custom_scenarioName) | is.null(input$input_custom_scenarioName) | (input$input_custom_scenarioName == "")))
-      {
-        shinyalert::shinyalert("Missing Information", "Please name the scenario and load an emissions file before attempting to load the scenario.", type = "warning")
-        return(NULL)
-      }
-      r6$run_name <- input$input_custom_scenarioName
+            # Require all inputs to exist
+            if (is.null(input$input_custom_emissions_file) | (is.na(input$input_custom_scenarioName) | is.null(input$input_custom_scenarioName) | (input$input_custom_scenarioName == "")))
+            {
+                shinyalert::shinyalert("Missing Information", "Please name the scenario and load an emissions file before attempting to load the scenario.", type = "warning")
+                return(NULL)
+            }
 
-      # Read in input data
-      inifile <- system.file(input$input_custom_SSP,package="hector")
-      emifile <- input$input_custom_emissions_file
-      emissions_data <- read.csv(file=emifile$datapath, header=TRUE, sep=",", skip = 5)
-      emissions_headers <- read.csv(file=emifile$datapath, header=FALSE, sep=",", skip = 4)
-      dates_col <- emissions_data$Date
-      r6$selected_var <- input$variable
+            r6$run_mode <- "custom"
+            r6$run_name <- input$input_custom_scenarioName
 
-      withProgress(message = paste('Creating Custom Scenario ', r6$run_name, "...\n"), value = 1/2, {
-        core <- newcore(inifile, suppresslogging=TRUE, name=r6$run_name)
-        run(core)
-        incProgress(1/1, detail = paste("Load complete."))
-        Sys.sleep(0.2)
-      })
+            # Read in input data
+            inifile <- system.file(input$input_custom_SSP,package="hector")
+            emifile <- input$input_custom_emissions_file
+            emissions_data <- read.csv(file=emifile$datapath, header=TRUE, sep=",", skip = 5)
+            emissions_headers <- read.csv(file=emifile$datapath, header=FALSE, sep=",", skip = 4)
+            dates_col <- emissions_data$Date
+            r6$selected_var <- input$variable
 
-      # get data from base SSP run
-      base_output <- fetchvars(core, 1745:2300, vars = list(r6$selected_var)) %>%
-        mutate(run = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)),
-                           Scenario = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)))
+            withProgress(message = paste('Creating Custom Scenario ', r6$run_name, "...\n"), value = 1/2, {
+                core <- newcore(inifile, suppresslogging=TRUE, name=r6$run_name)
+                run(core)
+                incProgress(1/1, detail = paste("Load complete."))
+                Sys.sleep(0.2)
+            })
 
-      # set vars and rerun core
-      for(i in c(2:ncol(emissions_data))) {
-          vname <- colnames(emissions_data)[i]
-          setvar(core = core, dates = emissions_data[, 1], var = vname, values = emissions_data[, i], unit = getunits(vname))
-      }
+            # get data from base SSP run
+            base_output <- fetchvars(core, 1745:2300, vars = list(r6$selected_var)) %>%
+                mutate(Run = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)),
+                       Scenario = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)))
 
-      reset(core)
-      run(core)
+            # set vars and rerun core
+            for(i in c(2:ncol(emissions_data))) {
+                vname <- colnames(emissions_data)[i]
+                setvar(core = core, dates = emissions_data[, 1], var = vname, values = emissions_data[, i], unit = getunits(vname))
+            }
 
-      # get custom output
-      custom_output <- fetchvars(core, 1745:2300, vars = list(r6$selected_var)) %>%
-        mutate(run = r6$run_name, Scenario = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)))
-      r6$output <- bind_rows(list(base_output,custom_output))
+            reset(core)
+            run(core)
 
-      # Plot
-      # replace following with graph plots function in future
-      output$graph <- renderPlotly({
-        ggplot(r6$output) +
-          geom_line(aes(x = year, y = value, color = run)) +
-          labs(x = "Year", y = last(r6$output)$variable[1],
-               title = paste0("Variable: ", last(r6$output)$variable[1])) +
-          theme(legend.position = "bottom")
-      })
+            # get custom output
+            custom_output <- fetchvars(core, 1745:2300, vars = list(r6$selected_var)) %>%
+                mutate(Run = r6$run_name, Scenario = names(which(scenarios == input$input_custom_SSP, arr.ind = FALSE)))
+            r6$output <- bind_rows(list(base_output,custom_output))
 
-    }) %>% bindEvent(input$input_load_emissions)
+            # Plot
+            # replace following with graph plots function in future
+            output$graph <- renderPlotly({
+                graph_plots(r6 = r6)
+                # ggplot(r6$output) +
+                #   geom_line(aes(x = year, y = value, color = run)) +
+                #   labs(x = "Year", y = last(r6$output)$variable[1],
+                #        title = paste0("Variable: ", last(r6$output)$variable[1])) +
+                #   theme(legend.position = "bottom")
+            })
 
-      output$downloadData <- downloadHandler(
-          filename = function()
-          {
-              paste0('HectorUI_CustomEmiss_', r6$run_name, "_", Sys.Date(), '.csv')
-          },
+        }) %>% bindEvent(input$input_load_emissions)
 
-          content = function(file)
-          {
+        output$downloadData <- downloadHandler(
+            filename = function()
+            {
+                paste0('HectorUI_CustomEmiss_', r6$run_name, "_", Sys.Date(), '.csv')
+            },
 
-              if(!is.null(r6$output))
-              {
-                  write.csv(as.data.frame(r6$output), file, row.names = FALSE)
-              }
-              else
-              {
-                  shinyalert::shinyalert("No active Hector cores", "Upload a custom emissions scenario before downloading.", type = "warning")
-              }
-          }
-      )
-      outputOptions(output, "downloadData", suspendWhenHidden = FALSE)
+            content = function(file)
+            {
 
-  })
+                if(!is.null(r6$output))
+                {
+                    write.csv(as.data.frame(r6$output), file, row.names = FALSE)
+                }
+                else
+                {
+                    shinyalert::shinyalert("No active Hector cores", "Upload a custom emissions scenario before downloading.", type = "warning")
+                }
+            }
+        )
+        outputOptions(output, "downloadData", suspendWhenHidden = FALSE)
+
+    })
 }
