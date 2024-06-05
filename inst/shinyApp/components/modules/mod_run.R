@@ -49,7 +49,7 @@ run_ui <- function(id) {
         ),
         mainPanel(
             fluidRow(
-                actionButton(ns("run"), label="Load Graphs", width = '150px', style = "background: #0B3F8F; color: white;"),
+                actionButton(ns("run"), label="Load Graph", width = '150px', style = "background: #0B3F8F; color: white;"),
                 downloadButton(ns("downloadData"), label="Download Data", style = "background: #B8B8B8; color: black;"),
                 downloadButton(ns("downloadParam"), label="Download Parameters", style = "background: #B8B8B8; color: black;")
             ),
