@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Introduction
-The Hector user interface was built to extend Hector, a simple, fast running global climate carbon-cycle mode into a web based interactive application. This vignette outlines the basics for interacting with the Hector user interface and includes a tutorial on how to use the Hector user interface to answer a simple science question: *What is the projected temperature change over time for a specific region?* The tools and features in this package will be able to show you the projected change in average temperature for a specific region compared to 1900 temperatures.
+The Hector user interface was built to extend Hector, a simple, fast running global climate carbon-cycle mode into a web based interactive application. This vignette outlines the basics for interacting with the Hector user interface and includes a tutorial on how to use the Hector user interface to answer a simple science question: *How would we get to 3.4 W/m2 radiative forcing by 2100 in SSP 5?* The tools and features in this package will be able to show you the projected change in average temperature for a specific region compared to 1900 temperatures.
 
 To run this vignette, you will need to access the `hectorui` online application at https://jgcri.shinyapps.io/HectorUI/ or install and setup the package locally.
 
@@ -25,17 +25,17 @@ Simply access the application here:  https://jgcri.shinyapps.io/HectorUI/.  To a
 ## Interface Guide
 Once you have the web page loaded or set up the package locally, you will see the application home page, which contains some background information on Hector, links to code and other resources, and information on how to cite this application. There are two main sections to the application: ‘System Information’ and ‘Run Scenario’ located on the Navigation bar at the top. Within each section are subsections that access information and functionality.
 
-The main interface is also divided into two sections: a left-hand control panel that contains preconfigured scenarios and user adjustable model parameters, and the main output panel on the right for viewing model outputs. Hector is run through “scenarios”, which are a set of emissions and model parameters that drive the model. Built into the package are four Representative Concentration Pathways (RCP) which are greenhouse gas concentration (not emissions) trajectories adopted by the IPCC. The default scenario, RCP 4.5, will be “checked” and you should see the Global Mean Temperature graph in the output section. Each scenario loaded creates a new, unique Hector core object with those parameters and emissions.
+The main interface is also divided into two sections: a left-hand control panel that contains preconfigured scenarios and user adjustable model parameters, and the main output panel on the right for viewing model outputs. Hector is run through “scenarios”, which are a set of emissions and model parameters that drive the model. Built into the package are eight Shared Socioeconomic Pathways (SSPs), representing different "pathways" the world could take, adopted by the IPCC. The default scenario, SSP 4-3.4, will be “checked” and you should see the Atmospheric CO2 graph in the output section. Each scenario loaded creates a new, unique Hector core object with those parameters and emissions.
 
 
 ### Scenarios 
-Scenarios are the main source of input for Hector. They contain emissions and parameters calibrated to represent different RCP scenarios. The default selected RCP 4.5 scenario represents a “middle of the road” projection for emissions and global mitigation. To add additional scenarios for comparison, you can check any combination of the 4 RCP scenarios and they will be represented as their own series in the output graphs. Try checking the 8.5 scenario. You should see a new series appear in the Global Temperature graph where the temperature rises faster than the 4.5 scenario. The 8.5 scenario represents somewhat of a “worst case” scenario. To view projections of other outputs choose some more variables (up to 4) in the graphs section and you should see additional graphs representing Hector’s projections of those outputs.
+Scenarios are the main source of input for Hector. They contain emissions and parameters calibrated to represent different SSP scenarios. The default selected RCP 4-3.4 scenario represents a “middle of the road” projection for emissions and global mitigation with a goal radiative forcing of 3.4 W/m2 at the end of 2100. To add additional scenarios for comparison, you can check any combination of the eight SSP scenarios and they will be represented as their own series in the output graphs. Try also checking the SSP 5-3.4OS scenario and clicking "Load Graphs". You should see a new Atmospheric CO2 graph with two lines. The 5-3.4OS scenario represents somewhat of a “worst case” scenario, where global fossil fuel emissions continue to increase. The SSP 4-3.4 line shows global average CO2 concentrations stay below 600 ppmv CO2 while SSP 5-3.4OS goes well above 1000 ppmv CO2.
 
 ### Parameters
-To further configure Hector, you can adjust the input parameters manually in the left hand nav or choose a global climate model to emulate and it will load up parameters that are calibrated to emulate that model. Try choosing one of the models and note how the input parameters change and the graphs are automatically updated to reflect Hector’s projection being run using those parameters.  At any point you can also manually adjust any of the input parameters and set them by clicking the “Set Parameters” button. 
+To further configure Hector, you can adjust the input parameters manually in the left hand nav. At any point you can also manually adjust any of the input parameters and set them by clicking the “Load Graphs” button. 
 
 ### Custom Scenarios
-The Hector user interface allows advanced users to customize their own scenarios via the “Custom Scenarios” tab in the left hand nav. The custom scenarios use the RCP scenarios as a starting point and allow you to edit the complete time series of emissions. To create a custom scenario you will need to download the excel scenario template file that you want to use as a starting point, edit the emissions within the file, and reupload it to the system. Once done, you will see your scenario’s output in the graphs on the right, just like one of the preconfigured scenarios.
+The Hector user interface allows advanced users to customize their own scenarios via the “Custom Scenarios” tab in the left hand nav. The custom scenarios use the SSP scenarios as a starting point and allow you to edit the complete time series of emissions. To create a custom scenario you will need to download the excel scenario template file that you want to use as a starting point, edit the emissions within the file, and reupload it to the system. Once done, click "Create Scenario" and you will see your scenario’s output in the graphs on the right, just like one of the preconfigured scenarios.
 
 ### Other Outputs
 In addition to the main graph interface, Hector also has a few other outputs. On the graph tab, there is a “Download Raw Data” button which will download the complete time series output for all of the scenarios and output variables that you have chosen. Clicking the “Downscaled Maps” tab in the output section allows you to view cell based global data for temperature and precipitation using pattern generation techniques. This is discussed more in the tutorial.
@@ -44,39 +44,19 @@ In addition to the main graph interface, Hector also has a few other outputs. On
 
 Tutorial Step 1: Getting Started | Example
 --------------- | -------
-To begin the tutorial, make sure you are in the “Explore Hector” tab and click the model emulation dropdown and choose one of the models available, or leave it as Hector default. The different models contain unique input parameters that drive the Hector model’s output. The models also have various degree resolutions for the downscaled maps we will be viewing. For the purposes of this experiment you may choose whichever you like. | ![Explore Hector](vig1_2.0.png){width=250px}
+To begin the tutorial, make sure you are in the “Explore Hector” tab. | ![Explore Hector](vig1_3.0.png){width=250px}
 
-Tutorial Step 2: Setting Map Parameters | Example
+Tutorial Step 2: Setting SSPs | Example
 --------------- | -------
-Click the ‘Downscaled Maps’ tab in the output section on the right and match the model dropdown there to the choice you made in the model parameters dropdown. This tells the system which model to emulate when doing the downscaling. In general, its best to match the models for the most accurate output. Set the Variable to temperature and the Year to 2020 and leave the Scenario as RCP 4.5 (the list of available scenarios corresponds to whichever RCP’s you have selected as well as any custom scenarios you created). Now click ‘Load Map’.  | ![Explore Hector](vig2_2.0.png){width=250px} 
+Click the "Select SSPs" dropdown  and choose 'SSP 4-3.4' and 'SSP 5-3.4OS'.  Now click "Load Graph". You should see a graph of CO2 concentrations and two lines - one for each SSP you chose. We see the SSP 5-3.4 exceeds SSP4-3.4 in global average CO2 concentrations around 2020 but begins to decline around 2040. | ![Explore Hector](vig2_3.0.png){width=250px} 
 
-Tutorial Step 3: Choose Location | Example
+Tutorial Step 3: Choose Output Variable | Example
 --------------- | -------
-You should see a global map of average temperature per unit of resolution (varies based on which model you chose). Now choose a point of origin, it could be the location of your home, school, work, or anywhere you want use as a point of references. Use one of the map zoom tools in the upper right hand corner to zoom in a little bit to your point of origin and hover over some of the cells. | ![Explore Hector](vig3_2.0.png){width=250px}
+Next, use the "Output Variable" dropdown to choose 'RF - Total', click "Load Graphs". Here we see that both SSPs end around 3.4 W/m2 at the end of 2100. Let's look at another output variables to see how emissions change over time. | ![Explore Hector](vig3_3.0.png){width=250px}
 
 Tutorial Step 4: Rescaling the Map | Example
 --------------- | -------
-To get a better view of temperature change in the region, rescale the map to your coordinates by clicking the ‘Filter by lat/lon’ check box. Enter a set of coordinates that corresponds to a box around your point of origin. If you aren’t sure, you can always use the maps x/y axis and/or the hover data to examine coordinates. In this example, we are using the system default coordinates which zooms into the United States region. Click ‘Load Map’ again. You should see a much broader range of temperature gradient for the region now, giving you better regional detail. The numbers didn’t change; the temperature legend has been rescaled based on your coordinates. It is now using the regional data within your specified bounding box to build the legend’s max/min values. Note the pattern of temperature changes in the region, it will be of use later. | ![Explore Hector](vig4_2.0.png){width=250px}
-
-Tutorial Step 5: Historical Comparison | Example
---------------- | -------
-This map is useful, but without more context it is difficult to determine how much the temperature changed over time. This can be accomplished by clicking the ‘Show as comparison to year 1900’ checkbox and then clicking ‘Load Map’ again. You should now see a much smaller range of numbers in the legend. The values represent the delta in temperature by comparing the values at the year 1900 to the values of the chosen year, in this case 2020. Hover over some of the cells and note the change in temperature in the region. Note the gradient pattern. In the US for example, some of the colder areas are getting hotter faster then the warmer regions of the country. | ![Explore Hector](vig5_2.0.png){width=250px} 
-
-Tutorial Step 6: Future Projections | Example
---------------- | -------
-Next, let’s do some future projections. Change the year to 2050 and click ‘Load Map’ again. Note the larger values in the legend, representing greater delta in temperature. We are viewing a middle of the road scenario RCP 4.5 which represents the world doing a moderate amount of mitigation. What about the worst case scenario, RCP 8.5? | ![Explore Hector](vig6_2.0.png){width=250px}
-
-Tutorial Step 7: Adding More Scenarios | Example
---------------- | -------
-Click the check box for the 8.5 scenario in the upper left. A new, separate Hector core has been initialized with the 8.5 parameters and it is now available for selection in the map section’s ‘Available Scenarios’ dropdown box. Choose the Standard 8.5 in the drop down and click ‘Load Map’ again. Note the greater range of temperatures reflecting further warming. Hover over your region and view the local temperature. The temperatures should be a bit higher than the RCP 4.5 scenario. This is because the RCP 8.5 scenario accounts for less mitigation of emissions and climate control. | ![Explore Hector](vig7_2.0.png){width=250px}
-
-Tutorial Step 8: Future Projections (2100) | Example
---------------- | -------
-Lastly, let’s project all the way to 2100, the maximum available year for Hector’s projections. Choose 2100 in the Year dropdown and click ‘Load Map’ again. Note the further expansion of temperature change. If you are still viewing the 8.5 scenario, try viewing the 4.5 also and note the differences. In the case of the US, the difference is dramatic, on the order of several degrees Celsius. | ![Explore Hector](vig8_2.0.png){width=250px}
-
-Tutorial Step 9: Further Exploration | Example
---------------- | -------
-Feel free to explore further the maps section by adjusting the model emulation, the model parameters, adding the 2.6 or 6.0 scenarios, or any of the other variables. A high resolution version of your map may be downloaded by clicking the “Save Hi-Res Map” button. | ![Explore Hector](vig9_2.0.png){width=250px} 
+Use the "Output Variable" dropdown menu again to select 'FFI Emissions' and click "Load Graph". Here we see a sharp decline in fossil fuel emissions in the year 2040, which is likely contributing to the radiative forcing mitigation we saw in Step 3. | ![Explore Hector](vig4_3.0.png){width=250px}
 
 ## Conclusion
 This concludes the tutorial and interface guide. After completing this, you should have a basic understanding of how the interface works, how the different pieces interact, and how to create meaningful output. For more detailed information on Hector, check the “About” section for links to the formal model description paper, the source code for Hector, and other related links and information. Feel free to examine and explore as much as you want.

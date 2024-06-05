@@ -3,6 +3,7 @@ Type: Package
 Title: A web-based interactive scenario builder and visualization application for the Hector climate model
 Version: 2.0
 Authors@R: c(person("Stephanie", "Pennington", email = "stephanie.pennington@pnnl.gov", role = c("aut", "cre")),
+         person("Ciara", "Donegan", email = "ciara.donegan@pnnl.gov", role = "aut"),
          person("Chris", "Vernon", email = "chris.vernon@pnnl.gov", role = "aut"),
          person("Stephanie", "Waldhoff", email = "stephanie.waldhoff@pnnl.gov", role = "aut"),
          person("Abigail", "Snyder", email = "abigail.snyder@pnnl.gov", role = "aut"),
@@ -14,10 +15,8 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
-    maps,
     remotes,
     shiny,
-    shinyjs,
     devtools,
     dplyr,
     plotly,
@@ -26,20 +25,17 @@ Imports:
     shinyBS,
     shinythemes,
     shinyWidgets,
-    stringr,
-    shinycustomloader,
-    markdown
+    stringr
 Depends:
     R (>= 3.6.0),
-    hector,
-    fldgen
+    hector (>= 3.2.0)
 Suggests:
     testthat (>= 2.1.0),
     knitr,
     rmarkdown,
     pkgdown
 Remotes:
-    github::JGCRI/hector,
+    github::JGCRI/hector@v3.2.0,
     github::JGCRI/fldgen@v2.0.0
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.1
 VignetteBuilder: knitr
