@@ -136,8 +136,12 @@ run_server <- function(id, r6) {
             r6$output <- bind_rows(runs)
             print("Done")
 
+            output$graph <- renderPlotly({
+                graph_plots(r6 = r6)
+            })
+
         }) %>%
-            bindEvent(input$run, ignoreNULL = FALSE, ignoreInit = TRUE)
+            bindEvent(input$run, ignoreNULL = FALSE, ignoreInit = FALSE)
 
         observe({
             r6$selected_var <- reactive({input$variable})
@@ -155,14 +159,6 @@ run_server <- function(id, r6) {
             })
         }) %>%
             bindEvent(input$variable, ignoreInit = TRUE)
-
-        observe({
-
-            output$graph <- renderPlotly({
-                graph_plots(r6 = r6)
-            })
-            }) %>%
-            bindEvent(input$run, ignoreNULL = TRUE, ignoreInit = TRUE)
 
             # Download handler for downloading the raw data output from a Hector run. This is activated upon button click.
             output$downloadData <- downloadHandler(
