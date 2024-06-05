@@ -1,7 +1,7 @@
 source("global.r", local = TRUE)
 
 ui <- fluidPage(theme = shinythemes::shinytheme("readable"),
-  includeCSS("./components/layout/style copy.css"),
+  includeCSS("./components/layout/style.css"),
   tags$div(class = "container",
            tags$img(src = "images/earth-header.png", height = "300px", width = "100%", class = "earth", alt = "Earth's atmosphere"),
            tags$div(
