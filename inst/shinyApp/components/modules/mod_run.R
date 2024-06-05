@@ -55,7 +55,7 @@ run_ui <- function(id) {
             ),
             fluidRow(
                 br(),
-                selectInput(ns("variable"), "Output Variable:",
+                selectInput(ns("variable"), "Output Variable (please choose after clicking Load Graph):",
                             list("Carbon Cycle" = list("Atmospheric CO2" = CONCENTRATIONS_CO2(),
                                                        "FFI Emissions" = FFI_EMISSIONS(),
                                                        "LUC Emissions" = LUC_EMISSIONS()),
