@@ -22,9 +22,6 @@ source("components/modules/mod_tracking.R", local = TRUE)
 source("components/functions/func_graph_plots.R", local = TRUE)
 source("components/functions/func_custom_emissions.R", local = TRUE)
 
-scenarios <- get_scenarios()
-title <- get_titles()
-
 theme_set(theme_minimal())
 
 # Define R6 class
@@ -123,3 +120,5 @@ get_titles <- function() {
     return(title)
 }
 
+scenarios <- get_scenarios()
+title <- get_titles()
