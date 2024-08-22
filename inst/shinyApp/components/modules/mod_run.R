@@ -133,6 +133,7 @@ run_server <- function(id, r6) {
                 runs[[i]] <- fetchvars(r6$core[[i]], r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
                     mutate(Scenario = names(which(scenarios == input$ssp_path[i], arr.ind = FALSE)))
             }
+            #browser()
 
             r6$output <- bind_rows(runs)
             print("Done")
@@ -146,7 +147,7 @@ run_server <- function(id, r6) {
 
         observe({
             r6$selected_var <- reactive({input$variable})
-            runs <- list()
+            runs <- list(r6$output)
 
             for(i in 1:length(input$ssp_path)) {
                 runs[[i]] <- fetchvars(r6$core[[i]], r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
