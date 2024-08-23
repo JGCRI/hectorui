@@ -148,7 +148,7 @@ run_server <- function(id, r6) {
             r6$selected_var <- reactive({input$variable})
             runs <- list()
 
-            for(i in 1:length(input$ssp_path)) {
+            for(i in 1:length(r6$ini_file)) {
                 runs[[i]] <- fetchvars(r6$core[[i]], r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
                     mutate(Scenario = names(which(scenarios == input$ssp_path[i], arr.ind = FALSE)))
             }
