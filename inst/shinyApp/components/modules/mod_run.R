@@ -10,7 +10,7 @@ run_ui <- function(id) {
                          label = "Select SSPs:",
                          choices = scenarios,
                          multiple = TRUE,
-                         selected = "input/hector_ssp245.ini"),
+                         selected = list("input/hector_ssp245.ini","input/hector_ssp460.ini")),
                      sliderInput(ns("time"), label="Select dates:",
                                  min = 1750, max = 2300, value = c(1900,2100), sep="", width = "90%", step=5),
                      h5("Include permafrost thaw:", id = "perm-lab"),
@@ -90,15 +90,17 @@ run_server <- function(id, r6) {
             r6$run_mode <- "regular"
             runs <- list()
             cores <- list()
+            r6$ini_list <- reactive({input$ssp_path})
+            #browser()
 
-            for(i in 1:length(input$ssp_path)) {
+            for(i in 1:length(r6$ini_list())) {
 
                 r6$selected_var <- reactive({input$variable})
                 r6$run_name <- reactive({input$run_name})
-                r6$ini_file <- reactive({system.file(input$ssp_path[i],package="hector")})
+                r6$ini_file <- reactive({system.file(r6$ini_list()[i],package="hector")})
                 r6$time <- reactive({input$time})
 
-                withProgress(message = paste("Running Hector", names(which(scenarios == input$ssp_path[i], arr.ind = FALSE)), "...\n"), value = 1/2, {
+                withProgress(message = paste("Running Hector", names(which(scenarios == r6$ini_file(), arr.ind = FALSE)), "...\n"), value = 1/2, {
                     print("Running...") # in command line
                     core <- reactive({newcore(r6$ini_file())}) # create core
 
@@ -129,13 +131,14 @@ run_server <- function(id, r6) {
 
             r6$core <- cores
 
-            for(i in 1:length(input$ssp_path)) {
+            for(i in 1:length(r6$ini_list())) {
                 runs[[i]] <- fetchvars(r6$core[[i]], r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
-                    mutate(Scenario = names(which(scenarios == input$ssp_path[i], arr.ind = FALSE)))
+                    mutate(Scenario = names(which(scenarios == r6$ini_list()[i], arr.ind = FALSE)))
             }
 
             r6$output <- bind_rows(runs)
             print("Done")
+            #browser()
 
             output$graph <- renderPlotly({
                 graph_plots(r6 = r6)
@@ -147,6 +150,7 @@ run_server <- function(id, r6) {
         observe({
             r6$selected_var <- reactive({input$variable})
             runs <- list()
+            #browser()
 
             for(i in 1:length(r6$ini_file)) {
                 runs[[i]] <- fetchvars(r6$core[[i]], r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
