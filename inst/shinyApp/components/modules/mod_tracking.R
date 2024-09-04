@@ -58,7 +58,7 @@ tracking_ui <- function(id) {
             downloadButton(ns("download"),"Download Plot", style = "background: #B8B8B8; color: black;")
         ),
         fluidRow(
-            withSpinner(plotOutput(ns("fig"), width = "80%"))#,
+            plotOutput(ns("fig"), width = "80%")#,
             # imageOutput(ns("gif"), width = "80%")
         )
     )
