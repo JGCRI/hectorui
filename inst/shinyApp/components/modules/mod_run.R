@@ -141,6 +141,7 @@ run_server <- function(id, r6) {
             r6$output <- bind_rows(runs)
             print("Done")
             
+            # Save scenarios used in run
             r6$ini_list <- unique(r6$output$Scenario)
 
             output$graph <- renderPlotly({
@@ -153,16 +154,13 @@ run_server <- function(id, r6) {
         observe({
             r6$selected_var <- reactive({input$variable})
             runs <- list()
-            #browser()
 
             for(i in 1:length(r6$ini_list)) {
                 runs[[i]] <- fetchvars(r6$core[[i]], r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
-                    mutate(Scenario = names(which(scenarios == scenarios[[r6$ini_list[i]]], arr.ind = FALSE)))
+                    mutate(Scenario = r6$ini_list[i])
             }
-            #browser()
 
             r6$output <- bind_rows(runs)
-            #browser()
 
             output$graph <- renderPlotly({
                 graph_plots(r6 = r6)
