@@ -10,7 +10,7 @@ run_ui <- function(id) {
                          label = "Select SSPs:",
                          choices = scenarios,
                          multiple = TRUE,
-                         selected = "input/hector_ssp245.ini"),
+                         selected = list("input/hector_ssp245.ini")),
                      sliderInput(ns("time"), label="Select dates:",
                                  min = 1750, max = 2300, value = c(1900,2100), sep="", width = "90%", step=5),
                      h5("Include permafrost thaw:", id = "perm-lab"),
@@ -70,10 +70,10 @@ run_ui <- function(id) {
                                                    "RF - Albedo" = RF_ALBEDO(),
                                                    "RF - CO2" = RF_CO2(),
                                                    "RF - N2O" = RF_N2O(),
-                                                   "RF - Black Carbon" = RF_BC(),
-                                                   "RF - Organic Carbon" = RF_OC(),
-                                                   "RF - Total SO2" = RF_SO2(),
-                                                   "RF - Volcanic Activity" = RF_VOL(),
+                                                   #"RF - Black Carbon" = RF_BC(),
+                                                   #"RF - Organic Carbon" = RF_OC(),
+                                                   #"RF - Total SO2" = RF_SO2(),
+                                                   #"RF - Volcanic Activity" = RF_VOL(),
                                                    "RF - CH4" = RF_CH4())),
                             selected = "Atmospheric CO2", multiple = FALSE)
             ),
@@ -92,19 +92,19 @@ run_server <- function(id, r6) {
         observe({
 
             r6$run_mode <- "regular"
-            runs <- list()
             cores <- list()
+            runs <- list()
 
             for(i in 1:length(input$ssp_path)) {
 
                 r6$selected_var <- reactive({input$variable})
                 r6$run_name <- reactive({input$run_name})
-                r6$ini_file <- reactive({system.file(input$ssp_path[i],package="hector")})
+                r6$ini_file <- system.file(input$ssp_path[i],package="hector")
                 r6$time <- reactive({input$time})
 
-                withProgress(message = paste("Running Hector", names(which(scenarios == input$ssp_path[i], arr.ind = FALSE)), "...\n"), value = 1/2, {
+                withProgress(message = paste("Running Hector", names(which(scenarios == r6$ini_file, arr.ind = FALSE)), "...\n"), value = 1/2, {
                     print("Running...") # in command line
-                    core <- reactive({newcore(r6$ini_file())}) # create core
+                    core <- reactive({newcore(r6$ini_file)}) # create core
 
                     # Set parameters using inputs (function to only call setvar once in final version)
                     if (input$permafrost == TRUE) {
@@ -132,14 +132,66 @@ run_server <- function(id, r6) {
             }
 
             r6$core <- cores
+            runs2_list <- list()
 
             for(i in 1:length(input$ssp_path)) {
+
                 runs[[i]] <- fetchvars(r6$core[[i]], r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
                     mutate(Scenario = names(which(scenarios == input$ssp_path[i], arr.ind = FALSE)))
+
+                if(r6$selected_var() == "ffi_emissions" | r6$selected_var() == "luc_emissions") {
+
+                    if(r6$selected_var() == "ffi_emissions") {
+
+                        runs2_list[[i]] <- fetchvars(r6$core[[i]], r6$time()[1]:r6$time()[2], vars = "daccs_uptake") %>%
+                            mutate(Scenario = names(which(scenarios == input$ssp_path[i], arr.ind = FALSE)))
+
+                    } else if(r6$selected_var() == "luc_emissions") {
+
+                        runs2_list[[i]] <- fetchvars(r6$core[[i]], r6$time()[1]:r6$time()[2], vars = "luc_uptake") %>%
+                            mutate(Scenario = names(which(scenarios == input$ssp_path[i], arr.ind = FALSE)))
+
+                    }
+
+                }
+
             }
 
-            r6$output <- bind_rows(runs)
+            if(r6$selected_var() == "ffi_emissions" | r6$selected_var() == "luc_emissions") {
+                if(r6$selected_var() == "ffi_emissions") {
+
+                    runs2 <- bind_rows(runs2_list) %>% pivot_wider(names_from = variable, values_from = value)
+
+                    bind_rows(runs) %>%
+                        pivot_wider(names_from = variable, values_from = value) %>%
+                        left_join(runs2) %>%
+                        mutate(ffi_emissions = ffi_emissions - daccs_uptake) %>%
+                        select(-daccs_uptake) %>% pivot_longer(cols = ffi_emissions, names_to = "variable", values_to = "value") %>%
+                        select(scenario, year, variable, value, units, Scenario) -> runs_w_uptake
+
+                } else if(r6$selected_var() == "luc_emissions") {
+
+                    runs2 <- bind_rows(runs2_list) %>% pivot_wider(names_from = variable, values_from = value)
+
+                    bind_rows(runs) %>%
+                        pivot_wider(names_from = variable, values_from = value) %>%
+                        left_join(runs2) %>%
+                        mutate(luc_emissions = luc_emissions - luc_uptake) %>%
+                        select(-luc_uptake) %>% pivot_longer(cols = luc_emissions, names_to = "variable", values_to = "value") %>%
+                        select(scenario, year, variable, value, units, Scenario) -> runs_w_uptake
+
+                }
+                runs_df <- as.data.frame(runs_w_uptake)
+
+            } else{
+                runs_df <- bind_rows(runs)
+            }
+
+            r6$output <- runs_df
             print("Done")
+
+            # Save scenarios used in run
+            r6$ini_list <- unique(r6$output$Scenario)
 
             output$graph <- renderPlotly({
                 graph_plots(r6 = r6)
@@ -151,13 +203,64 @@ run_server <- function(id, r6) {
         observe({
             r6$selected_var <- reactive({input$variable})
             runs <- list()
+            runs2_list <- list()
 
-            for(i in 1:length(input$ssp_path)) {
+            for(i in 1:length(r6$ini_list)) {
+
                 runs[[i]] <- fetchvars(r6$core[[i]], r6$time()[1]:r6$time()[2], vars = list(r6$selected_var())) %>%
-                    mutate(Scenario = names(which(scenarios == input$ssp_path[i], arr.ind = FALSE)))
+                    mutate(Scenario = r6$ini_list[i])
+
+                if(r6$selected_var() == "ffi_emissions" | r6$selected_var() == "luc_emissions") {
+
+                    if(r6$selected_var() == "ffi_emissions") {
+
+                        runs2_list[[i]] <- fetchvars(r6$core[[i]], r6$time()[1]:r6$time()[2], vars = "daccs_uptake") %>%
+                            mutate(Scenario = r6$ini_list[i])
+
+                    } else if(r6$selected_var() == "luc_emissions") {
+
+                        runs2_list[[i]] <- fetchvars(r6$core[[i]], r6$time()[1]:r6$time()[2], vars = "luc_uptake") %>%
+                            mutate(Scenario = r6$ini_list[i])
+
+                    }
+
+                }
+
             }
 
-            r6$output <- bind_rows(runs)
+            if(r6$selected_var() == "ffi_emissions" | r6$selected_var() == "luc_emissions") {
+
+                if(r6$selected_var() == "ffi_emissions") {
+                    runs2 <- bind_rows(runs2_list) %>% pivot_wider(names_from = variable, values_from = value)
+
+                    bind_rows(runs) %>%
+                        pivot_wider(names_from = variable, values_from = value) %>%
+                        left_join(runs2) %>%
+                        mutate(ffi_emissions = ffi_emissions - daccs_uptake) %>%
+                        select(-daccs_uptake) %>% pivot_longer(cols = ffi_emissions, names_to = "variable", values_to = "value") %>%
+                        select(scenario, year, variable, value, units, Scenario) -> runs_w_uptake
+
+                } else if(r6$selected_var() == "luc_emissions") {
+                    runs2 <- bind_rows(runs2_list) %>% pivot_wider(names_from = variable, values_from = value)
+
+                    bind_rows(runs) %>%
+                        pivot_wider(names_from = variable, values_from = value) %>%
+                        left_join(runs2) %>%
+                        mutate(luc_emissions = luc_emissions - luc_uptake) %>%
+                        select(-luc_uptake) %>% pivot_longer(cols = luc_emissions, names_to = "variable", values_to = "value") %>%
+                        select(scenario, year, variable, value, units, Scenario) -> runs_w_uptake
+
+                }
+
+                runs_df <- as.data.frame(runs_w_uptake)
+
+            } else{
+
+                runs_df <- bind_rows(runs)
+
+            }
+
+            r6$output <- runs_df
 
             output$graph <- renderPlotly({
                 graph_plots(r6 = r6)

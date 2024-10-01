@@ -37,6 +37,7 @@ HectorInputs <- R6Class(
     inputs = NULL,
     core = NULL,
     selected_var = NULL,
+    ini_list = NULL,
     initialize = function(ini_file = system.file("input/hector_ssp245.ini",
                                                  package = "hector")) {
       self$ini_file <- ini_file
@@ -45,6 +46,7 @@ HectorInputs <- R6Class(
       self$run_name <- 1
       self$inputs <- list()
       self$selected_var <- "CO2_concentration"
+      self$ini_list <- list()
     }
   )
 )
@@ -72,7 +74,9 @@ get_titles <- function() {
     title <- list("CO2_concentration" = "Atmospheric CO2",
                   "atmos_co2" = "Atmospheric Carbon Pool",
                   "ffi_emissions" = "FFI Emissions",
+                  "daccs_uptake" = "FFI Emission Uptake",
                   "luc_emissions" = "LUC Emissions",
+                  "luc_uptake" = "LuC Emission Uptake",
                   "N2O_concentration" = "N2O Concentration",
                   "BC_emissions" = "Black Carbon Emissions",
                   "OC_emissions" = "Organic Carbon Emissions",
